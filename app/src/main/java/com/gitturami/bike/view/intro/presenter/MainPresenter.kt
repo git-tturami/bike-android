@@ -1,19 +1,14 @@
 package com.gitturami.bike.view.intro.presenter
 
-import android.os.Handler
 import com.gitturami.bike.view.intro.base.BaseView
 
-class IntroPresenter : IntroContact.Presenter {
+class MainPresenter : MainContact.Presenter {
     private lateinit var view: BaseView
 
-    override fun takeView(view: IntroContact.View) {
+    override fun takeView(view: MainContact.View) {
         this.view = view
     }
-    override fun changeActivity() {
-        Handler().postDelayed({
-            view.start()
-        }, 2000)
-    }
+
 //    override fun dropView() {
 //        this.view = NullActivity()
 //    }

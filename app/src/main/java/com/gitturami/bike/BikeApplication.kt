@@ -18,7 +18,7 @@ class BikeApplication: Application() {
         startActivity(intent)
     }
 
-    override fun getApplicationContext() : Context {
-        return instance!!.applicationContext
-    }
+//    override fun getApplicationContext() : Context {
+//        return instance!!.applicationContext
+//    }
 }
