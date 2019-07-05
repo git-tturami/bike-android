@@ -1,6 +1,6 @@
-package com.gitturami.bike.view.intro.presenter
+package com.gitturami.bike.view.main.presenter
 
-import com.gitturami.bike.view.intro.base.BaseView
+import com.gitturami.bike.base.BaseView
 
 class MainPresenter : MainContact.Presenter {
     private lateinit var view: BaseView
