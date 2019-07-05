@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.gitturami.bike.view.intro.IntroActivity
 
-class BikeApplication: Application() {
+class BikeApplication : Application() {
     companion object {
         lateinit var instance: BikeApplication
             private set
@@ -17,8 +17,4 @@ class BikeApplication: Application() {
         var intent = Intent(this, IntroActivity::class.java)
         startActivity(intent)
     }
-
-//    override fun getApplicationContext() : Context {
-//        return instance!!.applicationContext
-//    }
 }

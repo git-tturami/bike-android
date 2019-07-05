@@ -1,7 +1,7 @@
 package com.gitturami.bike.view.intro.presenter
 
 import android.os.Handler
-import com.gitturami.bike.view.intro.base.BaseView
+import com.gitturami.bike.base.BaseView
 
 class IntroPresenter : IntroContact.Presenter {
     private lateinit var view: BaseView
