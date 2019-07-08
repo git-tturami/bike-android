@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.com/git-tturami/bike-android.svg?branch=master)](https://travis-ci.com/git-tturami/bike-android)[![Coverage Status](https://coveralls.io/repos/github/git-tturami/bike-android/badge.svg?branch=master)](https://coveralls.io/github/git-tturami/bike-android?branch=master)
