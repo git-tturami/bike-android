@@ -1,14 +1,19 @@
 package com.gitturami.bike.view.main.presenter
 
-import com.gitturami.bike.base.BasePresenter
-import com.gitturami.bike.base.BaseView
+import android.widget.LinearLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.skt.Tmap.TMapPoint
+import com.skt.Tmap.TMapView
 
 interface MainContact {
-    interface View: BaseView {
-
+    interface View {
+        fun findPath(start: TMapPoint, end: TMapPoint)
     }
-    interface Presenter: BasePresenter {
-        fun takeView(view: View)
-//        fun dropView()
+    interface Presenter {
+        fun takeView(view: MainContact.View)
+        fun test()
+        fun setpoint(tMapView: TMapView)
+        fun isCollapse(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>)
+        fun setBottomSheetBehavior(bottomSheetBehavior : BottomSheetBehavior<LinearLayout>)
     }
 }
