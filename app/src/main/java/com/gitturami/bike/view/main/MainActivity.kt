@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter.takeView(this)
     }
 
-    override fun start() {}
-
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun start( ) {}
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
 //        presenter.dropView()
-    }
+//    }
 }
