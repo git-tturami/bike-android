@@ -16,11 +16,4 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter = MainPresenter()
         presenter.takeView(this)
     }
-
-    override fun start() {}
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        presenter.dropView()
-    }
 }
