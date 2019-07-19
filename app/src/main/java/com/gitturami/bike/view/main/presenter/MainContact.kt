@@ -1,14 +1,11 @@
 package com.gitturami.bike.view.main.presenter
 
-import com.gitturami.bike.base.BasePresenter
-import com.gitturami.bike.base.BaseView
-
 interface MainContact {
-    interface View: BaseView {
+    interface View {
 
     }
-    interface Presenter: BasePresenter {
+    interface Presenter {
         fun takeView(view: View)
-//        fun dropView()
+
     }
 }

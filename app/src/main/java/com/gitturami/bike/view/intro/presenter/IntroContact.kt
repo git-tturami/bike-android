@@ -1,15 +1,12 @@
-package com.gitturami.bike.view.intro.presenter
-
-import com.gitturami.bike.base.BasePresenter
-import com.gitturami.bike.base.BaseView
+package com.gitturami.bike.view.main.presenter
 
 interface IntroContact {
-    interface View: BaseView {
-
+    interface View  {
+        fun start()
     }
-    interface Presenter: BasePresenter {
+    interface Presenter  {
         fun takeView(view: View)
         fun changeActivity()
-//        fun dropView()
+
     }
 }
