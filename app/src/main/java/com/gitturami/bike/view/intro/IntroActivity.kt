@@ -25,9 +25,4 @@ class IntroActivity : AppCompatActivity(), IntroContact.View {
         val nextIntent = Intent(this, MainActivity::class.java)
         startActivity(nextIntent)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        presenter.dropView()
-    }
 }
