@@ -4,9 +4,9 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.gitturami.bike.R
+import com.gitturami.bike.view.intro.presenter.IntroContact
 import com.gitturami.bike.view.intro.presenter.IntroPresenter
 import com.gitturami.bike.view.main.MainActivity
-import com.gitturami.bike.view.main.presenter.IntroContact
 
 class IntroActivity : AppCompatActivity(), IntroContact.View {
 
@@ -25,5 +25,4 @@ class IntroActivity : AppCompatActivity(), IntroContact.View {
         val nextIntent = Intent(this, MainActivity::class.java)
         startActivity(nextIntent)
     }
-
 }
