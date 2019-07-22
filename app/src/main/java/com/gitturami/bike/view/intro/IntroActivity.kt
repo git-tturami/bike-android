@@ -1,7 +1,9 @@
 package com.gitturami.bike.view.intro
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.gitturami.bike.MapActivity
 import com.gitturami.bike.R
 import com.gitturami.bike.view.intro.presenter.IntroContact
 import com.gitturami.bike.view.intro.presenter.IntroPresenter
@@ -16,5 +18,8 @@ class IntroActivity : AppCompatActivity() {
 
         presenter = IntroPresenter()
         presenter.changeActivity()
+
+        var intent = Intent(this, MapActivity::class.java)
+        startActivity(intent)
     }
 }
