@@ -1,9 +1,12 @@
 package com.gitturami.bike.view.main.presenter
 
-class MainPresenter : MainContact.Presenter {
-    private lateinit var view: MainContact.View
+import android.widget.LinearLayout
+import com.skt.Tmap.TMapView
 
-    override fun takeView(view: MainContact.View) {
-        this.view = view
+class MainPresenter : MainContact.Presenter {
+    private lateinit var tview: LinearLayout
+
+    override fun takeView(view: LinearLayout) {
+        this.tview = view
     }
 }
