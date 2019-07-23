@@ -1,8 +1,9 @@
 package com.gitturami.bike.view.intro
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.gitturami.bike.MapActivity
 import com.gitturami.bike.R
 import com.gitturami.bike.view.intro.presenter.IntroContact
 import com.gitturami.bike.view.intro.presenter.IntroPresenter
@@ -19,10 +20,13 @@ class IntroActivity : AppCompatActivity(), IntroContact.View {
         presenter = IntroPresenter()
         presenter.takeView(this)
         presenter.changeActivity()
+
+        var intent = Intent(this, MapActivity::class.java)
+        startActivity(intent)
     }
 
     override fun start() {
-        val nextIntent = Intent(this, MainActivity::class.java)
+        val nextIntent = Intent(this, MapActivity::class.java)
         startActivity(nextIntent)
     }
 }
