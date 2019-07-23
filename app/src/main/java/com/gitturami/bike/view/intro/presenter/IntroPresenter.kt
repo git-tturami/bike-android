@@ -1,7 +1,16 @@
 package com.gitturami.bike.view.intro.presenter
 
-class IntroPresenter : IntroContact {
+import android.os.Handler
+
+class IntroPresenter : IntroContact.Presenter {
+    private lateinit var view: IntroContact.View
+
+    override fun takeView(view: IntroContact.View) {
+        this.view = view
+    }
     override fun changeActivity() {
-        TODO("It will change activity after some time.")
+        Handler().postDelayed({
+            view.start()
+        }, 2000)
     }
 }

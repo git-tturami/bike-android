@@ -1,5 +1,11 @@
 package com.gitturami.bike.view.intro.presenter
 
 interface IntroContact {
-    fun changeActivity()
+    interface View {
+        fun start()
+    }
+    interface Presenter {
+        fun takeView(view: View)
+        fun changeActivity()
+    }
 }

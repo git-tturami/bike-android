@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Bike</string>
+    <string name="app_name">따로롱</string>
+    <string name="main">Main</string>
+    <string name="bike_android">Bike-android</string>
 </resources>
