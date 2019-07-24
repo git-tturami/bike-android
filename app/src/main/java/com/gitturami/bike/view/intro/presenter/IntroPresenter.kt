@@ -1,7 +1,7 @@
 package com.gitturami.bike.view.intro.presenter
 
 import android.os.Handler
-import com.gitturami.bike.view.main.presenter.IntroContact
+
 
 
 class IntroPresenter : IntroContact.Presenter {

@@ -8,6 +8,7 @@ import com.gitturami.bike.view.intro.presenter.IntroContact
 import com.gitturami.bike.view.intro.presenter.IntroPresenter
 import com.gitturami.bike.view.main.MainActivity
 
+
 class IntroActivity : AppCompatActivity(), IntroContact.View {
 
     private lateinit var presenter: IntroContact.Presenter

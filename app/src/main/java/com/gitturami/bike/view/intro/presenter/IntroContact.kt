@@ -1,4 +1,4 @@
-package com.gitturami.bike.view.main.presenter
+package com.gitturami.bike.view.intro.presenter
 
 
 interface IntroContact {
