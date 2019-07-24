@@ -15,8 +15,7 @@ class BikeApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        Intent(this, IntroActivity::class.java).let {
-            startActivity(it.addFlags(FLAG_ACTIVITY_NEW_TASK))
-        }
+        var intent = Intent(this, IntroActivity::class.java)
+        startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK))
     }
 }
