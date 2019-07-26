@@ -19,7 +19,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
 
-        <activity android:name=".view.Login.LoginActivity"></activity>
+
         <activity android:name=".view.intro.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
