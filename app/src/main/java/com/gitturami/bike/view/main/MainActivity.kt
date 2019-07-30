@@ -17,6 +17,7 @@ import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.skt.Tmap.*
+import kotlinx.android.synthetic.main.activity_bottomsheet.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {
@@ -66,7 +67,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         val listView = findViewById<ListView>(R.id.list)
         var adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
         listView.adapter = adapter
-        val bottomSheetText:TextView = findViewById(R.id.cat_persistent_bottomsheet_state)
+
+        val bottomSheetText:TextView = findViewById(R.id.bottomsheet_text)
         bottomSheet = Bottom_Sheet
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
