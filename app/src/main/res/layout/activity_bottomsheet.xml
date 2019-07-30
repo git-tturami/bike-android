@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/Bottom_Sheet"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="500dp"
     android:orientation="vertical"
     android:background="#FFAAAA"
 
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="150dp"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    app:behavior_skipCollapsed="true"
-    >
+    app:behavior_skipCollapsed="false">
 
     <RelativeLayout
         android:id="@+id/locationname"
@@ -52,22 +51,17 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
-                <ImageButton
-                    android:id="@+id/button1"
+                <Button
+                    android:id="@+id/start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@mipmap/ic_launcher_round" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignEnd="@+id/button1"
-                    android:text="BUTTON 1"
-                    android:textColor="@android:color/black" />
+                    android:background="@color/colorYello"
+                    android:text="출발지 선택"
+                    />
+                 />
             </RelativeLayout>
         </LinearLayout>
 

@@ -42,8 +42,19 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter.takeView(this)
         presenter.test()
 
+        //list
+        val listView = findViewById<ListView>(R.id.list)
+        var adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
+        listView.adapter = adapter
 
 
+        //bottomsheet
+        val bottomSheetText:TextView = findViewById(R.id.bottomsheet_text)
+        bottomSheet = Bottom_Sheet
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+
+        //Set the Point
         tMapView.setOnClickListenerCallBack(object : TMapView.OnClickListenerCallback {
             override fun onPressUpEvent(p0: ArrayList<TMapMarkerItem>?, p1: ArrayList<TMapPOIItem>?, p2: TMapPoint?, p3: PointF?): Boolean {
                 mpoint = p2
@@ -55,32 +66,30 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 tItem.tMapPoint = tpoint
                 tItem.visible = TMapMarkerItem.VISIBLE
                 tMapView.addMarkerItem(tItem.id, tItem)
+                Log.d("TAG",bottomSheetBehavior.peekHeight.toString() )
+                bottomSheetBehavior.setPeekHeight(150)
+                bottomSheetBehavior.setState(STATE_COLLAPSED)
                 return true
             }
 
             override fun onPressEvent(p0: ArrayList<TMapMarkerItem>?, p1: ArrayList<TMapPOIItem>?, p2: TMapPoint?, p3: PointF?): Boolean {
+                bottomSheetBehavior.setPeekHeight(150)
                 return true
             }
         })
 
 
-        val listView = findViewById<ListView>(R.id.list)
-        var adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
-        listView.adapter = adapter
-
-        val bottomSheetText:TextView = findViewById(R.id.bottomsheet_text)
-        bottomSheet = Bottom_Sheet
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+    //bottomsheetaction
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-//                when (slideOffset) {
-//                    -1F -> bottomSheetBehavior.setState(STATE_EXPANDED)
-//                    0F -> bottomSheetBehavior.setState(STATE_HALF_EXPANDED)
-//                    1F -> bottomSheetBehavior.setState(STATE_COLLAPSED)
-//                    else->{
-//
-//                    }
-//                }
+                when (slideOffset) {
+                    0F -> bottomSheetBehavior.setState(STATE_COLLAPSED)
+                    1F -> bottomSheetBehavior.setState(STATE_EXPANDED)
+
+                    else->{
+
+                    }
+                }
                 Log.d("TAG", "slideOffset " + slideOffset)
 
             }
@@ -88,8 +97,9 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    STATE_DRAGGING -> bottomSheetText.setText(R.string.DRAGGING)
-                    STATE_SETTLING -> bottomSheetText.setText(R.string.SETTLING)
+                    STATE_DRAGGING -> {
+                        bottomSheetText.setText(R.string.DRAGGING)
+                    }STATE_SETTLING -> bottomSheetText.setText(R.string.SETTLING)
                     STATE_EXPANDED -> bottomSheetText.setText(R.string.EXPANDED)
                     STATE_COLLAPSED -> bottomSheetText.setText(R.string.COLLAPSED)
                     STATE_HIDDEN -> bottomSheetText.setText(R.string.HIDDEN)
@@ -101,9 +111,11 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             }
         })
 
+        val btn_click_me = start
+        btn_click_me.setOnClickListener {
 
-
-
+            bottomSheetBehavior.setState(STATE_HIDDEN)
+        }
     }
 
     override fun findPath(start:TMapPoint, end:TMapPoint) {
