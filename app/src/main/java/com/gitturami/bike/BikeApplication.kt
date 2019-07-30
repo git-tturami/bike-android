@@ -3,7 +3,7 @@ package com.gitturami.bike
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.Intent.*
 import com.gitturami.bike.view.intro.IntroActivity
 
 class BikeApplication : Application() {
@@ -16,6 +16,6 @@ class BikeApplication : Application() {
         super.onCreate()
         instance = this
         var intent = Intent(this, IntroActivity::class.java)
-        startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK))
+        startActivity(intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP))
     }
 }

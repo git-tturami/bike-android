@@ -1,6 +1,7 @@
 package com.gitturami.bike.view.intro
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.gitturami.bike.R
@@ -23,6 +24,6 @@ class IntroActivity : AppCompatActivity(), IntroContact.View {
 
     override fun start() {
         val nextIntent = Intent(this, MainActivity::class.java)
-        startActivity(nextIntent)
+        startActivity(nextIntent.addFlags(FLAG_ACTIVITY_SINGLE_TOP))
     }
 }
