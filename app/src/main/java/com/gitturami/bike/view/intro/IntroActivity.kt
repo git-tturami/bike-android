@@ -1,16 +1,15 @@
 package com.gitturami.bike.view.intro
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.gitturami.bike.R
 import com.gitturami.bike.view.intro.presenter.IntroContact
 import com.gitturami.bike.view.intro.presenter.IntroPresenter
 import com.gitturami.bike.view.main.MainActivity
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-
-class IntroActivity : AppCompatActivity(), IntroContact.View{
+class IntroActivity : AppCompatActivity(), IntroContact.View {
 
     private lateinit var presenter: IntroContact.Presenter
 
@@ -25,6 +24,6 @@ class IntroActivity : AppCompatActivity(), IntroContact.View{
 
     override fun start() {
         val nextIntent = Intent(this, MainActivity::class.java)
-        startActivity(nextIntent)
+        startActivity(nextIntent.addFlags(FLAG_ACTIVITY_SINGLE_TOP))
     }
 }

@@ -2,8 +2,6 @@ package com.gitturami.bike.view.intro.presenter
 
 import android.os.Handler
 
-
-
 class IntroPresenter : IntroContact.Presenter {
     private lateinit var view: IntroContact.View
 
@@ -15,5 +13,4 @@ class IntroPresenter : IntroContact.Presenter {
             view.start()
         }, 2000)
     }
-
 }

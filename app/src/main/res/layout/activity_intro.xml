@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.intro.IntroActivity"
-    tools:ignore="ExtraText">
+    tools:context=".view.intro.IntroActivity">
 
     <TextView
         android:id="@+id/intro_text"
