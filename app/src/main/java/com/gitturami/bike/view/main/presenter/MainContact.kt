@@ -1,15 +1,17 @@
 package com.gitturami.bike.view.main.presenter
 
-import android.widget.LinearLayout
 
+import com.skt.Tmap.TMapPoint
 
 
 interface MainContact {
     interface View {
+        fun findPath(start: TMapPoint, end: TMapPoint)
     }
     interface Presenter {
-        fun takeView(view: LinearLayout)
 
+        fun takeView(view: MainContact.View)
+        fun test()
 
     }
 }

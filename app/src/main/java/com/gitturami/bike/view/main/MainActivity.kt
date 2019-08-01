@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
+
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -21,11 +22,15 @@ import com.skt.Tmap.*
 import java.util.ArrayList
 import com.skt.Tmap.TMapMarkerItem
 import com.skt.Tmap.TMapPoint
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.skt.Tmap.TMapView
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), MainContact.View{
     private lateinit var presenter: MainContact.Presenter
+
     private lateinit var tMapView:TMapView
     private lateinit var bottomSheet:LinearLayout
 
@@ -36,9 +41,11 @@ class MainActivity : AppCompatActivity(), MainContact.View{
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         val linearLayoutTmap: LinearLayout = findViewById(R.id.linearLayoutTmap) as LinearLayout
         tMapView = TMapView(this)
@@ -113,28 +120,25 @@ class MainActivity : AppCompatActivity(), MainContact.View{
             }
         })
 
+
         presenter = MainPresenter()
-        presenter.takeView(linearLayoutTmap)
+        presenter.takeView(this)
+        presenter.test()
     }
 
 
-
-    fun findpath(start:TMapPoint, end:TMapPoint){
+    override fun findPath(start:TMapPoint, end:TMapPoint) {
         try {
             val data = TMapData()
             Log.d("gess","gess")
-            data.findPathData(start, end, object: TMapData.FindPathDataListenerCallback {
-                override fun onFindPathData(path: TMapPolyLine){
-                    runOnUiThread(object: Runnable {
-                        override fun run(){
-                            path.setLineWidth(5f)
-                            path.setLineColor(Color.BLUE)
-                            tMapView.addTMapPath(path)
-                        }
-                    })
-                }
-            })
+            data.findPathData(start, end) { path ->
+                runOnUiThread {
+                    path.lineWidth = 5f
+                    path.lineColor = Color.BLUE
+                    tMapView.addTMapPath(path)
 
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
