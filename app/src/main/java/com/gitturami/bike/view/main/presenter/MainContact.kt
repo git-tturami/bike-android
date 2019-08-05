@@ -15,5 +15,6 @@ interface MainContact {
         fun setpoint(tMapView: TMapView)
         fun isCollapse(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>)
         fun setBottomSheetBehavior(bottomSheetBehavior : BottomSheetBehavior<LinearLayout>)
+
     }
 }

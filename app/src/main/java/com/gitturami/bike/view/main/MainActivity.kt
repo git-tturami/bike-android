@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-
 import com.gitturami.bike.R
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
@@ -18,10 +17,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_bottomsheet.*
+
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {
     private lateinit var presenter: MainContact.Presenter
+
     private lateinit var tMapView:TMapView
     private lateinit var bottomSheet:LinearLayout
 
@@ -29,9 +30,11 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     var mpoint: TMapPoint? = null
     var data = arrayOf("List1","List2","List3","List4","List5","List6","List7","List8","List9","List10","List11","List12")
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         val linearLayoutTmap=linearLayoutTmap
         tMapView = TMapView(this)
@@ -100,6 +103,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             bottomSheetBehavior.setState(STATE_HIDDEN)
         }
     }
+
 
     override fun findPath(start:TMapPoint, end:TMapPoint) {
         try {

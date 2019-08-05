@@ -16,6 +16,7 @@ class MainPresenter : MainContact.Presenter {
     var mpoint: TMapPoint? = null
     private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
 
+
     override fun takeView(view: MainContact.View) {
         this.view = view
     }
