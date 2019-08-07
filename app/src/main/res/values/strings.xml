@@ -2,4 +2,7 @@
     <string name="app_name">따로롱</string>
     <string name="main">Main</string>
     <string name="bike_android">Bike-android</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

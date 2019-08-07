@@ -1,16 +1,24 @@
 package com.gitturami.bike.view.main
 
+import android.app.Application
+import android.content.Intent
 import android.graphics.Color
+import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import com.gitturami.bike.R
+import com.gitturami.bike.SettingActivity
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.skt.Tmap.TMapData
 import com.skt.Tmap.TMapPoint
 import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.activity_main.*
+
+
 
 class MainActivity : AppCompatActivity(), MainContact.View {
     private lateinit var presenter: MainContact.Presenter
@@ -30,6 +38,15 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter = MainPresenter()
         presenter.takeView(this)
         presenter.test()
+
+        initSettingButton()
+    }
+
+    fun initSettingButton() {
+        settingButton.setOnClickListener {
+            val intent = Intent(applicationContext, SettingActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun findPath(start:TMapPoint, end:TMapPoint) {
