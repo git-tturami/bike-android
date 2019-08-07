@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/settingContainer"
+    android:orientation="vertical"
+    >
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:id="@+id/app_toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbarTitle"
+            android:layout_gravity="center"
+            android:text="설정"
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            />
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:background="#00ff0000"
+            android:id="@+id/backButton"
+            android:src="@drawable/back"
+            android:layout_gravity="left"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="홈"
+            android:layout_gravity="left"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:id="@+id/textHome"
+            />
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/profileImage" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/personalButton"
+        android:text="개인정보"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/paymentButton"
+        android:text="결제수단"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:text="계정 연동"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ttareungButton"
+        android:text="따릉이 연동하기"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/instaButton"
+        android:text="인스타그램 연동하기"
+        />
+
+
+</android.widget.LinearLayout>
