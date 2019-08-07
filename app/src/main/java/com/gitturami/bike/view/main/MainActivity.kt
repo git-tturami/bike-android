@@ -16,6 +16,9 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     private lateinit var presenter: MainContact.Presenter
     private lateinit var tMapView: TMapView
 
+//    private lateinit var recyclerAdapter: RecyclerAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,9 +30,19 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         linearLayoutTmap.addView(tMapView)
         tMapView.setCenterPoint(126.9573662, 37.5048935)
 
-        presenter = MainPresenter()
+//        recyclerAdapter = RecyclerAdapter(this)
+//        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+//        recyclerView.setHasFixedSize(true)
+//        recyclerView.adapter = recyclerAdapter
+
+        presenter = MainPresenter().apply{
+//            recyclerData = RecyclerData
+//            adapterModel = recyclerAdapter
+//            adapterView = recyclerAdapter
+        }
         presenter.takeView(this)
         presenter.test()
+        //presenter.loadItems(this, false)
     }
 
     override fun findPath(start:TMapPoint, end:TMapPoint) {
@@ -47,4 +60,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             e.printStackTrace()
         }
     }
+
+//    override fun showToast(text: String) {
+//        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+//    }
 }
