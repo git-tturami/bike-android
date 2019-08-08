@@ -3,7 +3,10 @@ package com.gitturami.bike.view.main
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import com.gitturami.bike.R
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
@@ -11,6 +14,8 @@ import com.skt.Tmap.TMapData
 import com.skt.Tmap.TMapPoint
 import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.activity_main.*
+import android.widget.Toast
+
 
 class MainActivity : AppCompatActivity(), MainContact.View {
     private lateinit var presenter: MainContact.Presenter
@@ -19,6 +24,29 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val tb = findViewById<View>(R.id.app_toolbar) as Toolbar
+        val st = findViewById<TextView>(R.id.startText)
+        val et = findViewById<TextView>(R.id.endText)
+        val it = findViewById<TextView>(R.id.infoText)
+
+        st.setOnClickListener(View.OnClickListener {
+            val toast = Toast.makeText(applicationContext, "start", Toast.LENGTH_LONG)
+            toast.show ()
+            // TextView 클릭될 시 할 코드작성
+        })
+
+        et.setOnClickListener(View.OnClickListener {
+            val toast = Toast.makeText(applicationContext, "end", Toast.LENGTH_LONG)
+            toast.show ()
+            // TextView 클릭될 시 할 코드작성
+        })
+
+        it.setOnClickListener(View.OnClickListener {
+            val toast = Toast.makeText(applicationContext, "info", Toast.LENGTH_LONG)
+            toast.show ()
+            // TextView 클릭될 시 할 코드작성
+        })
 
         val linearLayoutTmap = linearLayoutTmap
         tMapView = TMapView(this)

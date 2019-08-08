@@ -6,6 +6,85 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="?attr/colorPrimary"
+        android:id="@+id/app_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_gravity="center"
+                android:layout_height="60dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+                <TextView
+                    android:layout_width="32dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/back"
+                    android:text=" 출발">
+                </TextView>
+                    <TextView
+                        android:id="@+id/startText"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/back"
+                        android:text=""
+                        android:clickable="true"
+                        android:focusable="auto">
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+                <TextView
+                    android:layout_width="32dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/back"
+                    android:text=" 도착">
+                </TextView>
+                    <TextView
+                        android:id="@+id/endText"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/back"
+                        android:text=""
+                        android:clickable="true"
+                        android:focusable="auto">
+                    </TextView>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/infoText"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:textSize="50dp"
+                android:textColor="#000"
+                android:text=" ^^"
+                android:clickable="true"
+                android:focusable="auto">
+            </TextView>
+
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
     <LinearLayout
         android:id="@+id/linearLayoutTmap"
         android:layout_width="match_parent"
