@@ -25,8 +25,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     private lateinit var tMapGps: TMapGpsManager
     private lateinit var fabGps: FloatingActionButton
     private var mTracking: Boolean = true
-    private val apiKey: String = "3826adf1-c99a-4e69-95c5-3763539465ea"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +39,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView = TMapView(this)
         tMapGps = TMapGpsManager(this)
 
-        tMapView.setSKTMapApiKey(apiKey)
+        tMapView.setSKTMapApiKey(this.getString(R.string.apiKey))
         linearLayoutTmap.addView(tMapView)
 
         tMapView.setIconVisibility(true)
@@ -61,10 +59,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         })
     }
 
-    override fun onLocationChange(location: Location?) {
+    override fun onLocationChange(location: Location) {
         if(mTracking){
-            tMapView.setLocationPoint(location!!.longitude, location!!.latitude) // 마커이동
-            tMapView.setCenterPoint(location!!.longitude, location!!.latitude)  // 중심이동
+            tMapView.setLocationPoint(location.longitude, location.latitude) // 마커이동
+            tMapView.setCenterPoint(location.longitude, location.latitude)  // 중심이동
         }
     }
 
