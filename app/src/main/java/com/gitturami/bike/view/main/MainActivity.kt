@@ -30,33 +30,13 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1);
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1);
-        }
-
-        val linearLayoutTmap = linearLayoutTmap
-        tMapView = TMapView(this)
-        tMapGps = TMapGpsManager(this)
-
-        tMapView.setSKTMapApiKey(this.getString(R.string.apiKey))
-        linearLayoutTmap.addView(tMapView)
-
-        tMapView.setIconVisibility(true)
-        tMapView.setZoomLevel(15)
-        tMapView.setMapType(TMapView.MAPTYPE_STANDARD)
-        tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
+        setTmapView()
 
         presenter = MainPresenter()
         presenter.takeView(this)
         presenter.test()
 
-        fabGps = findViewById(R.id.fab_main) as FloatingActionButton
-        presenter.setGps(tMapGps)
-
-        fabGps.setOnClickListener(View.OnClickListener {
-            presenter.setGps(tMapGps)
-        })
+        setFloatingButtonAction()
     }
 
     override fun onLocationChange(location: Location) {
@@ -79,6 +59,34 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun setFloatingButtonAction(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1);
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1);
+        }
+
+        fabGps = findViewById(R.id.fab_main) as FloatingActionButton
+        presenter.setGps(tMapGps)
+
+        fabGps.setOnClickListener(View.OnClickListener {
+            presenter.setGps(tMapGps)
+        })
+    }
+
+    private fun setTmapView(){
+        val linearLayoutTmap = linearLayoutTmap
+        tMapView = TMapView(this)
+        tMapGps = TMapGpsManager(this)
+
+        tMapView.setSKTMapApiKey(this.getString(R.string.apiKey))
+        linearLayoutTmap.addView(tMapView)
+
+        tMapView.setIconVisibility(true)
+        tMapView.setZoomLevel(15)
+        tMapView.setMapType(TMapView.MAPTYPE_STANDARD)
+        tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
     }
 
 }
