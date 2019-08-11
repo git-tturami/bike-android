@@ -1,7 +1,13 @@
 package com.gitturami.bike.view.main.presenter
 
 import com.skt.Tmap.TMapGpsManager
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
+import android.widget.Button
+import com.gitturami.bike.R
+import com.gitturami.bike.SettingActivity
 import com.skt.Tmap.TMapPoint
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainPresenter : MainContact.Presenter {

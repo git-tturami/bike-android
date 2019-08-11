@@ -3,4 +3,6 @@
     <string name="main">Main</string>
     <string name="bike_android">Bike-android</string>
     <string name="apiKey">3826adf1-c99a-4e69-95c5-3763539465ea</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
