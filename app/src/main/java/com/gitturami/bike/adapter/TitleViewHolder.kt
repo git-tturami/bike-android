@@ -12,16 +12,14 @@ class TitleViewHolder(val context: Context, parent: ViewGroup?, val listenerFunc
     : RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(R.layout.activity_bottomsheet, parent, false)) {
 
     val titletextView by lazy {
-        itemView.findViewById(R.id.bottom_sheet_title) as TextView
+        itemView.findViewById(R.id.bottomSheetTitle) as TextView
     }
 
     val subtitletextView by lazy {
-        itemView.findViewById(R.id.address) as TextView
+        itemView.findViewById(R.id.bottomSheetSubTitle) as TextView
     }
 
-    //parameter에 상단바 '출발지' 객체를 받아 올 수 있게 추가 해야함
     fun onBind(data : recyclerItem,position: Int) {
-//        titletextView.text = 상단 출발지.title
         titletextView.text = data.title
         subtitletextView.text = data.content
         itemView.setOnClickListener {

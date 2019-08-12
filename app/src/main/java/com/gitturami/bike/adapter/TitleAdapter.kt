@@ -12,7 +12,6 @@ class TitleAdapter(private val context: Context) : TitleAdapterContact.View, Rec
     private lateinit var tempList: ArrayList<recyclerItem>
 
     override fun onBindViewHolder(holderTitle: TitleViewHolder, position: Int) {
-        //(미추가)->인자를 추가해 지도에서 받아온  title을 표시하게한다.
         holderTitle.onBind(tempList[position],position)
     }
 

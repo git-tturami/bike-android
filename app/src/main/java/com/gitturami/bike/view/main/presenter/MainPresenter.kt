@@ -17,7 +17,7 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
     override lateinit var  view: MainContact.View
     private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
     lateinit var  tmapView : TMapView
-    var mpoint: TMapPoint? = null
+    lateinit var mpoint: TMapPoint
 
     override lateinit var titleAdapterModel: TitleAdapterContact.Model
     override var titleAdapterView: TitleAdapterContact.View? = null
@@ -38,7 +38,7 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
     }
 
     override fun onPressUpEvent(p0: java.util.ArrayList<TMapMarkerItem>?, p1: java.util.ArrayList<TMapPOIItem>?, p2: TMapPoint?, p3: PointF?): Boolean {
-        mpoint = p2
+        mpoint = p2!!
         Log.d("tag",mpoint.toString())
         val tItem = TMapMarkerItem()
         tItem.tMapPoint = TMapPoint( mpoint?.latitude!!.toDouble() , mpoint?.longitude!!.toDouble())
@@ -92,7 +92,7 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
     override fun loadItems(context: Context, isClear: Boolean) {
         val tempList = arrayListOf<recyclerItem>(
                 recyclerItem("나는","멍청이입니다."),
-                recyclerItem("다시는", "술을 그렇게 먹지 않겠습니다."),
+                recyclerItem("다시는", "술을 그렇게 먹지 않겠습니다 ."),
                 recyclerItem("인생", "넘모 슬픕니다."),
                 recyclerItem("제가 또 술을 그렇게 마시면", "사람이 아닙니다."),
                 recyclerItem("하지만 유감스럽게도", "이미 사람은 아닙니다."),
@@ -107,14 +107,12 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
         titleAdapterModel.getItem(position).let {
             view.showToast(it.title)
         }
-    view.showToast(textview.text.toString())
     }
 
     override fun setGps(tMapGps: TMapGpsManager) {
         tMapGps.minTime = 1000
         tMapGps.minDistance = 5f
         tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER // 인터넷에 연결(실내에서 유용)
-        //tMapGps.provider = TMapGpsManager.GPS_PROVIDER
         tMapGps.OpenGps()
     }
 }

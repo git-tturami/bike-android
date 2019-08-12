@@ -32,7 +32,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/bottom_sheet_title"
+                    android:id="@+id/bottomSheetTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="중앙대학교 정문 대여소"
@@ -40,7 +40,7 @@
                     android:textSize="19sp"/>
 
                 <TextView
-                    android:id="@+id/address"
+                    android:id="@+id/bottomSheetSubTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="서울 특별시 흑석로 84"
@@ -86,13 +86,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="LinearLayoutManager" />
-                <!--<ListView-->
-                    <!--android:id="@+id/list"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="308dp"-->
-                    <!--android:color ="@color/colorPrimaryDark"-->
-                    <!--android:divider="#ffcc22"-->
-                    <!--android:dividerHeight="3dp"/>-->
             </LinearLayout>
         </LinearLayout>
 

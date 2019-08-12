@@ -55,17 +55,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         presenter.test()
 
         //make the bottomsheet
-        bottomSheet = Bottom_Sheet
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        presenter.setBottomSheetBehavior(bottomSheetBehavior)
-        bottomSheetBehavior.setBottomSheetCallback(presenter as MainPresenter)
-
-        //출발지 button
-        val btn_click_me = start
-        btn_click_me.setOnClickListener {
-            bottomSheetBehavior.setState(STATE_HIDDEN)
-        }
-
+        setBottomsheet()
         setFloatingButtonAction()
         initSettingButton()
     }
@@ -115,6 +105,19 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     override fun showToast(title: String) {
         testForClick.also {
             it.setText(title)
+        }
+    }
+
+    private fun setBottomsheet(){
+        bottomSheet = Bottom_Sheet
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        presenter.setBottomSheetBehavior(bottomSheetBehavior)
+        bottomSheetBehavior.setBottomSheetCallback(presenter as MainPresenter)
+
+        //출발지 button
+        val btn_click_me = start
+        btn_click_me.setOnClickListener {
+            bottomSheetBehavior.setState(STATE_HIDDEN)
         }
     }
 
