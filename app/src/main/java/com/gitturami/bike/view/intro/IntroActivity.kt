@@ -10,7 +10,6 @@ import com.gitturami.bike.view.intro.presenter.IntroPresenter
 import com.gitturami.bike.view.main.MainActivity
 
 class IntroActivity : AppCompatActivity(), IntroContact.View {
-
     private lateinit var presenter: IntroContact.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -8,7 +8,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.TMapPoint
 import com.skt.Tmap.TMapView
 
-
 interface MainContact {
     interface View {
         fun findPath(start: TMapPoint, end: TMapPoint)

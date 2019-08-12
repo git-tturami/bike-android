@@ -10,6 +10,8 @@ import com.gitturami.bike.adapter.contact.TitleAdapterContact
 import com.gitturami.bike.data.recyclerItem
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.*
+import com.skt.Tmap.TMapGpsManager
+import com.skt.Tmap.TMapPoint
 
 class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
     override lateinit var  view: MainContact.View
@@ -30,7 +32,6 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
 
     override fun test() {
         // TODO: implementing to get point(latitude, longitude). In some case, we need to implement Point class.
-
         val tMapPointStart = TMapPoint(37.5048935, 126.9573662) // 중앙대학교
         val tMapPointEnd = TMapPoint(37.5099724, 126.9949061) // 반포한강공원
         this.view.findPath(tMapPointStart, tMapPointEnd)
@@ -43,16 +44,13 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
         tItem.tMapPoint = TMapPoint( mpoint?.latitude!!.toDouble() , mpoint?.longitude!!.toDouble())
         tItem.visible = TMapMarkerItem.VISIBLE
         tmapView.addMarkerItem(tItem.id, tItem)
-
         setBottomSheetBehaviorStateCollapse(bottomSheetBehavior)
-
         return true
     }
 
     override fun onPressEvent(p0: java.util.ArrayList<TMapMarkerItem>?, p1: java.util.ArrayList<TMapPOIItem>?, p2: TMapPoint?, p3: PointF?): Boolean {
         return true
     }
-
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
         when (slideOffset) {

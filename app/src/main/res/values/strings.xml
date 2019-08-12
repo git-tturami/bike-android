@@ -1,8 +1,7 @@
 <resources>
-    <string name="app_name">따로롱</string>
+    <string name="app_name">Bike</string>
     <string name="main">Main</string>
     <string name="bike_android">Bike-android</string>
-    <!-- TODO: Remove  placeholder text -->
     <string name="cat_bottomsheet_state_collapsed">as</string>
     <string name="DRAGGING">STATE_DRAGGING</string>
     <string name="SETTLING">STATE_SETTLING</string>
