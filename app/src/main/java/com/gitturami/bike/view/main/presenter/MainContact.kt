@@ -1,5 +1,6 @@
 package com.gitturami.bike.view.main.presenter
 
+import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
 
 interface MainContact {
@@ -9,5 +10,6 @@ interface MainContact {
     interface Presenter {
         fun takeView(view: MainContact.View)
         fun test()
+        fun setGps(tMapGps: TMapGpsManager)
     }
 }
