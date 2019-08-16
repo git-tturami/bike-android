@@ -12,8 +12,10 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Button
 import com.gitturami.bike.R
 import com.gitturami.bike.SettingActivity
@@ -24,6 +26,8 @@ import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
 import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.activity_main.*
+import android.widget.Toast
+
 
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
 
@@ -37,6 +41,35 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val tb = findViewById<View>(R.id.app_toolbar) as Toolbar
+        val st = findViewById<TextView>(R.id.startText)
+        val et = findViewById<TextView>(R.id.endText)
+        val it = findViewById<TextView>(R.id.infoText)
+
+        st.setOnClickListener(View.OnClickListener {
+            val toast = Toast.makeText(applicationContext, "start", Toast.LENGTH_LONG)
+            toast.show ()
+            // TextView 클릭될 시 할 코드작성
+        })
+
+        et.setOnClickListener(View.OnClickListener {
+            val toast = Toast.makeText(applicationContext, "end", Toast.LENGTH_LONG)
+            toast.show ()
+            // TextView 클릭될 시 할 코드작성
+        })
+
+        it.setOnClickListener(View.OnClickListener {
+            val toast = Toast.makeText(applicationContext, "info", Toast.LENGTH_LONG)
+            toast.show ()
+            // TextView 클릭될 시 할 코드작성
+        })
+
+        val linearLayoutTmap = linearLayoutTmap
+        tMapView = TMapView(this)
+
+        tMapView.setSKTMapApiKey("3826adf1-c99a-4e69-95c5-3763539465ea")
+        linearLayoutTmap.addView(tMapView)
+        tMapView.setCenterPoint(126.9573662, 37.5048935)
         setTmapView()
 
         presenter = MainPresenter()
