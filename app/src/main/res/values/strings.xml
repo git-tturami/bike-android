@@ -2,7 +2,14 @@
     <string name="app_name">따로롱</string>
     <string name="main">Main</string>
     <string name="bike_android">Bike-android</string>
+    <string name="cat_bottomsheet_state_collapsed">as</string>
+    <string name="DRAGGING">STATE_DRAGGING</string>
+    <string name="SETTLING">STATE_SETTLING</string>
+    <string name="EXPANDED">STATE_EXPANDED</string>
+    <string name="COLLAPSED">STATE_COLLAPSED</string>
+    <string name="HIDDEN">STATE_HIDDEN</string>
+    <string name="HALF_EXPANDED">STATE_HALF_EXPANDED</string>
     <string name="apiKey">3826adf1-c99a-4e69-95c5-3763539465ea</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+     <!--TODO: Remove or change this placeholder text -->
+    <!--<string name="hello_blank_fragment">Hello blank fragment</string>-->
 </resources>
