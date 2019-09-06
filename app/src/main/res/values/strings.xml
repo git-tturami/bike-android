@@ -9,7 +9,8 @@
     <string name="COLLAPSED">STATE_COLLAPSED</string>
     <string name="HIDDEN">STATE_HIDDEN</string>
     <string name="HALF_EXPANDED">STATE_HALF_EXPANDED</string>
-    <string name="apiKey">3826adf1-c99a-4e69-95c5-3763539465ea</string>
+    <string name="apiKey">3826adf1&#8211;c99a&#8211;4e69&#8211;95c5&#8211;3763539465ea</string>
+    <string name="serverAddr">ec2&#8211;15&#8211;164&#8211;94&#8211;0.ap&#8211;northeast&#8211;2.compute.amazonaws.com:8080</string>
      <!--TODO: Remove or change this placeholder text -->
     <!--<string name="hello_blank_fragment">Hello blank fragment</string>-->
 </resources>
