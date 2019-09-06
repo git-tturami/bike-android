@@ -14,4 +14,8 @@ class BikeApplication : Application() {
         super.onCreate()
         instance = this
     }
+
+    fun binding() {
+
+    }
 }
