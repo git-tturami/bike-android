@@ -12,7 +12,6 @@ class StationDataManager(context: Context): DataManager(context) {
 
     fun getStationByName(name: String): Station? = api.getStationByName(name).execute().body()
 
-
     fun getNearByStation(lat: Float, lon: Float): StationResponse? =
             api.getNearByStation(lat, lon).execute().body()
 }
