@@ -1,4 +1,5 @@
 package com.gitturami.bike.model.restaurant.pojo
 
-class RestaurantResponse {
-}
+data class RestaurantResponse(
+        val CrtfcUpsoInfo: RestaurantList
+)

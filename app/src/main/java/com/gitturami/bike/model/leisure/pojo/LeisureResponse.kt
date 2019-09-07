@@ -1,4 +1,6 @@
 package com.gitturami.bike.model.leisure.pojo
 
-class LeisureResponse {
-}
+data class LeisureResponse(
+        val body: LeisureResponseBody,
+        val header: LeisureResponseHeader
+)
