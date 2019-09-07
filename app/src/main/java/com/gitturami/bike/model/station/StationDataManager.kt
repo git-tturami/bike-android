@@ -1,26 +1,18 @@
 package com.gitturami.bike.model.station
 
 import android.content.Context
-import com.gitturami.bike.di.dagger.retrofit.DaggerRetrofitComponent
-import com.gitturami.bike.di.dagger.retrofit.RetrofitComponent
-import com.gitturami.bike.di.dagger.retrofit.RetrofitModule
-import com.gitturami.bike.di.retrofit.RetrofitConfig
-import javax.inject.Inject
+import com.gitturami.bike.model.DataManager
+import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.model.station.pojo.StationResponse
 
-class StationDataManager(context: Context) {
-    @Inject
-    lateinit var retrofitConfig: RetrofitConfig
+class StationDataManager(context: Context): DataManager(context) {
+    private var api: StationApi = retrofitConfig.getRetrofit().create(StationApi::class.java)
 
-    init {
-        injectRetrofit(context)
-    }
+    fun getStationById(id: String): Station? = api.getStationById(id).execute().body()
 
-    private fun injectRetrofit(context: Context) {
-        val component = DaggerRetrofitComponent.builder()
-                .retrofitModule(RetrofitModule(context))
-                .build()
-        component.inject(this)
-    }
+    fun getStationByName(name: String): Station? = api.getStationByName(name).execute().body()
 
-    fun getRetrofitConfing() : RetrofitConfig = retrofitConfig
+
+    fun getNearByStation(lat: Float, lon: Float): StationResponse? =
+            api.getNearByStation(lat, lon).execute().body()
 }
