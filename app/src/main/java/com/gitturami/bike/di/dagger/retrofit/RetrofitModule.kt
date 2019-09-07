@@ -7,9 +7,6 @@ import dagger.Provides
 
 @Module
 class RetrofitModule(val context: Context) {
-
     @Provides
-    fun provideRetrofit() : RetrofitConfig {
-        return RetrofitConfig(context)
-    }
+    fun provideRetrofit() : RetrofitConfig = RetrofitConfig(context)
 }

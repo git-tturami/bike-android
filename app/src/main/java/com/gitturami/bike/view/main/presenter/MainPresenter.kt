@@ -8,10 +8,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.gitturami.bike.adapter.contact.TitleAdapterContact
 import com.gitturami.bike.data.recyclerItem
+import com.gitturami.bike.di.model.station.DaggerStationDataManagerComponent
+import com.gitturami.bike.di.model.station.StationDataManagerModule
+import com.gitturami.bike.model.station.StationDataManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.*
 import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
+import javax.inject.Inject
 
 class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
     override lateinit var  view: MainContact.View
@@ -19,12 +23,26 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
     lateinit var  tmapView : TMapView
     lateinit var mpoint: TMapPoint
 
+    @Inject
+    lateinit var stationDataManager: StationDataManager
+
     override lateinit var titleAdapterModel: TitleAdapterContact.Model
     override var titleAdapterView: TitleAdapterContact.View? = null
         set(value) {
             field = value
             field?.onClickFunc = { position, textView -> onClickListener(position,textView)}
         }
+
+    init {
+        injectDataManager()
+    }
+
+    fun injectDataManager(context: Context) {
+        DaggerStationDataManagerComponent.builder()
+                .stationDataManagerModule(StationDataManagerModule(context))
+                .build()
+                .inject(this)
+    }
 
     override fun takeView(view: MainContact.View) {
         this.view = view
