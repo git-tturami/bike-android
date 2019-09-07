@@ -1,8 +1,15 @@
 package com.gitturami.bike.view.main.presenter
 
+import android.content.Context
 import android.graphics.PointF
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
+import com.gitturami.bike.adapter.contact.TitleAdapterContact
+import com.gitturami.bike.data.recyclerItem
+import com.gitturami.bike.di.model.station.DaggerStationDataManagerComponent
+import com.gitturami.bike.di.model.station.StationDataManagerModule
+import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.data.RecyclerItem
@@ -10,21 +17,38 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.*
 import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
+import javax.inject.Inject
 import kotlin.math.abs
 
-class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
+class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
     private lateinit var view: MainContact.View
     private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
     private lateinit var tMapView : TMapView
     private lateinit var currentClickedMapPoint: TMapPoint
     private lateinit var dragCheckPoint: PointF
 
+    @Inject
+    lateinit var stationDataManager: StationDataManager
+
+    override lateinit var titleAdapterModel: TitleAdapterContact.Model
+    override var titleAdapterView: TitleAdapterContact.View? = null
     lateinit var recommendAdapterModel: RecommendAdapterContact.Model
     var recommendAdapterView: RecommendAdapterContact.View? = null
         set(value) {
             field = value
             field?.onClickFunc = { position -> onClickListener(position)}
         }
+
+    init {
+        injectDataManager(context)
+    }
+
+    fun injectDataManager(context: Context) {
+        DaggerStationDataManagerComponent.builder()
+                .stationDataManagerModule(StationDataManagerModule(context))
+                .build()
+                .inject(this)
+    }
 
     override fun takeView(view: MainContact.View) {
         this.view = view
