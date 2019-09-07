@@ -1,3 +1,7 @@
 package com.gitturami.bike.model.station.pojo
 
-data class StationResponse(val rentBikeStatus: StationList)
+import com.gitturami.bike.model.common.pojo.DataList
+
+data class StationResponse(
+        val rentBikeStatus: DataList<Station>
+)
