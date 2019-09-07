@@ -2,7 +2,6 @@ package com.gitturami.bike.view.main
 
 import android.Manifest
 import android.location.Location
-import android.os.Build
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import androidx.core.app.ActivityCompat
 import com.gitturami.bike.R
-import com.gitturami.bike.adapter.TitleAdapter
-import com.gitturami.bike.SettingActivity
+import com.gitturami.bike.adapter.RecommendAdapter
+import com.gitturami.bike.view.setting.SettingActivity
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -26,38 +25,28 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
 
     private lateinit var presenter: MainContact.Presenter
-    private lateinit var titleAdapter: TitleAdapter
-    private lateinit var tMapView:TMapView
-    private lateinit var bottomSheet:LinearLayout
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var tMapView: TMapView
     private lateinit var tMapGps: TMapGpsManager
-    private lateinit var fabGps: FloatingActionButton
     private var mTracking: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        titleAdapter = TitleAdapter(this)
-        recyclerView = recycler_view
-        recyclerView.adapter = titleAdapter
 
-        setTmapView()
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1)
+
         presenter = MainPresenter()
-                .apply {
-            titleAdapterModel = titleAdapter
-            titleAdapterView = titleAdapter
-            tmapView = tMapView
-        }
+
+        initTMapView()
+        initRecyclerView()
+        initBottomSheet()
+        initGpsAction()
+        initSettingButton()
 
         tMapView.setOnClickListenerCallBack(presenter)
-        presenter.loadItems(this, false)
         presenter.takeView(this)
-        presenter.test()
-
-        //make the bottomsheet
-        setBottomsheet()
-        setFloatingButtonAction()
-        initSettingButton()
+        presenter.takeTMapView(tMapView)
     }
 
     override fun onLocationChange(location: Location) {
@@ -65,6 +54,13 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
             tMapView.setLocationPoint(location.longitude, location.latitude) // 마커이동
             tMapView.setCenterPoint(location.longitude, location.latitude)  // 중심이동
         }
+    }
+
+    private fun initRecyclerView() {
+        val recommendAdapter = RecommendAdapter(this)
+        val recyclerView: RecyclerView = recycler_view
+        recyclerView.adapter = recommendAdapter
+        presenter.takeRecyclerAdapter(recommendAdapter)
     }
 
     private fun initSettingButton() {
@@ -89,12 +85,8 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    private fun setFloatingButtonAction(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1);
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1);
-        }
-        fabGps = findViewById(R.id.fab_main) as FloatingActionButton
+    private fun initGpsAction(){
+        val fabGps: FloatingActionButton = fab_main as FloatingActionButton
         presenter.setGps(tMapGps)
 
         fabGps.setOnClickListener(View.OnClickListener {
@@ -103,25 +95,27 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     override fun showToast(title: String) {
-        testForClick.also {
-            it.setText(title)
-        }
+        Toast.makeText(this, "OnClick Item $title", Toast.LENGTH_SHORT).show()
     }
 
-    private fun setBottomsheet(){
-        bottomSheet = Bottom_Sheet
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+    private fun initBottomSheet(){
+        val bottomSheet: LinearLayout = Bottom_Sheet
+        val bottomSheetBehavior: BottomSheetBehavior<LinearLayout> = from(bottomSheet)
         presenter.setBottomSheetBehavior(bottomSheetBehavior)
         bottomSheetBehavior.setBottomSheetCallback(presenter as MainPresenter)
 
-        //출발지 button
-        val btn_click_me = start
-        btn_click_me.setOnClickListener {
+        bottomSheet.setOnClickListener {
             bottomSheetBehavior.setState(STATE_HIDDEN)
+        }
+
+        val startButton: Button = start
+        startButton.setOnClickListener {
+            // TODO: add selected location in Path.
+            showToast(bottomSheetTitle.text as String)
         }
     }
 
-    private fun setTmapView(){
+    private fun initTMapView(){
         val linearLayoutTmap = linearLayoutTmap
         tMapView = TMapView(this)
         tMapGps = TMapGpsManager(this)
@@ -131,11 +125,5 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.setZoomLevel(15)
         tMapView.setMapType(TMapView.MAPTYPE_STANDARD)
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
-    }
-
-    override fun changeState(strings: String) {
-        bottomSheetText.also {
-            it.setText(strings)
-        }
     }
 }
