@@ -1,7 +1,7 @@
 package com.gitturami.bike.model.restaurant.pojo
 
-import com.gitturami.bike.model.common.pojo.DataList
+import com.gitturami.bike.model.common.pojo.DefaultDataList
 
 data class RestaurantResponse(
-        val crtfcUpsoInfo: DataList<Restaurant>
+        val crtfcUpsoInfo: DefaultDataList<Restaurant>
 )

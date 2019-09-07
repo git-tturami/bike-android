@@ -10,13 +10,12 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [RetrofitModule::class])
 interface RetrofitComponent {
-    //fun inject(stationDataManager: StationDataManager)
     fun inject(dataManager: DataManager)
 
     @Component.Builder
     interface Builder {
-        fun build() : RetrofitComponent
+        fun build(): RetrofitComponent
 
-        fun retrofitModule(retrofitModule: RetrofitModule) : Builder
+        fun retrofitModule(retrofitModule: RetrofitModule): Builder
     }
 }

@@ -1,7 +1,7 @@
 package com.gitturami.bike.model.cafe.pojo
 
-import com.gitturami.bike.model.common.pojo.DataList
+import com.gitturami.bike.model.common.pojo.DefaultDataList
 
 data class CafeResponse(
-        val coffeeShopInfo: DataList<Cafe>
+        val coffeeShopInfo: DefaultDataList<Cafe>
 )
