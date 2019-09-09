@@ -2,6 +2,8 @@ package com.gitturami.bike
 
 import android.app.Application
 import android.content.Intent.*
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import com.gitturami.bike.view.intro.IntroActivity
 
 class BikeApplication : Application() {
