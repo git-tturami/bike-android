@@ -1,10 +1,12 @@
 package com.gitturami.bike.view.main.presenter
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.PointF
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.gitturami.bike.adapter.contact.TitleAdapterContact
 import com.gitturami.bike.data.recyclerItem
 import com.gitturami.bike.di.model.station.DaggerStationDataManagerComponent

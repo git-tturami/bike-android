@@ -3,13 +3,16 @@ package com.gitturami.bike.view.main
 import android.Manifest
 import android.location.Location
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.view.setting.SettingActivity
@@ -24,10 +27,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
 
+    companion object {
+        private val TAG = "MainActivity"
+    }
+
     private lateinit var presenter: MainContact.Presenter
     private lateinit var tMapView: TMapView
     private lateinit var tMapGps: TMapGpsManager
     private var mTracking: Boolean = true
+
+    private val REQUEST_LOCATION_PERMISSION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +56,18 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.setOnClickListenerCallBack(presenter)
         presenter.takeView(this)
         presenter.takeTMapView(tMapView)
+
+        //make the bottomsheet
+        setBottomsheet()
+        if (!checkLocationPermission()) {
+            Log.i(TAG, "need permission")
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION)
+        } else {
+            setFloatingButtonAction()
+        }
+        initSettingButton()
     }
 
     override fun onLocationChange(location: Location) {
@@ -125,5 +146,26 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.setZoomLevel(15)
         tMapView.setMapType(TMapView.MAPTYPE_STANDARD)
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
+    }
+
+    fun checkLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_LOCATION_PERMISSION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Log.i(TAG, "permission granted")
+                    setFloatingButtonAction()
+                } else {
+                    Log.i(TAG, "permission denied")
+                }
+                return
+            }
+        }
     }
 }
