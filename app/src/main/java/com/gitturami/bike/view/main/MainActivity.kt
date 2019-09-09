@@ -4,13 +4,16 @@ import android.Manifest
 import android.location.Location
 import android.os.Build
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.adapter.TitleAdapter
 import com.gitturami.bike.SettingActivity
@@ -25,6 +28,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
 
+    companion object {
+        private val TAG = "MainActivity"
+    }
+
     private lateinit var presenter: MainContact.Presenter
     private lateinit var titleAdapter: TitleAdapter
     private lateinit var tMapView:TMapView
@@ -33,6 +40,8 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     private lateinit var tMapGps: TMapGpsManager
     private lateinit var fabGps: FloatingActionButton
     private var mTracking: Boolean = true
+
+    private val REQUEST_LOCATION_PERMISSION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +65,14 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
 
         //make the bottomsheet
         setBottomsheet()
-        setFloatingButtonAction()
+        if (!checkLocationPermission()) {
+            Log.i(TAG, "need permission")
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION)
+        } else {
+            setFloatingButtonAction()
+        }
         initSettingButton()
     }
 
@@ -90,10 +106,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun setFloatingButtonAction(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1);
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1);
-        }
         fabGps = findViewById(R.id.fab_main) as FloatingActionButton
         presenter.setGps(tMapGps)
 
@@ -136,6 +148,27 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     override fun changeState(strings: String) {
         bottomSheetText.also {
             it.setText(strings)
+        }
+    }
+
+    fun checkLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_LOCATION_PERMISSION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Log.i(TAG, "permission granted")
+                    setFloatingButtonAction()
+                } else {
+                    Log.i(TAG, "permission denied")
+                }
+                return
+            }
         }
     }
 }
