@@ -1,6 +1,5 @@
 package com.gitturami.bike.di.model.station
 
-import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import dagger.Component
 

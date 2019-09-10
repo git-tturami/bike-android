@@ -51,8 +51,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         recyclerView.adapter = titleAdapter
 
         setTmapView()
-        presenter = MainPresenter()
-                .apply {
+        presenter = MainPresenter(this).apply {
             titleAdapterModel = titleAdapter
             titleAdapterView = titleAdapter
             tmapView = tMapView
@@ -106,9 +105,8 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun setFloatingButtonAction(){
-        fabGps = findViewById(R.id.fab_main) as FloatingActionButton
+        fabGps = findViewById(R.id.fab_main)
         presenter.setGps(tMapGps)
-
         fabGps.setOnClickListener(View.OnClickListener {
             presenter.setGps(tMapGps)
         })
@@ -140,14 +138,14 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.setSKTMapApiKey(this.getString(R.string.apiKey))
         linearLayoutTmap.addView(tMapView)
         tMapView.setIconVisibility(true)
-        tMapView.setZoomLevel(15)
-        tMapView.setMapType(TMapView.MAPTYPE_STANDARD)
+        tMapView.zoomLevel = 15
+        tMapView.mapType = TMapView.MAPTYPE_STANDARD
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
     }
 
     override fun changeState(strings: String) {
         bottomSheetText.also {
-            it.setText(strings)
+            it.text = strings
         }
     }
 

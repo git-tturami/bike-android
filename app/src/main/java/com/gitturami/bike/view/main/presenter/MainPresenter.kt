@@ -19,8 +19,8 @@ import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
 import javax.inject.Inject
 
-class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
-    override lateinit var  view: MainContact.View
+class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
+    override lateinit var view: MainContact.View
     private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
     lateinit var  tmapView : TMapView
     lateinit var mpoint: TMapPoint
@@ -36,7 +36,7 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
         }
 
     init {
-
+        injectDataManager(context)
     }
 
     fun injectDataManager(context: Context) {
@@ -110,7 +110,7 @@ class MainPresenter : MainContact.Presenter, BottomSheetBehavior.BottomSheetCall
     }
 
     override fun loadItems(context: Context, isClear: Boolean) {
-        val tempList = arrayListOf<recyclerItem>(
+        val tempList = arrayListOf(
                 recyclerItem("나는","멍청이입니다."),
                 recyclerItem("다시는", "술을 그렇게 먹지 않겠습니다 ."),
                 recyclerItem("인생", "넘모 슬픕니다."),
