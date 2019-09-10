@@ -1,14 +1,9 @@
 package com.gitturami.bike.view.main.presenter
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.PointF
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.gitturami.bike.adapter.contact.TitleAdapterContact
-import com.gitturami.bike.data.recyclerItem
 import com.gitturami.bike.di.model.station.DaggerStationDataManagerComponent
 import com.gitturami.bike.di.model.station.StationDataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
@@ -31,9 +26,6 @@ class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavi
 
     @Inject
     lateinit var stationDataManager: StationDataManager
-
-    override lateinit var titleAdapterModel: TitleAdapterContact.Model
-    override var titleAdapterView: TitleAdapterContact.View? = null
     lateinit var recommendAdapterModel: RecommendAdapterContact.Model
     var recommendAdapterView: RecommendAdapterContact.View? = null
         set(value) {

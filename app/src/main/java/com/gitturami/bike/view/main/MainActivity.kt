@@ -45,28 +45,25 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1)
 
-        presenter = MainPresenter()
+        presenter = MainPresenter(applicationContext)
 
         initTMapView()
         initRecyclerView()
         initBottomSheet()
-        initGpsAction()
-        initSettingButton()
-
-        tMapView.setOnClickListenerCallBack(presenter)
-        presenter.takeView(this)
-        presenter.takeTMapView(tMapView)
-
-        //make the bottomsheet
-        setBottomsheet()
         if (!checkLocationPermission()) {
             Log.i(TAG, "need permission")
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                     REQUEST_LOCATION_PERMISSION)
         } else {
-            setFloatingButtonAction()
+            initGpsAction()
         }
+        initSettingButton()
+
+        tMapView.setOnClickListenerCallBack(presenter)
+        presenter.takeView(this)
+        presenter.takeTMapView(tMapView)
+
         initSettingButton()
     }
 
@@ -109,7 +106,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     private fun initGpsAction(){
         val fabGps: FloatingActionButton = fab_main as FloatingActionButton
         presenter.setGps(tMapGps)
-
         fabGps.setOnClickListener(View.OnClickListener {
             presenter.setGps(tMapGps)
         })
@@ -143,8 +139,8 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.setSKTMapApiKey(this.getString(R.string.apiKey))
         linearLayoutTmap.addView(tMapView)
         tMapView.setIconVisibility(true)
-        tMapView.setZoomLevel(15)
-        tMapView.setMapType(TMapView.MAPTYPE_STANDARD)
+        tMapView.zoomLevel = 15
+        tMapView.mapType = TMapView.MAPTYPE_STANDARD
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
     }
 
@@ -160,7 +156,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
             REQUEST_LOCATION_PERMISSION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     Log.i(TAG, "permission granted")
-                    setFloatingButtonAction()
+                    initGpsAction()
                 } else {
                     Log.i(TAG, "permission denied")
                 }
