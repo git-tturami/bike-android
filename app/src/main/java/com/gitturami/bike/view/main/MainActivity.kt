@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.adapter.RecommendAdapter
+import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.view.setting.SettingActivity
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
@@ -41,17 +42,13 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-      
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1)
 
         presenter = MainPresenter(applicationContext)
-
         initTMapView()
         initRecyclerView()
         initBottomSheet()
         if (!checkLocationPermission()) {
-            Log.i(TAG, "need permission")
+            Logger.i(TAG, "need permission")
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                     REQUEST_LOCATION_PERMISSION)
@@ -59,7 +56,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
             initGpsAction()
         }
         initSettingButton()
-
         tMapView.setOnClickListenerCallBack(presenter)
         presenter.takeView(this)
         presenter.takeTMapView(tMapView)
@@ -82,10 +78,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun initSettingButton() {
-        settingButton.setOnClickListener {
+        /*settingButton.setOnClickListener {
             val intent = Intent(applicationContext, SettingActivity::class.java)
             startActivity(intent)
-        }
+        }*/
     }
 
     override fun findPath(start:TMapPoint, end:TMapPoint) {
@@ -133,15 +129,15 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun initTMapView(){
-        val linearLayoutTmap = linearLayoutTmap
+        Logger.i(TAG, "initTMapView()")
         tMapView = TMapView(this)
         tMapGps = TMapGpsManager(this)
-        tMapView.setSKTMapApiKey(this.getString(R.string.apiKey))
-        linearLayoutTmap.addView(tMapView)
+        tMapView.setSKTMapApiKey(getString(R.string.apiKey))
         tMapView.setIconVisibility(true)
         tMapView.zoomLevel = 15
         tMapView.mapType = TMapView.MAPTYPE_STANDARD
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
+        linearLayoutTmap.addView(tMapView)
     }
 
     fun checkLocationPermission(): Boolean {
@@ -155,10 +151,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         when (requestCode) {
             REQUEST_LOCATION_PERMISSION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    Log.i(TAG, "permission granted")
+                    Logger.i(TAG, "permission granted")
                     initGpsAction()
                 } else {
-                    Log.i(TAG, "permission denied")
+                    Logger.i(TAG, "permission denied")
                 }
                 return
             }
