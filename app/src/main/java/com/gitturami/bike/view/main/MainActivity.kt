@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+      
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 1)
 
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.setOnClickListenerCallBack(presenter)
         presenter.takeView(this)
         presenter.takeTMapView(tMapView)
-
+      
         initSettingButton()
     }
 
