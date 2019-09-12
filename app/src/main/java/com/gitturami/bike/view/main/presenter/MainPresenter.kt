@@ -1,38 +1,36 @@
 package com.gitturami.bike.view.main.presenter
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.PointF
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.gitturami.bike.adapter.contact.TitleAdapterContact
-import com.gitturami.bike.data.recyclerItem
 import com.gitturami.bike.di.model.station.DaggerStationDataManagerComponent
 import com.gitturami.bike.di.model.station.StationDataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
+import com.gitturami.bike.adapter.RecommendAdapter
+import com.gitturami.bike.adapter.contact.RecommendAdapterContact
+import com.gitturami.bike.data.RecyclerItem
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.*
 import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
 import javax.inject.Inject
+import kotlin.math.abs
 
 class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
-    override lateinit var view: MainContact.View
+    private lateinit var view: MainContact.View
     private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
-    lateinit var  tmapView : TMapView
-    lateinit var mpoint: TMapPoint
+    private lateinit var tMapView : TMapView
+    private lateinit var currentClickedMapPoint: TMapPoint
+    private lateinit var dragCheckPoint: PointF
 
     @Inject
     lateinit var stationDataManager: StationDataManager
-
-    override lateinit var titleAdapterModel: TitleAdapterContact.Model
-    override var titleAdapterView: TitleAdapterContact.View? = null
+    lateinit var recommendAdapterModel: RecommendAdapterContact.Model
+    var recommendAdapterView: RecommendAdapterContact.View? = null
         set(value) {
             field = value
-            field?.onClickFunc = { position, textView -> onClickListener(position,textView)}
+            field?.onClickFunc = { position -> onClickListener(position)}
         }
 
     init {
@@ -50,81 +48,74 @@ class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavi
         this.view = view
     }
 
-    override fun test() {
-        // TODO: implementing to get point(latitude, longitude). In some case, we need to implement Point class.
-        val tMapPointStart = TMapPoint(37.5048935, 126.9573662) // 중앙대학교
-        val tMapPointEnd = TMapPoint(37.5099724, 126.9949061) // 반포한강공원
-        this.view.findPath(tMapPointStart, tMapPointEnd)
+    override fun takeTMapView(tMapView: TMapView) {
+        this.tMapView = tMapView
     }
 
-    override fun onPressUpEvent(p0: java.util.ArrayList<TMapMarkerItem>?, p1: java.util.ArrayList<TMapPOIItem>?, p2: TMapPoint?, p3: PointF?): Boolean {
-        mpoint = p2!!
-        Log.d("tag",mpoint.toString())
-        val tItem = TMapMarkerItem()
-        tItem.tMapPoint = TMapPoint( mpoint?.latitude!!.toDouble() , mpoint?.longitude!!.toDouble())
-        tItem.visible = TMapMarkerItem.VISIBLE
-        tmapView.addMarkerItem(tItem.id, tItem)
-        setBottomSheetBehaviorStateCollapse(bottomSheetBehavior)
+    override fun takeRecyclerAdapter(recommendAdapter: RecommendAdapter) {
+        recommendAdapterModel = recommendAdapter
+        recommendAdapterView = recommendAdapter
+    }
+
+    override fun onPressUpEvent(p0: java.util.ArrayList<TMapMarkerItem>?, p1: java.util.ArrayList<TMapPOIItem>?, p2: TMapPoint, p3: PointF): Boolean {
+        if (!isDrag(dragCheckPoint, p3)) {
+            currentClickedMapPoint = p2
+            val tItem = TMapMarkerItem()
+            tItem.tMapPoint = TMapPoint(currentClickedMapPoint.latitude, currentClickedMapPoint.longitude)
+            tItem.visible = TMapMarkerItem.VISIBLE
+            tMapView.addMarkerItem(tItem.id, tItem)
+            setBottomSheetBehaviorStateCollapse(bottomSheetBehavior)
+            recommendAdapterModel.clearItem()
+        }
         return true
     }
 
-    override fun onPressEvent(p0: java.util.ArrayList<TMapMarkerItem>?, p1: java.util.ArrayList<TMapPOIItem>?, p2: TMapPoint?, p3: PointF?): Boolean {
+    override fun onPressEvent(p0: java.util.ArrayList<TMapMarkerItem>?, p1: java.util.ArrayList<TMapPOIItem>?, p2: TMapPoint?, p3: PointF): Boolean {
+        dragCheckPoint = p3
         return true
+    }
+
+    private fun isDrag(p1: PointF, p2: PointF): Boolean {
+        if (abs(p1.x - p2.x) > 10.0 || abs(p1.y - p2.y) > 10.0) return true
+        return false
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
         when (slideOffset) {
             0F -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             1F -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
-            else -> {
-                }
+            else -> {}
         }
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-        when (newState) {
-            BottomSheetBehavior.STATE_DRAGGING ->view.changeState("DRAGGING")
-            BottomSheetBehavior.STATE_SETTLING -> view.changeState("SETTLING")
-            BottomSheetBehavior.STATE_EXPANDED -> view.changeState("EXPANDED")
-            BottomSheetBehavior.STATE_COLLAPSED -> view.changeState("COLLAPSED")
-            BottomSheetBehavior.STATE_HIDDEN -> view.changeState("HIDDEN")
-            BottomSheetBehavior.STATE_HALF_EXPANDED -> view.changeState("EXPANDED")
-            else -> {
-            }
-        }
+        // TODO: not implemented
     }
 
     override fun setBottomSheetBehaviorStateCollapse(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>) {
         checkPeekHeightAndSetHeight(bottomSheetBehavior)
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     override fun checkPeekHeightAndSetHeight(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>){
-        if(bottomSheetBehavior.peekHeight!=150) {
-            bottomSheetBehavior.setPeekHeight(150)
+        if (bottomSheetBehavior.peekHeight != 150) {
+            bottomSheetBehavior.peekHeight = 150
         }
     }
 
-    override fun setBottomSheetBehavior(bottomSheetBehavior : BottomSheetBehavior<LinearLayout>) {
-        this.bottomSheetBehavior=bottomSheetBehavior
+    override fun setBottomSheetBehavior(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>) {
+        this.bottomSheetBehavior = bottomSheetBehavior
     }
 
-    override fun loadItems(context: Context, isClear: Boolean) {
-        val tempList = arrayListOf(
-                recyclerItem("나는","멍청이입니다."),
-                recyclerItem("다시는", "술을 그렇게 먹지 않겠습니다 ."),
-                recyclerItem("인생", "넘모 슬픕니다."),
-                recyclerItem("제가 또 술을 그렇게 마시면", "사람이 아닙니다."),
-                recyclerItem("하지만 유감스럽게도", "이미 사람은 아닙니다."),
-                recyclerItem("왈왈", "크르르르르르르르르르릉"),
-                recyclerItem("반성해서", "개과천선하겠습니다.")
-        )
-        titleAdapterModel.addItems(tempList)
-        titleAdapterView?.notifyAdapter()
+    // TODO: When context is defined, this fuction is called at Model.
+    override fun loadItems(locationList: ArrayList<RecyclerItem>) {
+        recommendAdapterModel.addItems(locationList)
+        recommendAdapterView?.notifyAdapter()
     }
 
-    private fun onClickListener(position: Int,textview:TextView) {
-        titleAdapterModel.getItem(position).let {
+    // TODO: add selected location of item in Path.
+    private fun onClickListener(position: Int) {
+        recommendAdapterModel.getItem(position).let {
             view.showToast(it.title)
         }
     }
