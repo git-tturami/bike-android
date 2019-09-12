@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutTmap"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/linearLayoutTmap"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:orientation="vertical">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="설정"
-            android:id="@+id/settingButton"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_bar"
+        android:padding="5dp"
+        android:layout_margin="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+                <SearchView
+                    android:id="@+id/searchView_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:queryHint="출발지"/>
+                <SearchView
+                    android:id="@+id/searchView_destination"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:queryHint="도착지"/>
+            </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="설정"
+                android:id="@+id/settingButton"/>
+
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
     <include layout="@layout/activity_bottomsheet" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_main"
