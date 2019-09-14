@@ -12,7 +12,7 @@ interface MainContact {
     interface View {
         fun findPath(start: TMapPoint, end: TMapPoint)
         fun showToast(title: String)
-        fun setMarker(x: Float, y: Float)
+        fun setMarker(x: Double, y: Double, stationName: String)
     }
     interface Presenter : TMapView.OnClickListenerCallback {
         fun takeView(view: View)

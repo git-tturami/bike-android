@@ -46,6 +46,14 @@ class StationDataManagerTest {
         assertEquals(stationName, stationResponse?.stationName)
     }
 
+    @Test fun getAllStationMustGetResponse() {
+        val stationResponse = stationDataManager.getAllStationList
+        stationResponse.subscribe(
+                {it -> println(it)},
+                {err -> println(err)}
+        )
+    }
+
     @Test fun getNearByStationMustBeGetResponse() {
         val lat = 37.5050881f
         val long = 126.9571012f

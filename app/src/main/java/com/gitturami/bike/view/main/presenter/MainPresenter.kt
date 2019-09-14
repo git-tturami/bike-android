@@ -1,6 +1,7 @@
 package com.gitturami.bike.view.main.presenter
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.PointF
 import android.view.View
 import android.widget.LinearLayout
@@ -11,15 +12,20 @@ import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.station.pojo.Station
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.*
 import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 import kotlin.math.abs
 
 import io.reactivex.rxkotlin.toObservable
+import io.reactivex.schedulers.Schedulers
 
 class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
     companion object {
@@ -136,7 +142,21 @@ class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavi
     }
 
     override fun updateMarker() {
-        stationDataManager.getEnableStationList().subscribe()
+        Logger.i(TAG, "updateMarker()")
+        val disposal = CompositeDisposable()
+        disposal.add(stationDataManager.getAllStationList
+                .flatMap{list -> Observable.fromIterable(list)}
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            view.setMarker(it.stationLatitude.toDouble(),
+                                    it.stationLongitude.toDouble(),
+                                    it.stationName)
+                        },
+                        {Logger.e(TAG, "onError() : $it")},
+                        {Logger.i(TAG, "onComplete()")}
+                ))
     }
 }
 
