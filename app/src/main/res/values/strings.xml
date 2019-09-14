@@ -13,7 +13,10 @@
      3826adf1-c99a-4e69-95c5-3763539465ea
      -->
     <string name="apiKey">3826adf1-c99a-4e69-95c5-3763539465ea</string>
-    <string name="serverAddr">http://ec2&#8211;15&#8211;164&#8211;94&#8211;0.ap&#8211;northeast&#8211;2.compute.amazonaws.com:8080</string>
+    <string name="serverAddr">http://ec2-15-164-94-0.ap-northeast-2.compute.amazonaws.com:8080</string>
+    <!--
+    http://ec2&#8211;15&#8211;164&#8211;94&#8211;0.ap&#8211;northeast&#8211;2.compute.amazonaws.com:8080
+    -->
      <!--TODO: Remove or change this placeholder text -->
     <!--<string name="hello_blank_fragment">Hello blank fragment</string>-->
 </resources>

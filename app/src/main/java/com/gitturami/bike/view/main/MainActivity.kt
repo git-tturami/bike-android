@@ -4,6 +4,7 @@ import android.Manifest
 import android.location.Location
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -162,7 +163,19 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    override fun setMarker(x: Float, y: Float) {
-        presenter.updateMarker()
+    override fun setMarker(x: Double, y: Double, stationName: String) {
+        if (x == 0.0 || y == 0.0) {
+            return
+        }
+
+        val markerItem = TMapMarkerItem()
+        val mapPoint = TMapPoint(x, y)
+
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_map_marker)
+        markerItem.icon = bitmap
+        markerItem.setPosition(0.5f, 1.0f)
+        markerItem.tMapPoint = mapPoint
+        markerItem.name = stationName
+        tMapView.addMarkerItem(stationName, markerItem)
     }
 }
