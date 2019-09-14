@@ -10,14 +10,22 @@ import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.data.RecyclerItem
+import com.gitturami.bike.logger.Logger
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.*
 import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapPoint
+import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 import kotlin.math.abs
 
+import io.reactivex.rxkotlin.toObservable
+
 class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
+    companion object {
+        val TAG = "MainPresenter"
+    }
+
     private lateinit var view: MainContact.View
     private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
     private lateinit var tMapView : TMapView
@@ -125,6 +133,10 @@ class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavi
         tMapGps.minDistance = 5f
         tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER // 인터넷에 연결(실내에서 유용)
         tMapGps.OpenGps()
+    }
+
+    override fun updateMarker() {
+        stationDataManager.getEnableStationList().subscribe()
     }
 }
 

@@ -12,6 +12,7 @@ interface MainContact {
     interface View {
         fun findPath(start: TMapPoint, end: TMapPoint)
         fun showToast(title: String)
+        fun setMarker(x: Float, y: Float)
     }
     interface Presenter : TMapView.OnClickListenerCallback {
         fun takeView(view: View)
@@ -22,5 +23,6 @@ interface MainContact {
         fun checkPeekHeightAndSetHeight(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>)
         fun setBottomSheetBehavior(bottomSheetBehavior : BottomSheetBehavior<LinearLayout>)
         fun loadItems(locationList: ArrayList<RecyclerItem>)
+        fun updateMarker()
     }
 }

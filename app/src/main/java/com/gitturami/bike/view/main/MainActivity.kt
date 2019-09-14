@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.setOnClickListenerCallBack(presenter)
         presenter.takeView(this)
         presenter.takeTMapView(tMapView)
+        presenter.updateMarker()
       
         initSettingButton()
     }
@@ -159,5 +160,9 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
                 return
             }
         }
+    }
+
+    override fun setMarker(x: Float, y: Float) {
+        presenter.updateMarker()
     }
 }

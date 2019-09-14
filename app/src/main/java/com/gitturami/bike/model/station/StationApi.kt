@@ -16,4 +16,7 @@ interface StationApi {
     // TODO : It is temporarily not enabled. (Server issue)
     @GET("/stations/close")
     fun getNearByStation(@Query("lat") lat: Float, @Query("lon") lon: Float): Call<StationResponse>
+
+    @GET("/stations/enable")
+    fun getEnableStation(): Call<StationResponse>
 }
