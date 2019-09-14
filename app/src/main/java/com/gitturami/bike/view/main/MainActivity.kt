@@ -2,12 +2,9 @@ package com.gitturami.bike.view.main
 
 import android.Manifest
 import android.location.Location
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +14,8 @@ import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.logger.Logger
-import com.gitturami.bike.view.setting.SettingActivity
+import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,6 +35,9 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     private lateinit var tMapView: TMapView
     private lateinit var tMapGps: TMapGpsManager
     private var mTracking: Boolean = true
+    private val bitmapManager: BitmapManager by lazy {
+        BitmapManager(applicationContext)
+    }
 
     private val REQUEST_LOCATION_PERMISSION = 1
 
@@ -163,19 +164,20 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    override fun setMarker(x: Double, y: Double, stationName: String) {
-        if (x == 0.0 || y == 0.0) {
-            return
-        }
-
+    override fun setMarker(x: Double, y: Double, station: Station) {
         val markerItem = TMapMarkerItem()
         val mapPoint = TMapPoint(x, y)
+        val bitmap = when {
+                station.shared > 50 -> bitmapManager.markerGreen
+                station.shared in 20..50 -> bitmapManager.markerYellow
+                else -> bitmapManager.markerRed
+            }
 
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_map_marker)
+        Logger.i(TAG, "bitmap : $bitmap, shared : ${station.shared}")
         markerItem.icon = bitmap
         markerItem.setPosition(0.5f, 1.0f)
         markerItem.tMapPoint = mapPoint
-        markerItem.name = stationName
-        tMapView.addMarkerItem(stationName, markerItem)
+        markerItem.id = station.stationId
+        tMapView.addMarkerItem(station.stationId, markerItem)
     }
 }

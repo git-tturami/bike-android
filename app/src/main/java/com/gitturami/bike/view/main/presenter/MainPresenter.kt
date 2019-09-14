@@ -150,9 +150,7 @@ class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavi
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            view.setMarker(it.stationLatitude.toDouble(),
-                                    it.stationLongitude.toDouble(),
-                                    it.stationName)
+                            view.setMarker(it.stationLatitude.toDouble(), it.stationLongitude.toDouble(), it)
                         },
                         {Logger.e(TAG, "onError() : $it")},
                         {Logger.i(TAG, "onComplete()")}
