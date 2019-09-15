@@ -22,5 +22,5 @@ class StationDataManager(context: Context): DataManager(context) {
     val getEnableStationList: Observable<StationResponse> =
             api.getEnableStation()
 
-    val getAllStationList: Observable<List<Station>> = api.getAllStation()
+    val allStationList: Observable<List<Station>> = api.getAllStation()
 }

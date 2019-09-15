@@ -47,7 +47,7 @@ class StationDataManagerTest {
     }
 
     @Test fun getAllStationMustGetResponse() {
-        val stationResponse = stationDataManager.getAllStationList
+        val stationResponse = stationDataManager.allStationList
         stationResponse.subscribe(
                 {it -> println(it)},
                 {err -> println(err)}

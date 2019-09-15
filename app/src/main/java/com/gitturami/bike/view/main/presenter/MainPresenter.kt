@@ -45,7 +45,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun registerObserver() {
         Logger.i(TAG, "registerObserver()")
-        disposal.add(stationDataManager.getAllStationList
+        disposal.add(stationDataManager.allStationList
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -62,11 +62,11 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         )
 
         disposal.add(restaurantDataManager.allRestaurant
-                .flatMap{response -> Observable.fromIterable(response.crtfcUpsoInfo.row)}
+                .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { Logger.i(TAG, "onNext(): $it") },
+                        { Logger.i(TAG, "onNext()") },
                         { e ->
                             Logger.e(TAG, "onError(): $e")
                             view.showToast("카페 정보를 받아오는 도중에 문제가 발생했습니다.")
