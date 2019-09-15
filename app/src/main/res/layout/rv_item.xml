@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:orientation="vertical"
-    android:background="#FFAAAA"
+    android:background="@color/colorlightgrey"
 
-    app:behavior_hideable="true"
+    app:behavior_hideable="false"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     app:behavior_skipCollapsed="false">
@@ -16,7 +16,7 @@
         android:id="@+id/locationname"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorlightgrey"
         android:paddingTop="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Title"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="19sp"/>
 
                 <TextView
@@ -44,23 +44,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SubTitle"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="12sp"
                     android:layout_marginTop="5dp"/>
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/start_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                     android:layout_gravity="right"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:background="@color/colorYello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="출발지 선택"
-                    />
+                    android:textSize="13sp"
+                    android:textColor="@android:color/black"/>
+                <!--<Button-->
+                <!--android:id="@+id/start_location"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:background="@color/colorlightblue"-->
+                <!--android:text="출발지 선택"-->
+                <!--/>-->
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
