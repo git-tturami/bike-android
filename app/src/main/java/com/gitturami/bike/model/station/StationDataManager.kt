@@ -5,7 +5,6 @@ import com.gitturami.bike.model.DataManager
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.StationResponse
 import io.reactivex.Observable
-import io.reactivex.Single
 
 class StationDataManager(context: Context): DataManager(context) {
     companion object {
@@ -20,7 +19,7 @@ class StationDataManager(context: Context): DataManager(context) {
     fun getNearByStation(lat: Float, lon: Float): StationResponse? =
             api.getNearByStation(lat, lon).execute().body()
 
-    val getEnableStationList: Single<StationResponse> =
+    val getEnableStationList: Observable<StationResponse> =
             api.getEnableStation()
 
     val getAllStationList: Observable<List<Station>> = api.getAllStation()

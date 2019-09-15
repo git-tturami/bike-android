@@ -20,8 +20,7 @@ interface StationApi {
     fun getNearByStation(@Query("lat") lat: Float, @Query("lon") lon: Float): Call<StationResponse>
 
     @GET("/stations/enable")
-    // fun getEnableStation(): Call<StationResponse>
-    fun getEnableStation(): Single<StationResponse>
+    fun getEnableStation(): Observable<StationResponse>
 
     @GET("/stations/list")
     fun getAllStation(): Observable<List<Station>>
