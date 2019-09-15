@@ -20,12 +20,10 @@ class BitmapManager(val context: Context) {
 
     private fun drawableToBitmap(resId: Int): Bitmap {
         val drawable = context.resources.getDrawable(resId, null)
-        val bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(96, 96, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
         return bitmap
     }
-
-
 }

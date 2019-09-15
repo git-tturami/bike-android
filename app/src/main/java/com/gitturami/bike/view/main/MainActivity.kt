@@ -4,6 +4,7 @@ import android.Manifest
 import android.location.Location
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.PointF
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -172,12 +173,23 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
                 station.shared in 20..50 -> bitmapManager.markerYellow
                 else -> bitmapManager.markerRed
             }
-
-        Logger.i(TAG, "bitmap : $bitmap, shared : ${station.shared}")
         markerItem.icon = bitmap
         markerItem.setPosition(0.5f, 1.0f)
         markerItem.tMapPoint = mapPoint
         markerItem.id = station.stationId
         tMapView.addMarkerItem(station.stationId, markerItem)
+
+        val markerItem2 = object: TMapMarkerItem2() {
+            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                Logger.i(TAG, "onSingleTapUp() : ${station.stationName}")
+                return super.onSingleTapUp(p, mapView)
+            }
+        }
+        markerItem2.icon = bitmap
+        markerItem2.setPosition(0.5f, 1.0f)
+        markerItem2.tMapPoint = mapPoint
+        markerItem2.id = station.stationId
+        tMapView.addMarkerItem2(station.stationId, markerItem2)
+
     }
 }
