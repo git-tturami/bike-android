@@ -7,15 +7,15 @@ import com.gitturami.bike.R
 
 class BitmapManager(val context: Context) {
     val markerGreen: Bitmap by lazy {
-        drawableToBitmap(R.drawable.ic_map_marker_green)
+        drawableToBitmap(R.drawable.ic_map_marker_material_green)
     }
 
     val markerRed: Bitmap by lazy {
-        drawableToBitmap(R.drawable.ic_map_marker_red)
+        drawableToBitmap(R.drawable.ic_map_marker_material_red)
     }
 
     val markerYellow: Bitmap by lazy {
-        drawableToBitmap(R.drawable.ic_map_marker_yellow)
+        drawableToBitmap(R.drawable.ic_map_marker_material_yellow)
     }
 
     private fun drawableToBitmap(resId: Int): Bitmap {
