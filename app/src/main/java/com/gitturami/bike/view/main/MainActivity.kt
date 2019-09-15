@@ -8,25 +8,18 @@ import android.location.Location
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
-import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.view.main.listener.BottomSheetListener
-import com.gitturami.bike.view.main.listener.TMapOnClickListener
 import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skt.Tmap.*
-import kotlinx.android.synthetic.main.activity_bottomsheet.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
@@ -37,12 +30,12 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     private lateinit var presenter: MainContact.Presenter
     override lateinit var tMapView: TMapView
     private lateinit var tMapGps: TMapGpsManager
-    private lateinit var bottomSheet: LinearLayout
     private var mTracking: Boolean = true
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private val bitmapManager: BitmapManager by lazy {
         BitmapManager(applicationContext)
     }
+
+    private lateinit var bottomSheetDialog: BottomSheetDialog
 
     override lateinit var recommendAdapterModel: RecommendAdapterContact.Model
     var recommendAdapterView: RecommendAdapterContact.View? = null
@@ -57,14 +50,13 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        bottomSheetDialog = BottomSheetDialog.newInstance()
         presenter = MainPresenter(applicationContext)
-        initTMapView()
         initRecyclerView()
-        initBottomSheet()
         initSettingButton()
+        initTMapView()
         checkPermission()
 
-        tMapView.setOnClickListenerCallBack(TMapOnClickListener(this, bottomSheetBehavior))
         presenter.takeView(this)
         presenter.registerObserver()
     }
@@ -88,11 +80,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun initRecyclerView() {
-        val recommendAdapter = RecommendAdapter(this)
+        /*val recommendAdapter = RecommendAdapter(this)
         val recyclerView: RecyclerView = recycler_view
         recyclerView.adapter = recommendAdapter
         recommendAdapterModel = recommendAdapter
-        recommendAdapterView = recommendAdapter
+        recommendAdapterView = recommendAdapter*/
     }
 
     private fun initSettingButton() {
@@ -134,22 +126,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapGps.minDistance = 5f
         tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER // 인터넷에 연결(실내에서 유용)
         tMapGps.OpenGps()
-    }
-
-    private fun initBottomSheet(){
-        bottomSheet = Bottom_Sheet
-        bottomSheetBehavior = from(bottomSheet)
-        bottomSheetBehavior.bottomSheetCallback = BottomSheetListener(bottomSheetBehavior)
-
-        bottomSheet.setOnClickListener {
-            bottomSheetBehavior.setState(STATE_HIDDEN)
-        }
-
-        val startButton: Button = start
-        startButton.setOnClickListener {
-            // TODO: add selected location in Path.
-            showToast(bottomSheetTitle.text as String)
-        }
     }
 
     private fun initTMapView(){
@@ -218,6 +194,9 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         val markerItem2 = object: TMapMarkerItem2() {
             override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
                 Logger.i(TAG, "onSingleTapUp() : ${station.stationName}")
+                bottomSheetDialog.station = station
+                bottomSheetDialog.show(supportFragmentManager, "bs")
+                //bottomSheetDialog.setStation(station)
                 return super.onSingleTapUp(p, mapView)
             }
         }
