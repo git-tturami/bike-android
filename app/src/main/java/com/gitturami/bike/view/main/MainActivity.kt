@@ -11,11 +11,14 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.gitturami.bike.R
+import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.view.main.listener.TMapOnClickListener
 import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
@@ -24,6 +27,7 @@ import com.gitturami.bike.view.setting.SettingActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
     companion object {
@@ -40,7 +44,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
 
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
-    override lateinit var recommendAdapterModel: RecommendAdapterContact.Model
+    lateinit var recommendAdapterModel: RecommendAdapterContact.Model
     var recommendAdapterView: RecommendAdapterContact.View? = null
         set(value) {
             field = value
@@ -54,12 +58,14 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         setContentView(R.layout.activity_main)
 
         presenter = MainPresenter(applicationContext)
+
         bottomSheetDialog = BottomSheetDialog(presenter)
         initRecyclerView()
         initSettingButton()
         initTMapView()
         checkPermission()
 
+        // tMapView.setOnClickListenerCallBack(TMapOnClickListener(this))
         presenter.takeView(this)
         presenter.registerObserver()
     }
@@ -80,14 +86,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         } else {
             initFloatingButtonAction()
         }
-    }
-
-    private fun initRecyclerView() {
-        /*val recommendAdapter = RecommendAdapter(this)
-        val recyclerView: RecyclerView = recycler_view
-        recyclerView.adapter = recommendAdapter
-        recommendAdapterModel = recommendAdapter
-        recommendAdapterView = recommendAdapter*/
     }
 
     private fun initSettingButton() {
@@ -169,17 +167,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    // TODO: When context is defined, this function is called at Model.
-    fun loadItems(locationList: ArrayList<RecyclerItem>) {
-        recommendAdapterModel.addItems(locationList)
-        recommendAdapterView?.notifyAdapter()
-    }
-
-    // TODO: add selected location of item in Path.
-    private fun onClickListener(position: Int) {
-        showToast(recommendAdapterModel.getItem(position).title)
-    }
-
     override fun setMarker(x: Double, y: Double, station: Station) {
         val markerItem = TMapMarkerItem()
         val mapPoint = TMapPoint(x, y)
@@ -237,6 +224,25 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
                 super.onBackPressed()
             }
         }
+    }
+
+    // TODO: When context is defined, this function is called at Model.
+    fun loadItems(locationList: ArrayList<RecyclerItem>) {
+        recommendAdapterModel.addItems(locationList)
+        recommendAdapterView?.notifyAdapter()
+    }
+
+    // TODO: add selected location of item in Path.
+    private fun onClickListener(position: Int) {
+        Logger.i(BottomSheetDialog.TAG, recommendAdapterModel.getItem(position).title)
+    }
+
+    private fun initRecyclerView() {
+        /*val recommendAdapter = RecommendAdapter(this)
+        val recyclerView: RecyclerView = recycler_view
+        recyclerView.adapter = recommendAdapter
+        recommendAdapterModel = recommendAdapter
+        recommendAdapterView = recommendAdapter*/
     }
 
     override fun onDestroy() {
