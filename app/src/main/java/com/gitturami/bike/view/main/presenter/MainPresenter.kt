@@ -6,6 +6,7 @@ import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
+
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -20,6 +21,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     private lateinit var view: MainContact.View
+    private val disposal = CompositeDisposable()
 
     @Inject
     lateinit var stationDataManager: StationDataManager
@@ -41,9 +43,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         this.view = view
     }
 
-    override fun updateMarker() {
-        Logger.i(TAG, "updateMarker()")
-        val disposal = CompositeDisposable()
+    override fun registerObserver() {
+        Logger.i(TAG, "registerObserver()")
         disposal.add(stationDataManager.getAllStationList
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -52,9 +53,31 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         {
                             view.setMarker(it.stationLatitude.toDouble(), it.stationLongitude.toDouble(), it)
                         },
-                        {Logger.e(TAG, "onError() : $it")},
-                        {Logger.i(TAG, "onComplete()")}
-                ))
+                        { e ->
+                            Logger.e(TAG, "onError() : $e")
+                            view.showToast("따릉이 정거장 정보를 받아오는 도중에 문제가 발생했습니다.")
+                        },
+                        { Logger.i(TAG, "onComplete()") }
+                )
+        )
+
+        disposal.add(restaurantDataManager.allRestaurant
+                .flatMap{response -> Observable.fromIterable(response.crtfcUpsoInfo.row)}
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { Logger.i(TAG, "onNext(): $it") },
+                        { e ->
+                            Logger.e(TAG, "onError(): $e")
+                            view.showToast("카페 정보를 받아오는 도중에 문제가 발생했습니다.")
+                        },
+                        { Logger.i(TAG, "onComplete()") }
+                )
+        )
+    }
+
+    override fun destroy() {
+        disposal.dispose()
     }
 }
 

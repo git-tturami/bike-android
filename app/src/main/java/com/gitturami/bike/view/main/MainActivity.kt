@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         checkPermission()
         initSettingButton()
         presenter.takeView(this)
-        presenter.updateMarker()
+        presenter.registerObserver()
     }
 
     override fun onLocationChange(location: Location) {
@@ -109,8 +109,8 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    override fun showToast(title: String) {
-        Toast.makeText(this, "OnClick Item $title", Toast.LENGTH_SHORT).show()
+    override fun showToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     private fun initBottomSheet(){
@@ -192,5 +192,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         markerItem2.id = station.stationId
         tMapView.addMarkerItem2(station.stationId, markerItem2)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 }
