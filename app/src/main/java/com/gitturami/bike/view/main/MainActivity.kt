@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
@@ -50,21 +49,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         initTMapView()
         initRecyclerView()
         initBottomSheet()
-        if (!checkLocationPermission()) {
-            Logger.i(TAG, "need permission")
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    REQUEST_LOCATION_PERMISSION)
-        } else {
-            initGpsAction()
-        }
         initSettingButton()
-        tMapView.setOnClickListenerCallBack(presenter)
+        checkPermission()
+        initSettingButton()
         presenter.takeView(this)
-        presenter.takeTMapView(tMapView)
         presenter.updateMarker()
-      
-        initSettingButton()
     }
 
     override fun onLocationChange(location: Location) {
@@ -74,11 +63,21 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
+    private fun checkPermission() {
+        if (!checkLocationPermission()) {
+            Logger.i(TAG, "need permission")
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION)
+        } else {
+            initFloatingButtonAction()
+        }
+    }
+
     private fun initRecyclerView() {
         val recommendAdapter = RecommendAdapter(this)
         val recyclerView: RecyclerView = recycler_view
         recyclerView.adapter = recommendAdapter
-        presenter.takeRecyclerAdapter(recommendAdapter)
     }
 
     private fun initSettingButton() {
@@ -103,12 +102,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    private fun initGpsAction(){
+    private fun initFloatingButtonAction(){
         val fabGps: FloatingActionButton = fab_main as FloatingActionButton
-        presenter.setGps(tMapGps)
-        fabGps.setOnClickListener(View.OnClickListener {
-            presenter.setGps(tMapGps)
-        })
+        fabGps.setOnClickListener{
+            Logger.i(TAG, "set gps to my location.")
+        }
     }
 
     override fun showToast(title: String) {
@@ -118,8 +116,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     private fun initBottomSheet(){
         val bottomSheet: LinearLayout = Bottom_Sheet
         val bottomSheetBehavior: BottomSheetBehavior<LinearLayout> = from(bottomSheet)
-        presenter.setBottomSheetBehavior(bottomSheetBehavior)
-        bottomSheetBehavior.setBottomSheetCallback(presenter as MainPresenter)
 
         bottomSheet.setOnClickListener {
             bottomSheetBehavior.setState(STATE_HIDDEN)
@@ -142,6 +138,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapView.mapType = TMapView.MAPTYPE_STANDARD
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
         linearLayoutTmap.addView(tMapView)
+
+        tMapGps.minTime = 1000
+        tMapGps.minDistance = 5f
+        tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER // 인터넷에 연결(실내에서 유용)
+        tMapGps.OpenGps()
     }
 
     fun checkLocationPermission(): Boolean {
@@ -156,7 +157,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
             REQUEST_LOCATION_PERMISSION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     Logger.i(TAG, "permission granted")
-                    initGpsAction()
+                    initFloatingButtonAction()
                 } else {
                     Logger.i(TAG, "permission denied")
                 }
