@@ -13,6 +13,7 @@ interface MainContact {
 
     interface Presenter {
         fun takeView(view: View)
-        fun updateMarker()
+        fun registerObserver()
+        fun destroy()
     }
 }
