@@ -1,6 +1,7 @@
 package com.gitturami.bike.view.main
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PointF
@@ -18,6 +19,8 @@ import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
+import com.gitturami.bike.view.main.state.State
+import com.gitturami.bike.view.setting.SettingActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -50,8 +53,8 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bottomSheetDialog = BottomSheetDialog.newInstance()
         presenter = MainPresenter(applicationContext)
+        bottomSheetDialog = BottomSheetDialog(presenter)
         initRecyclerView()
         initSettingButton()
         initTMapView()
@@ -88,10 +91,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun initSettingButton() {
-        /*settingButton.setOnClickListener {
+        settingButton.setOnClickListener {
             val intent = Intent(applicationContext, SettingActivity::class.java)
             startActivity(intent)
-        }*/
+        }
     }
 
     override fun findPath(start:TMapPoint, end:TMapPoint) {
@@ -193,10 +196,9 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
 
         val markerItem2 = object: TMapMarkerItem2() {
             override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : ${station.stationName}")
+                Logger.i(TAG, "onSingleTapUp() : ${station}")
                 bottomSheetDialog.station = station
                 bottomSheetDialog.show(supportFragmentManager, "bs")
-                //bottomSheetDialog.setStation(station)
                 return super.onSingleTapUp(p, mapView)
             }
         }
@@ -205,6 +207,36 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         markerItem2.tMapPoint = mapPoint
         markerItem2.id = station.stationId
         tMapView.addMarkerItem2(station.stationId, markerItem2)
+    }
+
+    override fun setStartSearchView(text: String) {
+        Logger.i(TAG, "setStartSearchView : $text")
+        startSearchView.text = text
+        presenter.setState(State.SET_START)
+    }
+
+    override fun setFinishSearchView(text: String) {
+        Logger.i(TAG, "setFinishSearchView : $text")
+        finishSearchView.text = text
+        presenter.setState(State.SET_FINISH)
+    }
+
+    override fun onBackPressed() {
+        when (presenter.getState()) {
+            State.SET_START -> {
+                Toast.makeText(applicationContext, "출발지 초기화", Toast.LENGTH_SHORT).show()
+                presenter.setState(State.PREPARE)
+                startSearchView.text = ""
+            }
+            State.SET_FINISH -> {
+                Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()
+                presenter.setState(State.SET_START)
+                finishSearchView.text = ""
+            }
+            else -> {
+                super.onBackPressed()
+            }
+        }
     }
 
     override fun onDestroy() {

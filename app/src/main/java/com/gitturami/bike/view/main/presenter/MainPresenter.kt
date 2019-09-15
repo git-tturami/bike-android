@@ -6,6 +6,7 @@ import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
+import com.gitturami.bike.view.main.state.State
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,8 +20,9 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         val TAG = "MainPresenter"
     }
 
-    private lateinit var view: MainContact.View
-    private val disposal = CompositeDisposable()
+    lateinit var view: MainContact.View
+    val disposal = CompositeDisposable()
+    private var state: State = State.PREPARE
 
     @Inject
     lateinit var stationDataManager: StationDataManager
@@ -41,6 +43,12 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun takeView(view: MainContact.View) {
         this.view = view
+    }
+
+    override fun getState(): State = state
+
+    override fun setState(state: State) {
+        this.state = state
     }
 
     override fun registerObserver() {
@@ -74,6 +82,13 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         { Logger.i(TAG, "onComplete()") }
                 )
         )
+    }
+
+    override fun setSearchView(text: String) {
+        when (state) {
+            State.PREPARE -> view.setStartSearchView(text)
+            State.SET_START -> view.setFinishSearchView(text)
+        }
     }
 
     override fun destroy() {

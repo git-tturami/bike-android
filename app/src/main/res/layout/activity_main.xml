@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,29 +18,62 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
             android:gravity="center_vertical">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
-                <SearchView
-                    android:id="@+id/searchView_start"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:queryHint="출발지"/>
-                <SearchView
-                    android:id="@+id/searchView_destination"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:background="@drawable/upper_search_text_view"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="출발" />
+                    <TextView
+                        android:id="@+id/startSearchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:queryHint="도착지"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:background="@drawable/below_search_text_view"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="도착" />
+                    <TextView
+                        android:id="@+id/finishSearchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="설정"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_account"
                 android:id="@+id/settingButton"/>
 
         </LinearLayout>
