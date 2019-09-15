@@ -12,7 +12,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 import javax.inject.Inject
-
 import io.reactivex.schedulers.Schedulers
 
 class MainPresenter(context: Context) : MainContact.Presenter {
@@ -25,6 +24,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     @Inject
     lateinit var stationDataManager: StationDataManager
+
     @Inject
     lateinit var restaurantDataManager: RestaurantDataManager
 
