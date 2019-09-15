@@ -1,11 +1,11 @@
 package com.gitturami.bike.view.main.presenter
 
 import android.content.Context
-import com.gitturami.bike.di.model.station.DaggerStationDataManagerComponent
-import com.gitturami.bike.di.model.station.StationDataManagerModule
+import com.gitturami.bike.di.model.DaggerDataManagerComponent
+import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
-import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -23,14 +23,16 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     @Inject
     lateinit var stationDataManager: StationDataManager
+    @Inject
+    lateinit var restaurantDataManager: RestaurantDataManager
 
     init {
         injectDataManager(context)
     }
 
     fun injectDataManager(context: Context) {
-        DaggerStationDataManagerComponent.builder()
-                .stationDataManagerModule(StationDataManagerModule(context))
+        DaggerDataManagerComponent.builder()
+                .dataManagerModule(DataManagerModule(context))
                 .build()
                 .inject(this)
     }
