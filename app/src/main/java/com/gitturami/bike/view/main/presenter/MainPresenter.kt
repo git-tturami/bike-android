@@ -12,7 +12,6 @@ import com.gitturami.bike.adapter.RecommendAdapter
 import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
-import com.gitturami.bike.model.station.pojo.Station
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.*
 import com.skt.Tmap.TMapGpsManager
@@ -20,11 +19,10 @@ import com.skt.Tmap.TMapPoint
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
+
 import javax.inject.Inject
 import kotlin.math.abs
 
-import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 
 class MainPresenter(context: Context) : MainContact.Presenter, BottomSheetBehavior.BottomSheetCallback(){
