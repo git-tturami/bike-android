@@ -1,11 +1,6 @@
 package com.gitturami.bike.view.main.presenter
 
-import com.skt.Tmap.TMapGpsManager
-import android.widget.LinearLayout
-import com.gitturami.bike.adapter.RecommendAdapter
-import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.model.station.pojo.Station
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.Tmap.TMapPoint
 import com.skt.Tmap.TMapView
 
@@ -15,15 +10,9 @@ interface MainContact {
         fun showToast(title: String)
         fun setMarker(x: Double, y: Double, station: Station)
     }
-    interface Presenter : TMapView.OnClickListenerCallback {
+
+    interface Presenter {
         fun takeView(view: View)
-        fun takeTMapView(tMapView: TMapView)
-        fun takeRecyclerAdapter(recommendAdapter: RecommendAdapter)
-        fun setGps(tMapGps: TMapGpsManager)
-        fun setBottomSheetBehaviorStateCollapse(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>)
-        fun checkPeekHeightAndSetHeight(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>)
-        fun setBottomSheetBehavior(bottomSheetBehavior : BottomSheetBehavior<LinearLayout>)
-        fun loadItems(locationList: ArrayList<RecyclerItem>)
         fun updateMarker()
     }
 }
