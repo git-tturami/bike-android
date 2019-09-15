@@ -44,7 +44,7 @@
 
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
-    <include layout="@layout/activity_bottomsheet" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_main"
         android:layout_width="wrap_content"
