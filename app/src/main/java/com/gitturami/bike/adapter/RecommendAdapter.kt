@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.adapter.viewholder.RecommendViewHolder
 import com.gitturami.bike.data.RecyclerItem
+import com.gitturami.bike.view.main.BottomSheetDialog
 
 class RecommendAdapter(private val context: Context) : RecommendAdapterContact.View, RecyclerView.Adapter<RecommendViewHolder>(), RecommendAdapterContact.Model {
     override var onClickFunc: ((Int) -> Unit)? = null

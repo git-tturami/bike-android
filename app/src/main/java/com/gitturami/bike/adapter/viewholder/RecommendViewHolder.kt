@@ -14,15 +14,15 @@ class RecommendViewHolder(context: Context, parent: ViewGroup?, private val clic
     : RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(R.layout.rv_item, parent, false)) {
 
     private val titleTextView by lazy {
-        itemView.itemTitle as TextView
+        itemView.recommend_itemTitle as TextView
     }
 
     private val subtitleTextView by lazy {
-        itemView.itemSubTitle as TextView
+        itemView.recommend_itemSubTitle as TextView
     }
 
     private val locationSelectButton by lazy {
-        itemView.start_location as Button
+        itemView.recommend_start_location as Button
     }
 
     fun onBind(data : RecyclerItem, position: Int) {
