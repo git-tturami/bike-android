@@ -9,7 +9,8 @@ interface MainContact {
     interface View {
         var tMapView: TMapView
 
-        fun findPath(start: TMapPoint, end: TMapPoint)
+        fun findPath(start: Station, end: Station)
+        fun clearPath()
         fun showToast(title: String)
         fun setMarker(x: Double, y: Double, station: Station)
         fun setStartSearchView(text: String)
@@ -22,6 +23,7 @@ interface MainContact {
         fun setSearchView(text: String)
         fun getState(): State
         fun setState(state: State)
+        fun setLocation(station: Station?)
         fun destroy()
     }
 }

@@ -6,6 +6,7 @@ import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
+import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.state.State
 
 import io.reactivex.Observable
@@ -23,6 +24,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     lateinit var view: MainContact.View
     val disposal = CompositeDisposable()
     private var state: State = State.PREPARE
+    private var startStation: Station? = null
+    private var finishStation: Station? = null
 
     @Inject
     lateinit var stationDataManager: StationDataManager
@@ -89,6 +92,23 @@ class MainPresenter(context: Context) : MainContact.Presenter {
             State.PREPARE -> view.setStartSearchView(text)
             State.SET_START -> view.setFinishSearchView(text)
         }
+    }
+
+    override fun setLocation(station: Station?) {
+        when (state) {
+            State.SET_START -> setStartStation(station)
+            State.SET_FINISH -> setFinishStation(station)
+        }
+    }
+
+    private fun setStartStation(station: Station?) {
+        startStation = station
+    }
+
+    private fun setFinishStation(station: Station?) {
+        finishStation = station
+        if (station != null) view.findPath(startStation!!, finishStation!!)
+        else view.clearPath()
     }
 
     override fun destroy() {

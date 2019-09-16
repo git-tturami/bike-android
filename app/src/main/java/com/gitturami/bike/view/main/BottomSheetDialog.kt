@@ -7,15 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.gitturami.bike.R
-import com.gitturami.bike.adapter.RecommendAdapter
-import com.gitturami.bike.adapter.contact.RecommendAdapterContact
-import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.state.State
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_bottom_sheet.view.*
 
 class BottomSheetDialog(val presenter: MainContact.Presenter): BottomSheetDialogFragment() {
@@ -47,6 +43,7 @@ class BottomSheetDialog(val presenter: MainContact.Presenter): BottomSheetDialog
 
         view.setButton.setOnClickListener {
             presenter.setSearchView(parsedTitle)
+            presenter.setLocation(station)
             dismiss()
         }
         setStarView(view.stationStar)
