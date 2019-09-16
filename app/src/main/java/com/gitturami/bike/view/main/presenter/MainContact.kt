@@ -7,14 +7,13 @@ import com.skt.Tmap.TMapView
 
 interface MainContact {
     interface View {
-        var tMapView: TMapView
-
         fun findPath(start: Station, end: Station)
         fun clearPath()
         fun showToast(title: String)
         fun setMarker(x: Double, y: Double, station: Station)
         fun setStartSearchView(text: String)
         fun setFinishSearchView(text: String)
+        fun setSelectDialogContants(station: Station)
     }
 
     interface Presenter {
