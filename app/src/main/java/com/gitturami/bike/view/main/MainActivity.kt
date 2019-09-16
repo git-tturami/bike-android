@@ -9,26 +9,20 @@ import android.location.Location
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.gitturami.bike.R
-import com.gitturami.bike.adapter.RecommendAdapter
-import com.gitturami.bike.adapter.contact.RecommendAdapterContact
-import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.view.main.listener.BottomSheetListener
 import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
+import com.gitturami.bike.view.main.sheet.select.BottomSheetDialog
+import com.gitturami.bike.view.main.sheet.waypoint.WayPointSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skt.Tmap.*
-import kotlinx.android.synthetic.main.activity_bottom_sheet.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
@@ -45,15 +39,9 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private lateinit var bottomSheetDialog: BottomSheetDialog
-
-    private lateinit var recommendBottomSheet: CoordinatorLayout
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<CoordinatorLayout>
-    lateinit var recommendAdapterModel: RecommendAdapterContact.Model
-    var recommendAdapterView: RecommendAdapterContact.View? = null
-        set(value) {
-            field = value
-            field?.onClickFunc = { position -> onClickListener(position)}
-        }
+    private val bottomSheetManager by lazy {
+        WayPointSheetManager(this)
+    }
 
     private val REQUEST_LOCATION_PERMISSION = 1
 
@@ -64,13 +52,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         presenter = MainPresenter(applicationContext)
 
         bottomSheetDialog = BottomSheetDialog(presenter)
-        initCategoryOfRecommendBottomSheet()
-        initRecyclerView()
         initSettingButton()
         initTMapView()
         checkPermission()
 
-        // tMapView.setOnClickListenerCallBack(TMapOnClickListener(this))
         presenter.takeView(this)
         presenter.registerObserver()
     }
@@ -107,11 +92,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         try {
             val data = TMapData()
             data.findPathData(startTMapPoint, endTMapPoint) { path ->
-                runOnUiThread {
+                    runOnUiThread {
                     path.lineWidth = 5f
                     path.lineColor = Color.BLUE
                     tMapView.addTMapPath(path)
-                    setBottomSheetBehaviorStateCollapse()
+                    bottomSheetManager.collapseWayPointSheet()
                 }
             }
         } catch (e: Exception) {
@@ -159,7 +144,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         tMapGps.OpenGps()
     }
 
-    fun checkLocationPermission(): Boolean {
+    private fun checkLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
@@ -239,42 +224,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
                 super.onBackPressed()
             }
         }
-    }
-
-    private fun initCategoryOfRecommendBottomSheet() {
-        recommendBottomSheet = category_bottom_sheet
-        bottomSheetBehavior = BottomSheetBehavior.from(recommendBottomSheet)
-        bottomSheetBehavior.bottomSheetCallback = BottomSheetListener(bottomSheetBehavior)
-    }
-
-    private fun setBottomSheetBehaviorStateCollapse() {
-        checkPeekHeightAndSetHeight()
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-    }
-
-    private fun checkPeekHeightAndSetHeight() {
-        if (bottomSheetBehavior.peekHeight != 150) {
-            bottomSheetBehavior.peekHeight = 150
-        }
-    }
-
-    // TODO: When context is defined, this function is called at Model.
-    fun loadItems(locationList: ArrayList<RecyclerItem>) {
-        recommendAdapterModel.addItems(locationList)
-        recommendAdapterView?.notifyAdapter()
-    }
-
-    // TODO: add selected location of item in Path.
-    private fun onClickListener(position: Int) {
-        Logger.i(BottomSheetDialog.TAG, recommendAdapterModel.getItem(position).title)
-    }
-
-    private fun initRecyclerView() {
-        val recommendAdapter = RecommendAdapter(this)
-        val recyclerView: RecyclerView = recycler_view
-        recyclerView.adapter = recommendAdapter
-        recommendAdapterModel = recommendAdapter
-        recommendAdapterView = recommendAdapter
     }
 
     override fun onDestroy() {
