@@ -26,6 +26,7 @@ class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activ
     init {
         Logger.i(TAG, "initLocationBottomSheet()")
         bottomSheet = activity.bottom_sheet
+        setStarView(bottomSheet.stationStar)
     }
 
     fun initStation(station: Station) {
@@ -48,7 +49,6 @@ class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activ
             presenter.setLocation(station)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-        setStarView(bottomSheet.stationStar)
     }
 
     private fun setStarView(starLayout: LinearLayout) {
@@ -79,5 +79,9 @@ class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activ
             bottomSheetBehavior.peekHeight = 250
         }
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    fun hide() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 }

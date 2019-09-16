@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="#ffffff"
+    android:focusable="true"
+    android:clickable="true"
 
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"

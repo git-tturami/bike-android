@@ -3,7 +3,6 @@ package com.gitturami.bike.view.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,6 @@ import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
@@ -21,7 +19,6 @@ import com.gitturami.bike.view.main.sheet.waypoint.WayPointSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     private lateinit var presenter: MainContact.Presenter
 
     private val bottomSheetManager by lazy {
-        WayPointSheetManager(this)
+        WayPointSheetManager(this) { state: State -> presenter.setState(state) }
     }
 
     private val tMapManager by lazy {
@@ -76,21 +73,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun findPath(start: Station, end: Station) {
-        val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
-        val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
-
-        try {
-            val data = TMapData()
-            data.findPathData(startTMapPoint, endTMapPoint) { path ->
-                    runOnUiThread {
-                    path.lineWidth = 5f
-                    path.lineColor = Color.BLUE
-                    tMapManager.addTMapPath(path)
-                    bottomSheetManager.collapseWayPointSheet()
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        tMapManager.findPath(start, end) {
+            bottomSheetManager.collapseWayPointSheet()
         }
     }
 
@@ -162,6 +146,14 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 bottomSheetManager.hiddenWayPointSheet()
                 finishSearchView.text = ""
             }
+            State.MIN_WAYPOINT_SHEET -> {
+                presenter.setState(State.SET_FINISH)
+                bottomSheetManager.hiddenWayPointSheet()
+            }
+            State.FULL_WAYPOINT_SHEET -> {
+                presenter.setState(State.MIN_WAYPOINT_SHEET)
+                bottomSheetManager.collapseWayPointSheet()
+            }
             else -> {
                 super.onBackPressed()
             }
@@ -170,6 +162,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun setMarker(x: Double, y: Double, station: Station) {
         tMapManager.setMarker(x, y, station)
+    }
+
+    override fun hideStationMarker() {
+        tMapManager.hideStationMarker()
     }
 
     override fun onDestroy() {
