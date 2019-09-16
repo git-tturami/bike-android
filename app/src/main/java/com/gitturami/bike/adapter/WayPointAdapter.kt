@@ -3,14 +3,13 @@ package com.gitturami.bike.adapter
 import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.gitturami.bike.adapter.contact.RecommendAdapterContact
+import com.gitturami.bike.adapter.contact.WayPointAdapterContact
 import com.gitturami.bike.adapter.viewholder.RecommendViewHolder
 import com.gitturami.bike.data.RecyclerItem
-import com.gitturami.bike.view.main.BottomSheetDialog
 
-class RecommendAdapter(private val context: Context) : RecommendAdapterContact.View, RecyclerView.Adapter<RecommendViewHolder>(), RecommendAdapterContact.Model {
+class WayPointAdapter(private val context: Context) : WayPointAdapterContact.View, RecyclerView.Adapter<RecommendViewHolder>(), WayPointAdapterContact.Model {
     override var onClickFunc: ((Int) -> Unit)? = null
-    private var itemList: ArrayList<RecyclerItem> = arrayListOf()
+    private var itemList: List<RecyclerItem> = arrayListOf()
 
     override fun onBindViewHolder(holderRecommend: RecommendViewHolder, position: Int) {
         holderRecommend.onBind(itemList[position], position)
@@ -21,7 +20,7 @@ class RecommendAdapter(private val context: Context) : RecommendAdapterContact.V
     }
 
     override fun clearItem() {
-        itemList.clear()
+        itemList = arrayListOf()
     }
 
     override fun getItem(position: Int): RecyclerItem = itemList[position]
@@ -33,7 +32,7 @@ class RecommendAdapter(private val context: Context) : RecommendAdapterContact.V
         notifyDataSetChanged()
     }
 
-    override fun addItems(recyclerList: ArrayList<RecyclerItem>) {
+    override fun addItems(recyclerList: List<RecyclerItem>) {
         this.itemList = recyclerList
     }
 
