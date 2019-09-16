@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PointF
-import android.location.Location
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +13,7 @@ import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.map.BitmapManager
+import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.BottomSheetDialog
@@ -25,14 +24,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
+class MainActivity : AppCompatActivity(), MainContact.View {
     companion object {
         private val TAG = "MainActivity"
     }
 
     private lateinit var presenter: MainContact.Presenter
-    override lateinit var tMapView: TMapView
-    private lateinit var tMapGps: TMapGpsManager
     private var mTracking: Boolean = true
     private val bitmapManager: BitmapManager by lazy {
         BitmapManager(applicationContext)
@@ -41,6 +38,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private val bottomSheetManager by lazy {
         WayPointSheetManager(this)
+    }
+
+    private val tMapManager by lazy {
+        TmapManager(this)
     }
 
     private val REQUEST_LOCATION_PERMISSION = 1
@@ -53,18 +54,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
 
         bottomSheetDialog = BottomSheetDialog(presenter)
         initSettingButton()
-        initTMapView()
+        // initTMapView()
         checkPermission()
 
         presenter.takeView(this)
         presenter.registerObserver()
-    }
-
-    override fun onLocationChange(location: Location) {
-        if(mTracking){
-            tMapView.setLocationPoint(location.longitude, location.latitude) // 마커이동
-            tMapView.setCenterPoint(location.longitude, location.latitude)  // 중심이동
-        }
     }
 
     private fun checkPermission() {
@@ -95,7 +89,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
                     runOnUiThread {
                     path.lineWidth = 5f
                     path.lineColor = Color.BLUE
-                    tMapView.addTMapPath(path)
+                    tMapManager.addTMapPath(path)
                     bottomSheetManager.collapseWayPointSheet()
                 }
             }
@@ -105,14 +99,13 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     override fun clearPath() {
-        tMapView.removeTMapPath()
+        tMapManager.clearPath()
     }
 
     private fun initFloatingButtonAction() {
         val fabGps: FloatingActionButton = fab_main as FloatingActionButton
-        setGps(tMapGps)
         fabGps.setOnClickListener {
-            setGps(tMapGps)
+            tMapManager.setGpsToCurrentLocation()
         }
     }
 
@@ -121,23 +114,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun setGps(tMapGps: TMapGpsManager) {
-        tMapGps.minTime = 1000
-        tMapGps.minDistance = 5f
-        tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER // 인터넷에 연결(실내에서 유용)
-        tMapGps.OpenGps()
-    }
-
-    private fun initTMapView(){
-        Logger.i(TAG, "initTMapView()")
-        tMapView = TMapView(this)
-        tMapGps = TMapGpsManager(this)
-        tMapView.setSKTMapApiKey(getString(R.string.apiKey))
-        tMapView.setIconVisibility(true)
-        tMapView.zoomLevel = 15
-        tMapView.mapType = TMapView.MAPTYPE_STANDARD
-        tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
-        linearLayoutTmap.addView(tMapView)
-
         tMapGps.minTime = 1000
         tMapGps.minDistance = 5f
         tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER // 인터넷에 연결(실내에서 유용)
@@ -165,35 +141,6 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    override fun setMarker(x: Double, y: Double, station: Station) {
-        val markerItem = TMapMarkerItem()
-        val mapPoint = TMapPoint(x, y)
-        val bitmap = when {
-                station.shared > 50 -> bitmapManager.markerGreen
-                station.shared in 20..50 -> bitmapManager.markerYellow
-                else -> bitmapManager.markerRed
-            }
-        markerItem.icon = bitmap
-        markerItem.setPosition(0.5f, 1.0f)
-        markerItem.tMapPoint = mapPoint
-        markerItem.id = station.stationId
-        tMapView.addMarkerItem(station.stationId, markerItem)
-
-        val markerItem2 = object: TMapMarkerItem2() {
-            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : $station")
-                bottomSheetDialog.station = station
-                bottomSheetDialog.show(supportFragmentManager, "bs")
-                return super.onSingleTapUp(p, mapView)
-            }
-        }
-        markerItem2.icon = bitmap
-        markerItem2.setPosition(0.5f, 1.0f)
-        markerItem2.tMapPoint = mapPoint
-        markerItem2.id = station.stationId
-        tMapView.addMarkerItem2(station.stationId, markerItem2)
-    }
-
     override fun setStartSearchView(text: String) {
         Logger.i(TAG, "setStartSearchView : $text")
         startSearchView.text = text
@@ -204,6 +151,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         Logger.i(TAG, "setFinishSearchView : $text")
         finishSearchView.text = text
         presenter.setState(State.SET_FINISH)
+    }
+
+    override fun setSelectDialogContants(station: Station) {
+        bottomSheetDialog.station = station
+        bottomSheetDialog.show(supportFragmentManager, "selectSheet")
     }
 
     override fun onBackPressed() {
@@ -224,6 +176,10 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
                 super.onBackPressed()
             }
         }
+    }
+
+    override fun setMarker(x: Double, y: Double, station: Station) {
+        tMapManager.setMarker(x, y, station)
     }
 
     override fun onDestroy() {
