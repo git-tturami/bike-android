@@ -1,6 +1,7 @@
 package com.gitturami.bike.view.main.listener
 
 import android.view.View
+import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 

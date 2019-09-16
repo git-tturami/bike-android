@@ -16,7 +16,7 @@ import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
-import com.gitturami.bike.view.main.sheet.select.BottomSheetDialog
+import com.gitturami.bike.view.main.sheet.select.SelectLocationSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.WayPointSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
@@ -30,18 +30,16 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     private lateinit var presenter: MainContact.Presenter
-    private var mTracking: Boolean = true
-    private val bitmapManager: BitmapManager by lazy {
-        BitmapManager(applicationContext)
-    }
 
-    private lateinit var bottomSheetDialog: BottomSheetDialog
     private val bottomSheetManager by lazy {
         WayPointSheetManager(this)
     }
 
     private val tMapManager by lazy {
         TmapManager(this)
+    }
+    private val selectLocationSheetManager by lazy {
+        SelectLocationSheetManager(presenter, this)
     }
 
     private val REQUEST_LOCATION_PERMISSION = 1
@@ -52,9 +50,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
         presenter = MainPresenter(applicationContext)
 
-        bottomSheetDialog = BottomSheetDialog(presenter)
         initSettingButton()
-        // initTMapView()
         checkPermission()
 
         presenter.takeView(this)
@@ -113,13 +109,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
-    private fun setGps(tMapGps: TMapGpsManager) {
-        tMapGps.minTime = 1000
-        tMapGps.minDistance = 5f
-        tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER // 인터넷에 연결(실내에서 유용)
-        tMapGps.OpenGps()
-    }
-
     private fun checkLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED &&
@@ -154,8 +143,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun setSelectDialogContants(station: Station) {
-        bottomSheetDialog.station = station
-        bottomSheetDialog.show(supportFragmentManager, "selectSheet")
+        selectLocationSheetManager.initStation(station)
+        selectLocationSheetManager.collapseSelectSheet()
     }
 
     override fun onBackPressed() {
@@ -170,6 +159,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
                 presenter.setState(State.SET_START)
+                bottomSheetManager.hiddenWayPointSheet()
                 finishSearchView.text = ""
             }
             else -> {

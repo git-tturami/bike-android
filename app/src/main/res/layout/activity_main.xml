@@ -83,19 +83,30 @@
         </com.google.android.material.appbar.AppBarLayout>
     </RelativeLayout>
 
-    <include layout="@layout/layout_bottom_sheet" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_main"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_gravity="bottom|right"
-        android:src="@drawable/ic_place_black_24dp"
+        android:gravity="right"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchorGravity="bottom|right|end">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_place_black_24dp"
+            android:layout_gravity="bottom|right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_anchorGravity="bottom|right|end" />
+    </RelativeLayout>
+
+    <include layout="@layout/layout_bottom_sheet" />
+    <include layout="@layout/layout_waypoint_bottom_sheet" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 

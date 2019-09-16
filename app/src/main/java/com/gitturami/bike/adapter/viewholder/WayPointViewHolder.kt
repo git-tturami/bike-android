@@ -10,7 +10,7 @@ import com.gitturami.bike.R
 import com.gitturami.bike.data.RecyclerItem
 import kotlinx.android.synthetic.main.rv_item.view.*
 
-class RecommendViewHolder(context: Context, parent: ViewGroup?, private val clickListenerFunc: ((Int) -> Unit)?)
+class WayPointViewHolder(context: Context, parent: ViewGroup?, private val clickListenerFunc: ((Int) -> Unit)?)
     : RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(R.layout.rv_item, parent, false)) {
 
     private val titleTextView by lazy {
