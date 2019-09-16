@@ -2,8 +2,6 @@ package com.gitturami.bike.view.main.presenter
 
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.state.State
-import com.skt.Tmap.TMapPoint
-import com.skt.Tmap.TMapView
 
 interface MainContact {
     interface View {
@@ -14,6 +12,7 @@ interface MainContact {
         fun setStartSearchView(text: String)
         fun setFinishSearchView(text: String)
         fun setSelectDialogContants(station: Station)
+        fun hideStationMarker()
     }
 
     interface Presenter {

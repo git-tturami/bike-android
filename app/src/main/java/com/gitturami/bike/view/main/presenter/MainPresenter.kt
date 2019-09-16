@@ -40,7 +40,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     fun injectDataManager(context: Context) {
         DaggerDataManagerComponent.builder()
                 .dataManagerModule(DataManagerModule(context))
-                .build()
+        .build()
                 .inject(this)
     }
 
@@ -51,7 +51,10 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     override fun getState(): State = state
 
     override fun setState(state: State) {
-        this.state = state
+        if (this.state != state) {
+            Logger.i(TAG, "setState: $state")
+            this.state = state
+        }
     }
 
     override fun registerObserver() {

@@ -1,14 +1,17 @@
 package com.gitturami.bike.view.main.map
 
+import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
-import com.gitturami.bike.view.main.presenter.MainContact
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallback {
     companion object {
@@ -89,5 +92,27 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         markerItem2.tMapPoint = mapPoint
         markerItem2.id = station.stationId
         tMapView.addMarkerItem2(station.stationId, markerItem2)
+    }
+
+    fun findPath(start:Station, end: Station, bottomSheetAction: () -> Unit) {
+        val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
+        val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
+        try {
+            val data = TMapData()
+            data.findPathData(startTMapPoint, endTMapPoint) { path ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    path.lineWidth = 10f
+                    path.lineColor = Color.BLUE
+                    tMapView.addTMapPath(path)
+                    bottomSheetAction()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun hideStationMarker() {
+        tMapView.removeAllMarkerItem()
     }
 }

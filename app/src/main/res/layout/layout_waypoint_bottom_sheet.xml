@@ -2,9 +2,12 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:id="@+id/waypoint_bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="600dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/colorlightblue"
+    android:background="@drawable/bottom_sheet"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:padding="10dp"
 
     app:behavior_hideable="true"
     app:behavior_skipCollapsed="false"
@@ -17,75 +20,95 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:text="경유지 선택"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/category_cafe"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/waypoint_search_text_view"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ic_cafe"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:text="경유지 선택" />
-                <TextView
-                    android:id="@+id/waypointSearchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:text="카페"/>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/cafe_button" />
 
-                <ImageButton
-                    android:id="@+id/leisure_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-                <ImageButton
+            <LinearLayout
+                android:id="@+id/category_restaurant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ic_restaurant"/>
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/restaurant_button" />
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/station_button" />
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tour_button" />
+                    android:text="식당"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/category_terrain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ic_terrain"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="자연"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/category_leisure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ic_leisure"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="레저"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layoutManager="LinearLayoutManager" />
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

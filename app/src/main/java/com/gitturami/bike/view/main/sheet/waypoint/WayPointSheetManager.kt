@@ -1,18 +1,17 @@
 package com.gitturami.bike.view.main.sheet.waypoint
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.recyclerview.widget.RecyclerView
 import com.gitturami.bike.adapter.WayPointAdapter
 import com.gitturami.bike.adapter.contact.WayPointAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.view.main.MainActivity
-import com.gitturami.bike.view.main.listener.BottomSheetListener
+import com.gitturami.bike.view.main.listener.CategorySheetListener
+import com.gitturami.bike.view.main.state.State
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_waypoint_bottom_sheet.*
-import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 
-class WayPointSheetManager(activity: MainActivity) {
+class WayPointSheetManager(activity: MainActivity, listener: (State) -> Unit) {
     companion object {
         private val TAG = "WayPointSheetManager"
     }
@@ -21,30 +20,41 @@ class WayPointSheetManager(activity: MainActivity) {
     private val sheetBehavior: BottomSheetBehavior<CoordinatorLayout>
     private val wayPointModel: WayPointAdapterContact.Model
     private val wayPointView: WayPointAdapterContact.View
-    private val recyclerView: RecyclerView = activity.recycler_view
+    private val categorySheetListener:CategorySheetListener
 
     init {
         sheetBehavior = BottomSheetBehavior.from(wayPointSheet)
-        sheetBehavior.bottomSheetCallback = BottomSheetListener(sheetBehavior)
+        categorySheetListener = CategorySheetListener(sheetBehavior, listener)
+        sheetBehavior.bottomSheetCallback = categorySheetListener
+        sheetBehavior.isHideable = false
         val wayPointAdapter = WayPointAdapter(activity)
-        recyclerView.adapter = wayPointAdapter
+
         wayPointModel = wayPointAdapter
         wayPointView = wayPointAdapter
         wayPointView.onClickFunc = { position -> onClickListener(position) }
+        wayPointSheet.setOnTouchListener { view, motionEvent -> true }
+
+        activity.category_cafe.setOnClickListener{v -> activity.hideStationMarker()}
+        activity.category_leisure.setOnClickListener{v -> activity.hideStationMarker()}
+        activity.category_restaurant.setOnClickListener{v -> activity.hideStationMarker()}
+        activity.category_terrain.setOnClickListener{v -> activity.hideStationMarker()}
+
     }
 
     fun collapseWayPointSheet() {
+        Logger.i(TAG, "collapseWayPointSheet()")
         checkHeightAndSet()
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun hiddenWayPointSheet() {
+        sheetBehavior.isHideable = true
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun checkHeightAndSet() {
-        if (sheetBehavior.peekHeight != 250) {
-            sheetBehavior.peekHeight = 250
+        if (sheetBehavior.peekHeight != 400) {
+            sheetBehavior.peekHeight = 400
         }
     }
 
