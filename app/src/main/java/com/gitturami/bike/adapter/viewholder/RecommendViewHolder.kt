@@ -21,15 +21,11 @@ class RecommendViewHolder(context: Context, parent: ViewGroup?, private val clic
         itemView.recommend_itemSubTitle as TextView
     }
 
-    private val locationSelectButton by lazy {
-        itemView.recommend_start_location as Button
-    }
-
     fun onBind(data : RecyclerItem, position: Int) {
         titleTextView.text = data.title
         subtitleTextView.text = data.content
 
-        locationSelectButton.setOnClickListener {
+        itemView.setOnClickListener {
             clickListenerFunc?.invoke(position)
         }
     }

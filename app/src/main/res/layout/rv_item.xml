@@ -51,27 +51,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/recommend_start_location"
-                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                    android:layout_gravity="right"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="출발지 선택"
-                    android:textSize="13sp"
-                    android:textColor="@android:color/black"/>
-                <!--<Button-->
-                <!--android:id="@+id/start_location"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:background="@color/colorlightblue"-->
-                <!--android:text="출발지 선택"-->
-                <!--/>-->
+
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

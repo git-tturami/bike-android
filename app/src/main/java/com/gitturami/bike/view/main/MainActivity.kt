@@ -9,6 +9,7 @@ import android.location.Location
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -18,16 +19,17 @@ import com.gitturami.bike.adapter.contact.RecommendAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.view.main.listener.TMapOnClickListener
+import com.gitturami.bike.view.main.listener.BottomSheetListener
 import com.gitturami.bike.view.main.map.BitmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skt.Tmap.*
+import kotlinx.android.synthetic.main.activity_bottom_sheet.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 
 class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
     companion object {
@@ -44,6 +46,8 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
 
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
+    private lateinit var recommendBottomSheet: CoordinatorLayout
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<CoordinatorLayout>
     lateinit var recommendAdapterModel: RecommendAdapterContact.Model
     var recommendAdapterView: RecommendAdapterContact.View? = null
         set(value) {
@@ -60,6 +64,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         presenter = MainPresenter(applicationContext)
 
         bottomSheetDialog = BottomSheetDialog(presenter)
+        initCategoryOfRecommendBottomSheet()
         initRecyclerView()
         initSettingButton()
         initTMapView()
@@ -95,19 +100,27 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         }
     }
 
-    override fun findPath(start:TMapPoint, end:TMapPoint) {
+    override fun findPath(start: Station, end: Station) {
+        val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
+        val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
+
         try {
             val data = TMapData()
-            data.findPathData(start, end) { path ->
+            data.findPathData(startTMapPoint, endTMapPoint) { path ->
                 runOnUiThread {
                     path.lineWidth = 5f
                     path.lineColor = Color.BLUE
                     tMapView.addTMapPath(path)
+                    setBottomSheetBehaviorStateCollapse()
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun clearPath() {
+        tMapView.removeTMapPath()
     }
 
     private fun initFloatingButtonAction() {
@@ -183,7 +196,7 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
 
         val markerItem2 = object: TMapMarkerItem2() {
             override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : ${station}")
+                Logger.i(TAG, "onSingleTapUp() : $station")
                 bottomSheetDialog.station = station
                 bottomSheetDialog.show(supportFragmentManager, "bs")
                 return super.onSingleTapUp(p, mapView)
@@ -212,17 +225,36 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
         when (presenter.getState()) {
             State.SET_START -> {
                 Toast.makeText(applicationContext, "출발지 초기화", Toast.LENGTH_SHORT).show()
+                presenter.setLocation(null)
                 presenter.setState(State.PREPARE)
                 startSearchView.text = ""
             }
             State.SET_FINISH -> {
                 Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()
+                presenter.setLocation(null)
                 presenter.setState(State.SET_START)
                 finishSearchView.text = ""
             }
             else -> {
                 super.onBackPressed()
             }
+        }
+    }
+
+    private fun initCategoryOfRecommendBottomSheet() {
+        recommendBottomSheet = category_bottom_sheet
+        bottomSheetBehavior = BottomSheetBehavior.from(recommendBottomSheet)
+        bottomSheetBehavior.bottomSheetCallback = BottomSheetListener(bottomSheetBehavior)
+    }
+
+    private fun setBottomSheetBehaviorStateCollapse() {
+        checkPeekHeightAndSetHeight()
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    }
+
+    private fun checkPeekHeightAndSetHeight() {
+        if (bottomSheetBehavior.peekHeight != 150) {
+            bottomSheetBehavior.peekHeight = 150
         }
     }
 
@@ -238,11 +270,11 @@ class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLoc
     }
 
     private fun initRecyclerView() {
-        /*val recommendAdapter = RecommendAdapter(this)
+        val recommendAdapter = RecommendAdapter(this)
         val recyclerView: RecyclerView = recycler_view
         recyclerView.adapter = recommendAdapter
         recommendAdapterModel = recommendAdapter
-        recommendAdapterView = recommendAdapter*/
+        recommendAdapterView = recommendAdapter
     }
 
     override fun onDestroy() {
