@@ -14,13 +14,13 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     companion object {
         const val TAG = "TmapManager"
     }
-    private var isTracking = false
+    private var isTracking = true
     private val tMapView = TMapView(activity)
     private val tMapGps = TMapGpsManager(activity)
     private val bitmapManager: BitmapManager by lazy {
         BitmapManager(activity.applicationContext)
     }
-    private val mainView: MainContact.View = activity
+    private val mainView: MainActivity = activity
 
     init {
         initTmapView(activity)

@@ -4,15 +4,15 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gitturami.bike.adapter.contact.WayPointAdapterContact
-import com.gitturami.bike.adapter.viewholder.RecommendViewHolder
+import com.gitturami.bike.adapter.viewholder.WayPointViewHolder
 import com.gitturami.bike.data.RecyclerItem
 
-class WayPointAdapter(private val context: Context) : WayPointAdapterContact.View, RecyclerView.Adapter<RecommendViewHolder>(), WayPointAdapterContact.Model {
+class WayPointAdapter(private val context: Context) : WayPointAdapterContact.View, RecyclerView.Adapter<WayPointViewHolder>(), WayPointAdapterContact.Model {
     override var onClickFunc: ((Int) -> Unit)? = null
     private var itemList: List<RecyclerItem> = arrayListOf()
 
-    override fun onBindViewHolder(holderRecommend: RecommendViewHolder, position: Int) {
-        holderRecommend.onBind(itemList[position], position)
+    override fun onBindViewHolder(holderWayPoint: WayPointViewHolder, position: Int) {
+        holderWayPoint.onBind(itemList[position], position)
     }
 
     override fun getItemCount(): Int {
@@ -25,8 +25,8 @@ class WayPointAdapter(private val context: Context) : WayPointAdapterContact.Vie
 
     override fun getItem(position: Int): RecyclerItem = itemList[position]
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendViewHolder
-            = RecommendViewHolder(context, parent, onClickFunc)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WayPointViewHolder
+            = WayPointViewHolder(context, parent, onClickFunc)
 
     override fun notifyAdapter() {
         notifyDataSetChanged()
