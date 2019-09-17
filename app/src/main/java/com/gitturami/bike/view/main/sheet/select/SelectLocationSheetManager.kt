@@ -8,7 +8,7 @@ import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
-import com.gitturami.bike.view.main.presenter.MainContact
+import com.gitturami.bike.view.main.MainContact
 import com.gitturami.bike.view.main.state.State
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet.view.*

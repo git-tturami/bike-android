@@ -7,6 +7,8 @@ import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.view.main.MainContact
+import com.gitturami.bike.view.main.presenter.handler.*
 import com.gitturami.bike.view.main.state.State
 
 import io.reactivex.Observable
@@ -26,6 +28,13 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     private var state: State = State.PREPARE
     private var startStation: Station? = null
     private var finishStation: Station? = null
+    private val stateHandlers: Map<State, StateHandler> = hashMapOf(
+            State.PREPARE to PrepareHandler(),
+            State.SET_START to SetStartHandler(),
+            State.SET_FINISH to SetFinishHandler(),
+            State.SELECT_CATEGORY to CategoryHandler(),
+            State.SELECT_WAYPOINT to WayPointHandler()
+    )
 
     @Inject
     lateinit var stationDataManager: StationDataManager
@@ -37,10 +46,10 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         injectDataManager(context)
     }
 
-    fun injectDataManager(context: Context) {
+    private fun injectDataManager(context: Context) {
         DaggerDataManagerComponent.builder()
                 .dataManagerModule(DataManagerModule(context))
-        .build()
+                .build()
                 .inject(this)
     }
 
@@ -54,11 +63,12 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         if (this.state != state) {
             Logger.i(TAG, "setState: $state")
             this.state = state
+            stateHandlers[state]?.onStateChanged(view)
         }
     }
 
-    override fun registerObserver() {
-        Logger.i(TAG, "registerObserver()")
+    override fun setMarkers() {
+        Logger.i(TAG, "setMarkers()")
         disposal.add(stationDataManager.allStationList
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -71,7 +81,10 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                             Logger.e(TAG, "onError() : $e")
                             view.showToast("따릉이 정거장 정보를 받아오는 도중에 문제가 발생했습니다.")
                         },
-                        { Logger.i(TAG, "onComplete()") }
+                        {
+                            Logger.i(TAG, "onComplete()")
+                            view.onCompleteMarking()
+                        }
                 )
         )
 
@@ -92,8 +105,14 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun setSearchView(text: String) {
         when (state) {
-            State.PREPARE -> view.setStartSearchView(text)
-            State.SET_START -> view.setFinishSearchView(text)
+            State.PREPARE -> {
+                view.setStartSearchView(text)
+                setState(State.SET_START)
+            }
+            State.SET_START -> {
+                view.setFinishSearchView(text)
+                setState(State.SET_FINISH)
+            }
         }
     }
 

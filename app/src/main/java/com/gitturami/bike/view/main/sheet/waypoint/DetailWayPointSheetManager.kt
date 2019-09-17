@@ -7,7 +7,8 @@ import com.gitturami.bike.adapter.contact.WayPointAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.view.main.MainActivity
-import com.gitturami.bike.view.main.listener.CategorySheetListener
+import com.gitturami.bike.view.main.sheet.waypoint.listener.CategorySheetListener
+import com.gitturami.bike.view.main.sheet.waypoint.listener.DetailWayPointSheetListener
 import com.gitturami.bike.view.main.state.State
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_detail_waypoint_bottom_sheet.*
@@ -21,14 +22,17 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
     private val sheetBehavior: BottomSheetBehavior<CoordinatorLayout>
     private val wayPointModel: WayPointAdapterContact.Model
     private val wayPointView: WayPointAdapterContact.View
-    private val categorySheetListener: CategorySheetListener
+    //private val categorySheetListener: CategorySheetListener
+    private val sheetListener: DetailWayPointSheetListener
 
     private val recyclerView: RecyclerView
 
     init {
         sheetBehavior = BottomSheetBehavior.from(detailWayPointSheet)
-        categorySheetListener = CategorySheetListener(sheetBehavior, listener)
-        sheetBehavior.bottomSheetCallback = categorySheetListener
+        // categorySheetListener = CategorySheetListener(sheetBehavior, listener)
+        sheetListener = DetailWayPointSheetListener(sheetBehavior, activity.getPresenter())
+
+        sheetBehavior.bottomSheetCallback = sheetListener
 
         detailWayPointSheet.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -44,12 +48,11 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
     }
 
     fun halfWayPointSheet() {
+        sheetBehavior.peekHeight = 400
         sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
     fun collapseWayPointSheet() {
-        Logger.i(TAG, "collapseWayPointSheet()")
-        checkHeightAndSet()
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -57,10 +60,8 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun checkHeightAndSet() {
-        if (sheetBehavior.peekHeight != 150) {
-            sheetBehavior.peekHeight = 150
-        }
+    fun expandWayPointSheet() {
+        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     // TODO: When context is defined, this function is called at Model.
