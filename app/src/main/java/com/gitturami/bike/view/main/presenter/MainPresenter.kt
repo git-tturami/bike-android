@@ -105,13 +105,21 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     private fun setStartStation(station: Station?) {
+        if (station == null) view.setMarker(startStation!!.stationLatitude.toDouble(), startStation!!.stationLongitude.toDouble(), startStation!!)
         startStation = station
+        if (station != null) view.changeMarker(station)
     }
 
     private fun setFinishStation(station: Station?) {
+        if (station == null) {
+            view.setMarker(finishStation!!.stationLatitude.toDouble(), finishStation!!.stationLongitude.toDouble(), finishStation!!)
+            view.clearPath()
+        }
         finishStation = station
-        if (station != null) view.findPath(startStation!!, finishStation!!)
-        else view.clearPath()
+        if (station != null) {
+            view.findPath(startStation!!, finishStation!!)
+            view.changeMarker(station)
+        }
     }
 
     override fun destroy() {

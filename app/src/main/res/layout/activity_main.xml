@@ -107,6 +107,7 @@
 
     <include layout="@layout/layout_bottom_sheet" />
     <include layout="@layout/layout_waypoint_bottom_sheet" />
+    <include layout="@layout/layout_detail_waypoint_bottom_sheet" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

@@ -103,12 +103,5 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -15,6 +15,7 @@ import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.SelectLocationSheetManager
+import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.WayPointSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
@@ -28,8 +29,12 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     private lateinit var presenter: MainContact.Presenter
 
-    private val bottomSheetManager by lazy {
-        WayPointSheetManager(this) { state: State -> presenter.setState(state) }
+    private val wayPointSheetManager by lazy {
+        WayPointSheetManager(this)
+    }
+
+    private val detailWayPointSheetManager by lazy {
+        DetailWayPointSheetManager(this) { state: State -> presenter.setState(state)}
     }
 
     private val tMapManager by lazy {
@@ -74,7 +79,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun findPath(start: Station, end: Station) {
         tMapManager.findPath(start, end) {
-            bottomSheetManager.collapseWayPointSheet()
+            wayPointSheetManager.collapseWayPointSheet()
         }
     }
 
@@ -143,16 +148,23 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
                 presenter.setState(State.SET_START)
-                bottomSheetManager.hiddenWayPointSheet()
+                wayPointSheetManager.hiddenWayPointSheet()
                 finishSearchView.text = ""
             }
-            State.MIN_WAYPOINT_SHEET -> {
+            State.SELECT_CATEGORY -> {
+                Toast.makeText(applicationContext, "카테고리 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setState(State.SET_FINISH)
-                bottomSheetManager.hiddenWayPointSheet()
+                detailWayPointSheetManager.hiddenWayPointSheet()
+                wayPointSheetManager.collapseWayPointSheet()
+                presenter.registerObserver()
+            }
+            State.HALF_WAYPOINT_SHEET -> {
+                presenter.setState(State.SELECT_CATEGORY)
+                detailWayPointSheetManager.collapseWayPointSheet()
             }
             State.FULL_WAYPOINT_SHEET -> {
-                presenter.setState(State.MIN_WAYPOINT_SHEET)
-                bottomSheetManager.collapseWayPointSheet()
+                presenter.setState(State.SELECT_CATEGORY)
+                detailWayPointSheetManager.halfWayPointSheet()
             }
             else -> {
                 super.onBackPressed()
@@ -164,7 +176,14 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         tMapManager.setMarker(x, y, station)
     }
 
+    override fun changeMarker(station: Station) {
+        tMapManager.changeMarker(station)
+    }
+
     override fun hideStationMarker() {
+        presenter.setState(State.SELECT_CATEGORY)
+        wayPointSheetManager.hiddenWayPointSheet()
+        detailWayPointSheetManager.collapseWayPointSheet()
         tMapManager.hideStationMarker()
     }
 

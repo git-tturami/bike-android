@@ -47,7 +47,7 @@ class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activ
         bottomSheet.setButton.setOnClickListener {
             presenter.setSearchView(parsedTitle)
             presenter.setLocation(station)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            hiddenSelectSheet()
         }
     }
 
@@ -69,7 +69,7 @@ class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activ
 
     private fun createStarImageView(res: Int): ImageView {
         val star = ImageView(activity)
-        star.background = activity?.getDrawable(res)
+        star.background = activity.getDrawable(res)
         star.layoutParams = ViewGroup.LayoutParams(24, 24)
         return star
     }
@@ -81,7 +81,7 @@ class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activ
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
-    fun hide() {
+    fun hiddenSelectSheet() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 }
