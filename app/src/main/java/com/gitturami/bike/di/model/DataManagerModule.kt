@@ -1,6 +1,7 @@
 package com.gitturami.bike.di.model
 
 import android.content.Context
+import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.StationDataManager
 import dagger.Module
@@ -13,4 +14,7 @@ class DataManagerModule(val context: Context) {
 
     @Provides
     fun provideRestaurantDataManager() = RestaurantDataManager(context)
+
+    @Provides
+    fun provideCafeDataManager() = CafeDataManager(context)
 }
