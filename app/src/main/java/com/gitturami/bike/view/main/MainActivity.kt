@@ -164,6 +164,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         tMapManager.setMarker(x, y, station)
     }
 
+    override fun changeMarker(station: Station) {
+        tMapManager.changeMarker(station)
+    }
+
     override fun hideStationMarker() {
         tMapManager.hideStationMarker()
     }

@@ -7,6 +7,8 @@ import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
+import com.gitturami.bike.view.main.presenter.MainContact
+import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -94,6 +96,11 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         tMapView.addMarkerItem2(station.stationId, markerItem2)
     }
 
+    fun changeMarker(station: Station) {
+        // TODO: add marker at selected station
+        tMapView.removeMarkerItem(station.stationId)
+    }
+
     fun findPath(start:Station, end: Station, bottomSheetAction: () -> Unit) {
         val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
         val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
@@ -104,6 +111,9 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
                     path.lineWidth = 10f
                     path.lineColor = Color.BLUE
                     tMapView.addTMapPath(path)
+                    tMapView.removeAllMarkerItem()
+                    changeMarker(start)
+                    changeMarker(end)
                     bottomSheetAction()
                 }
             }
