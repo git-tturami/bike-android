@@ -7,8 +7,6 @@ import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
-import com.gitturami.bike.view.main.presenter.MainContact
-import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +18,8 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         const val TAG = "TmapManager"
     }
     private var isTracking = true
+    private var isFindPath = false
+    var isMarked = false
     private val tMapView = TMapView(activity)
     private val tMapGps = TMapGpsManager(activity)
     private val bitmapManager: BitmapManager by lazy {
@@ -69,6 +69,10 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     }
 
     fun setMarker(x: Double, y: Double, station: Station) {
+        if (isMarked) {
+            return
+        }
+
         val markerItem = TMapMarkerItem()
         val mapPoint = TMapPoint(x, y)
         val bitmap = when {
@@ -98,10 +102,11 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
 
     fun changeMarker(station: Station) {
         // TODO: add marker at selected station
-        tMapView.removeMarkerItem(station.stationId)
+        // tMapView.removeMarkerItem(station.stationId)
     }
 
     fun findPath(start:Station, end: Station, bottomSheetAction: () -> Unit) {
+        isFindPath = true
         val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
         val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
         try {
@@ -120,6 +125,20 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     }
 
     fun hideStationMarker() {
+        if (!isMarked) {
+            return;
+        }
+
+        isMarked = false
         tMapView.removeAllMarkerItem()
+    }
+
+    fun hidePath() {
+        if (!isFindPath) {
+            return
+        }
+
+        isFindPath = false
+        tMapView.removeTMapPath()
     }
 }
