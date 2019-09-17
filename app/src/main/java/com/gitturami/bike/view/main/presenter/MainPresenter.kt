@@ -5,6 +5,7 @@ import com.gitturami.bike.di.model.DaggerDataManagerComponent
 import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainContact
@@ -41,6 +42,9 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     @Inject
     lateinit var restaurantDataManager: RestaurantDataManager
+
+    @Inject
+    lateinit var cafeDataManager: CafeDataManager
 
     init {
         injectDataManager(context)
@@ -89,6 +93,20 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         )
 
         disposal.add(restaurantDataManager.allRestaurant
+                .flatMap{list -> Observable.fromIterable(list)}
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { Logger.i(TAG, "onNext()") },
+                        { e ->
+                            Logger.e(TAG, "onError(): $e")
+                            view.showToast("식당 정보를 받아오는 도중에 문제가 발생했습니다.")
+                        },
+                        { Logger.i(TAG, "onComplete()") }
+                )
+        )
+
+        disposal.add(cafeDataManager.allCafe
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
