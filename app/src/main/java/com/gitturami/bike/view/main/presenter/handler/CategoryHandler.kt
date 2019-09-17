@@ -6,8 +6,8 @@ import com.gitturami.bike.view.main.MainContact
 class CategoryHandler: StateHandler {
     val TAG = "CategoryHandler"
     override fun onStateChanged(view: MainContact.View) {
-        Logger.i(TAG, "onStateChanged()")
-        view.hideStationMarker()
+        Logger.i(TAG, "onStateChanged() : Set Select Category")
+        view.hideAllMarkers()
         view.hideWayPointSheet()
         view.collapseCategorySheet()
     }

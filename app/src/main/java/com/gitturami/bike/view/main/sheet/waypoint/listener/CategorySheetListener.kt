@@ -15,7 +15,6 @@ class CategorySheetListener(private var behavior: BottomSheetBehavior<Coordinato
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        Logger.i(TAG, "onSlide()")
         when (slideOffset) {
             0F -> behavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             0.5F -> behavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED)
@@ -24,24 +23,5 @@ class CategorySheetListener(private var behavior: BottomSheetBehavior<Coordinato
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-        Logger.i(TAG, "onStateChanged()")
-        Logger.i(TAG, "onStateChanged()")
-        when (newState) {
-            BottomSheetBehavior.STATE_HIDDEN -> {
-                presenter.setState(State.PREPARE)
-            }
-            BottomSheetBehavior.STATE_COLLAPSED -> {
-
-            }
-            BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-
-            }
-            BottomSheetBehavior.STATE_EXPANDED -> {
-
-            }
-            else -> {
-
-            }
-        }
     }
 }

@@ -6,6 +6,7 @@ import com.gitturami.bike.adapter.WayPointAdapter
 import com.gitturami.bike.adapter.contact.WayPointAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.view.main.MainActivity
 import com.gitturami.bike.view.main.sheet.waypoint.listener.CategorySheetListener
 import com.gitturami.bike.view.main.sheet.waypoint.listener.DetailWayPointSheetListener
@@ -38,41 +39,61 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        recyclerView = activity.recycler_view
+        recyclerView = activity.category_items
         val wayPointAdapter = WayPointAdapter(activity)
         recyclerView.adapter = wayPointAdapter
         wayPointModel = wayPointAdapter
         wayPointView = wayPointAdapter
-        loadItems()
         wayPointView.onClickFunc = { position -> onClickListener(position) }
     }
 
     fun halfWayPointSheet() {
-        sheetBehavior.peekHeight = 400
+        sheetBehavior.isHideable = false
+        sheetBehavior.peekHeight = 200
         sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
     fun collapseWayPointSheet() {
+        sheetBehavior.isHideable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun hiddenWayPointSheet() {
+        sheetBehavior.isHideable = true
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     fun expandWayPointSheet() {
+        sheetBehavior.isHideable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     // TODO: When context is defined, this function is called at Model.
-    private fun loadItems() {
-        val testList = arrayListOf(
-                RecyclerItem("test1", "test1"),
-                RecyclerItem("test2", "test2"),
-                RecyclerItem("test3", "test3")
+    fun setItems(itemList: Array<DefaultItem>) {
+        val list = arrayListOf(
+                RecyclerItem(itemList[0].getName(), itemList[0].getTel()),
+                RecyclerItem(itemList[1].getName(), itemList[1].getTel()),
+                RecyclerItem(itemList[2].getName(), itemList[2].getTel()),
+                RecyclerItem(itemList[3].getName(), itemList[3].getTel()),
+                RecyclerItem(itemList[4].getName(), itemList[4].getTel())
         )
-        wayPointModel.addItems(testList)
+        wayPointModel.clearItem()
+        wayPointModel.addItems(list)
         wayPointView.notifyAdapter()
+    }
+
+    fun addItem(item: DefaultItem) {
+        if (wayPointModel.getSize() < 10) {
+            Logger.i(TAG, "addItem: ${item.getName()}, ${item.getTel()}")
+            wayPointModel.addItem(
+                    RecyclerItem(item.getName(), item.getTel())
+            )
+            wayPointView.notifyAdapter()
+        }
+    }
+
+    fun clearItem() {
+        wayPointModel.clearItem()
     }
 
     // TODO: add selected location of item in Path.

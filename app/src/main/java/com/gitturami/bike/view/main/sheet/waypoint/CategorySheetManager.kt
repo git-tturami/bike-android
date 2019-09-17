@@ -26,17 +26,26 @@ class CategorySheetManager(activity: MainActivity) {
 
         activity.category_cafe.setOnClickListener{v -> activity.getPresenter().setState(State.SELECT_WAYPOINT) }
         activity.category_leisure.setOnClickListener{v -> activity.getPresenter().setState(State.SELECT_WAYPOINT)}
-        activity.category_restaurant.setOnClickListener{v -> activity.getPresenter().setState(State.SELECT_WAYPOINT)}
+        activity.category_restaurant.setOnClickListener{ v ->
+            activity.getPresenter().setState(State.SELECT_WAYPOINT)
+            activity.getPresenter().setRestaurantMarkers()
+        }
         activity.category_terrain.setOnClickListener{v -> activity.getPresenter().setState(State.SELECT_WAYPOINT)}
     }
 
     fun collapseWayPointSheet() {
-        Logger.i(TAG, "halfWayPointSheet()")
-        sheetBehavior.peekHeight = 400
-        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        if (sheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+            Logger.i(TAG, "halfWayPointSheet()")
+            sheetBehavior.isHideable = false
+            sheetBehavior.peekHeight = 400
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 
     fun hiddenWayPointSheet() {
-        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        if (sheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+            sheetBehavior.isHideable = true
+            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 }
