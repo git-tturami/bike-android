@@ -111,9 +111,6 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
                     path.lineWidth = 10f
                     path.lineColor = Color.BLUE
                     tMapView.addTMapPath(path)
-                    tMapView.removeAllMarkerItem()
-                    changeMarker(start)
-                    changeMarker(end)
                     bottomSheetAction()
                 }
             }

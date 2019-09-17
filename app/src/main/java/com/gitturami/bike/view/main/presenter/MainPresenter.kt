@@ -111,7 +111,10 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     private fun setFinishStation(station: Station?) {
-        if (station == null) view.setMarker(finishStation!!.stationLatitude.toDouble(), finishStation!!.stationLongitude.toDouble(), startStation!!)
+        if (station == null) {
+            view.setMarker(finishStation!!.stationLatitude.toDouble(), finishStation!!.stationLongitude.toDouble(), finishStation!!)
+            view.clearPath()
+        }
         finishStation = station
         if (station != null) {
             view.findPath(startStation!!, finishStation!!)
