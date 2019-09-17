@@ -34,7 +34,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
             State.SET_START to SetStartHandler(),
             State.SET_FINISH to SetFinishHandler(),
             State.SELECT_CATEGORY to CategoryHandler(),
-            State.SELECT_WAYPOINT to WayPointHandler()
+            State.SELECT_WAYPOINT to WayPointHandler(),
+            State.POST_SELECT to PostSelectHandler()
     )
 
     @Inject
@@ -71,8 +72,9 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         }
     }
 
-    override fun setMarkers() {
-        Logger.i(TAG, "setMarkers()")
+    // TODO : Below setters can be combined.
+    override fun setStationMarkers() {
+        Logger.i(TAG, "#### Request station information ####")
         disposal.add(stationDataManager.allStationList
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -91,21 +93,9 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         }
                 )
         )
+    }
 
-        disposal.add(restaurantDataManager.allRestaurant
-                .flatMap{list -> Observable.fromIterable(list)}
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { Logger.i(TAG, "onNext()") },
-                        { e ->
-                            Logger.e(TAG, "onError(): $e")
-                            view.showToast("식당 정보를 받아오는 도중에 문제가 발생했습니다.")
-                        },
-                        { Logger.i(TAG, "onComplete()") }
-                )
-        )
-
+    override fun setCafeMarkers() {
         disposal.add(cafeDataManager.allCafe
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -117,6 +107,30 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                             view.showToast("카페 정보를 받아오는 도중에 문제가 발생했습니다.")
                         },
                         { Logger.i(TAG, "onComplete()") }
+                )
+        )
+    }
+
+    override fun setRestaurantMarkers() {
+        Logger.i(TAG, "#### Request restaurant information ####")
+        disposal.add(restaurantDataManager.allRestaurant
+                .flatMap{list -> Observable.fromIterable(list)}
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            //Logger.i(TAG, "restaurant : $it")
+                            view.setMarker(it.Y_DNTS.toDouble(), it.X_CNTS.toDouble(), it)
+                            view.addWayPointItem(it)
+                        },
+                        { e ->
+                            Logger.e(TAG, "onError(): $e")
+                            view.showToast("식당 정보를 받아오는 도중에 문제가 발생했습니다.")
+                        },
+                        {
+                            Logger.i(TAG, "onComplete() : set recycler view")
+                            view.onCompleteMarking()
+                        }
                 )
         )
     }

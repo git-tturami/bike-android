@@ -10,6 +10,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         checkPermission()
 
         presenter.takeView(this)
-        setMarkers()
+        setStationMarkers()
     }
 
     override fun getPresenter(): MainContact.Presenter = presenter
@@ -155,7 +157,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             State.SELECT_CATEGORY -> {
                 Toast.makeText(applicationContext, "초기화", Toast.LENGTH_SHORT).show()
                 presenter.setState(State.PREPARE)
-                presenter.setMarkers()
+                presenter.setStationMarkers()
             }
             State.SELECT_WAYPOINT -> {
                 presenter.setState(State.SELECT_CATEGORY)
@@ -174,15 +176,22 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         }
     }
 
-    override fun setMarkers() {
+    override fun setStationMarkers() {
         if (!tMapManager.isMarked) {
-            Logger.i(TAG, "### request station information ###")
-            presenter.setMarkers()
+            presenter.setStationMarkers()
         }
+    }
+
+    override fun setRestaurantMarkers(x: Double, y: Double, restaurant: Restaurant) {
+        presenter.setRestaurantMarkers()
     }
 
     override fun setMarker(x: Double, y: Double, station: Station) {
         tMapManager.setMarker(x, y, station)
+    }
+
+    override fun setMarker(x: Double, y: Double, restaurant: Restaurant) {
+        tMapManager.setMarker(x, y, restaurant)
     }
 
     override fun onCompleteMarking() {
@@ -194,7 +203,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         tMapManager.changeMarker(station)
     }
 
-    override fun hideStationMarker() {
+    override fun hideAllMarkers() {
         wayPointSheetManager.hiddenWayPointSheet()
         detailWayPointSheetManager.collapseWayPointSheet()
         tMapManager.hideStationMarker()
@@ -218,6 +227,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun expandWayPointSheet() {
         detailWayPointSheetManager.expandWayPointSheet()
+    }
+
+    override fun addWayPointItem(item: DefaultItem) {
+        detailWayPointSheetManager.addItem(item)
     }
 
     override fun onDestroy() {

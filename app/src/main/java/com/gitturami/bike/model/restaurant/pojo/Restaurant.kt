@@ -1,5 +1,7 @@
 package com.gitturami.bike.model.restaurant.pojo
 
+import com.gitturami.bike.model.common.pojo.DefaultItem
+
 data class Restaurant(
         val CRTFC_UPSO_MGT_SNO: String,
         val UPSO_SNO: String,
@@ -32,4 +34,7 @@ data class Restaurant(
         val FOOD_MENU: String,
         val GNT_NO: String,
         val CRTFC_YN: String
-)
+) : DefaultItem {
+    override fun getName(): String = UPSO_NM
+    override fun getTel(): String = TEL_NO
+}

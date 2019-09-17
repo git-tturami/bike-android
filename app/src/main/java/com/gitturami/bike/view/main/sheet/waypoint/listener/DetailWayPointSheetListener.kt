@@ -13,11 +13,7 @@ class DetailWayPointSheetListener(
     private val TAG = "DetailWayPointSheetListener"
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        Logger.i(TAG, "onSlide()")
         when (slideOffset) {
-            0F -> {
-                behavior.setState(BottomSheetBehavior.STATE_HIDDEN)
-            }
             1F -> {
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED)
             }
@@ -25,17 +21,5 @@ class DetailWayPointSheetListener(
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-        Logger.i(TAG, "onStateChanged()")
-        when (newState) {
-            BottomSheetBehavior.STATE_HIDDEN -> {
-                presenter.setState(State.SELECT_CATEGORY)
-            }
-            BottomSheetBehavior.STATE_EXPANDED -> {
-                presenter.setState(State.FULL_WAYPOINT_SHEET)
-            }
-            else -> {
-
-            }
-        }
     }
 }

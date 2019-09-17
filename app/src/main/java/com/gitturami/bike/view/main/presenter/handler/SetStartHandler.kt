@@ -6,7 +6,7 @@ import com.gitturami.bike.view.main.MainContact
 class SetStartHandler: StateHandler {
     val TAG = "SetStartHandler"
     override fun onStateChanged(view: MainContact.View) {
-        Logger.i(TAG, "onStateChanged()")
+        Logger.i(TAG, "onStateChanged() : Set Start")
         view.setFinishSearchView("")
     }
 }

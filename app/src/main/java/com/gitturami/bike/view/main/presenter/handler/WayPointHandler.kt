@@ -6,7 +6,7 @@ import com.gitturami.bike.view.main.MainContact
 class WayPointHandler: StateHandler {
     val TAG = "WayPointHandler"
     override fun onStateChanged(view: MainContact.View) {
-        Logger.i(TAG, "onStateChanged()")
+        Logger.i(TAG, "onStateChanged() : WayPoint")
         view.hideCategorySheet()
         view.halfWayPointSheet()
     }

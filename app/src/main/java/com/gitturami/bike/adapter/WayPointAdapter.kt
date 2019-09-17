@@ -9,7 +9,7 @@ import com.gitturami.bike.data.RecyclerItem
 
 class WayPointAdapter(private val context: Context) : WayPointAdapterContact.View, RecyclerView.Adapter<WayPointViewHolder>(), WayPointAdapterContact.Model {
     override var onClickFunc: ((Int) -> Unit)? = null
-    private var itemList: List<RecyclerItem> = arrayListOf()
+    private var itemList: MutableList<RecyclerItem> = arrayListOf()
 
     override fun onBindViewHolder(holderWayPoint: WayPointViewHolder, position: Int) {
         holderWayPoint.onBind(itemList[position], position)
@@ -32,8 +32,14 @@ class WayPointAdapter(private val context: Context) : WayPointAdapterContact.Vie
         notifyDataSetChanged()
     }
 
-    override fun addItems(recyclerList: List<RecyclerItem>) {
+    override fun addItem(item: RecyclerItem) {
+        itemList.add(item)
+    }
+
+    override fun addItems(recyclerList: MutableList<RecyclerItem>) {
         this.itemList = recyclerList
     }
+
+    override fun getSize(): Int = itemList.size
 
 }
