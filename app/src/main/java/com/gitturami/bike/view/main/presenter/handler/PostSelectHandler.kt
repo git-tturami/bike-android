@@ -9,5 +9,6 @@ class PostSelectHandler: StateHandler {
         Logger.i(TAG, "onStateChanged() : Set Post Select")
         view.hideWayPointSheet()
         view.hideCategorySheet()
+        view.collapseItemSheet()
     }
 }

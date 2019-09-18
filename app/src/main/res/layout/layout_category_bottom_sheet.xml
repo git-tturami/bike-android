@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:id="@+id/waypoint_bottom_sheet"
+    android:id="@+id/category_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -32,19 +32,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp"
-            android:gravity="center_horizontal">
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center">
             <LinearLayout
                 android:id="@+id/category_cafe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/ic_cafe"/>
+                    android:background="@drawable/ic_category_cafe"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,13 +57,14 @@
                 android:id="@+id/category_restaurant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/ic_restaurant"/>
+                    android:background="@drawable/ic_category_restaurant"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,13 +75,14 @@
                 android:id="@+id/category_terrain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/ic_terrain"/>
+                    android:background="@drawable/ic_category_terrain"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -89,13 +93,14 @@
                 android:id="@+id/category_leisure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/ic_leisure"/>
+                    android:background="@drawable/ic_category_festival"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

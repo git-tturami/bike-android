@@ -3,6 +3,7 @@ package com.gitturami.bike.view.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.PointF
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -19,9 +20,12 @@ import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.SelectLocationSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.CategorySheetManager
+import com.gitturami.bike.view.main.sheet.waypoint.ItemSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.skt.Tmap.TMapMarkerItem2
+import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {
@@ -43,8 +47,12 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         TmapManager(this)
     }
 
-    val selectLocationSheetManager by lazy {
+    private val selectLocationSheetManager by lazy {
         SelectLocationSheetManager(presenter, this)
+    }
+
+    private val itemSheetManager by lazy {
+        ItemSheetManager(this)
     }
 
     private val REQUEST_LOCATION_PERMISSION = 1
@@ -168,13 +176,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             State.SELECT_WAYPOINT -> {
                 presenter.setState(State.SELECT_CATEGORY)
             }
-            State.HALF_WAYPOINT_SHEET -> {
-                presenter.setState(State.SELECT_CATEGORY)
-                detailWayPointSheetManager.collapseWayPointSheet()
-            }
-            State.FULL_WAYPOINT_SHEET -> {
-                presenter.setState(State.SELECT_CATEGORY)
-                detailWayPointSheetManager.halfWayPointSheet()
+            State.POST_SELECT_WAYPOINT -> {
+                presenter.setState(State.SELECT_WAYPOINT)
             }
             else -> {
                 super.onBackPressed()
@@ -197,7 +200,17 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun setMarker(x: Double, y: Double, restaurant: Restaurant) {
-        tMapManager.setMarker(x, y, restaurant)
+        tMapManager.setMarker(
+                x = x,
+                y = y,
+                restaurant = restaurant,
+                clickListener = object: TMapMarkerItem2() {
+                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                        presenter.setState(State.POST_SELECT_WAYPOINT)
+                        itemSheetManager.setItem(restaurant)
+                        return super.onSingleTapUp(p, mapView)
+                    }
+        })
     }
 
     override fun onCompleteMarking() {
@@ -227,6 +240,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         detailWayPointSheetManager.hiddenWayPointSheet()
     }
 
+    override fun collapseWayPointSheet() {
+        detailWayPointSheetManager.collapseWayPointSheet()
+    }
+
     override fun halfWayPointSheet() {
         detailWayPointSheetManager.halfWayPointSheet()
     }
@@ -237,6 +254,14 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun addWayPointItem(item: DefaultItem) {
         detailWayPointSheetManager.addItem(item)
+    }
+
+    override fun collapseItemSheet() {
+        itemSheetManager.collapseSheet()
+    }
+
+    override fun hideItemSheet() {
+        itemSheetManager.hideSheet()
     }
 
     override fun onDestroy() {

@@ -26,9 +26,12 @@ interface MainContact {
         fun hideAllMarkers()
         fun hideCategorySheet()
         fun collapseCategorySheet()
+        fun collapseWayPointSheet()
         fun hideWayPointSheet()
         fun halfWayPointSheet()
         fun expandWayPointSheet()
+        fun collapseItemSheet()
+        fun hideItemSheet()
 
         fun addWayPointItem(item: DefaultItem)
     }
