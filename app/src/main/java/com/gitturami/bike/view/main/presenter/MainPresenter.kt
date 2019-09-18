@@ -36,7 +36,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
             State.SET_FINISH to SetFinishHandler(),
             State.SELECT_CATEGORY to CategoryHandler(),
             State.SELECT_WAYPOINT to WayPointHandler(),
-            State.POST_SELECT to PostSelectHandler()
+            State.POST_SELECT_WAYPOINT to PostSelectHandler()
     )
 
     @Inject

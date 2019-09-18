@@ -9,6 +9,7 @@ class CategoryHandler: StateHandler {
         Logger.i(TAG, "onStateChanged() : Set Select Category")
         view.hideAllMarkers()
         view.hideWayPointSheet()
+        view.hideItemSheet()
         view.collapseCategorySheet()
     }
 }
