@@ -9,5 +9,6 @@ class WayPointHandler: StateHandler {
         Logger.i(TAG, "onStateChanged() : WayPoint")
         view.hideCategorySheet()
         view.halfWayPointSheet()
+        view.hideItemSheet()
     }
 }

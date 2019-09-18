@@ -6,14 +6,14 @@ import com.gitturami.bike.view.main.MainActivity
 import com.gitturami.bike.view.main.sheet.waypoint.listener.CategorySheetListener
 import com.gitturami.bike.view.main.state.State
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.layout_waypoint_bottom_sheet.*
+import kotlinx.android.synthetic.main.layout_category_bottom_sheet.*
 
 class CategorySheetManager(activity: MainActivity) {
     companion object {
-        private val TAG = "CategorySheetManager"
+        private const val TAG = "CategorySheetManager"
     }
 
-    private val wayPointSheet: CoordinatorLayout = activity.waypoint_bottom_sheet
+    private val wayPointSheet: CoordinatorLayout = activity.category_bottom_sheet
     private val sheetBehavior: BottomSheetBehavior<CoordinatorLayout>
     private val sheetListener: CategorySheetListener
 

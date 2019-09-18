@@ -75,9 +75,9 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
             return
         }
         val bitmap = when {
-            station.shared > 50 -> bitmapManager.markerGreen
-            station.shared in 20..50 -> bitmapManager.markerYellow
-            else -> bitmapManager.markerRed
+            station.shared > 50 -> bitmapManager.greenMarker
+            station.shared in 20..50 -> bitmapManager.yellowMarker
+            else -> bitmapManager.redMarker
         }
 
         val markerOverlay = object: TMapMarkerItem2() {
@@ -91,14 +91,14 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         setMarker(x, y, station.stationId, bitmap, markerOverlay)
     }
 
-    fun setMarker(x: Double, y: Double, restaurant: Restaurant) {
-        val markerOverlay = object: TMapMarkerItem2() {
-            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : $restaurant")
-                return super.onSingleTapUp(p, mapView)
-            }
-        }
-        setMarker(x, y, restaurant.UPSO_SNO, bitmapManager.markerGreen, markerOverlay)
+    fun setMarker(x: Double, y: Double, restaurant: Restaurant, clickListener: TMapMarkerItem2) {
+//        val clickListener = object: TMapMarkerItem2() {
+//            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+//                Logger.i(TAG, "onSingleTapUp() : $restaurant")
+//                return super.onSingleTapUp(p, mapView)
+//            }
+//        }
+        setMarker(x, y, restaurant.UPSO_SNO, bitmapManager.restaurantMarker, clickListener)
 
     }
 
