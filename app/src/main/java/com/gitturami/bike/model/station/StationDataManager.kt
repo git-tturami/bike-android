@@ -16,15 +16,15 @@ class StationDataManager(context: Context): DataManager(context) {
 
     fun getStationById(id: String): Single<Station>? = api.getStationById(id)
 
-    fun getStationByName(name: String): Station? = api.getStationByName(name).execute().body()
+    fun getStationByName(name: String): Single<Station>? = api.getStationByName(name)
 
-    fun getNearByStation(lat: Float, lon: Float): StationResponse? =
-            api.getNearByStation(lat, lon).execute().body()
+    fun getNearByStation(lat: Float, lon: Float): Single<StationResponse>? =
+            api.getNearByStation(lat, lon)
 
     val getEnableStationList: Observable<StationResponse> =
             api.getEnableStation()
 
     val allSummaryStationList: Observable<List<SummaryStation>> = api.getSummaryOfStation()
 
-     val allStationList: Observable<List<Station>> = api.getAllStation()
+    val allStationList: Observable<List<Station>> = api.getAllStation()
 }

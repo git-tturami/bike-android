@@ -1,6 +1,7 @@
 package com.gitturami.bike.view.main.sheet.waypoint
 
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.view.main.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,8 +38,8 @@ class ItemSheetManager(activity: MainActivity) {
         }
     }
 
-    fun setItem(item: Restaurant) {
-        sheet.item_title.text = item.UPSO_NM
-        sheet.item_addr.text = item.RDN_DETAIL_ADDR
+    fun setItem(item: DefaultItem) {
+        sheet.item_title.text = item.getName()
+        sheet.item_addr.text = item.getAddress()
     }
 }

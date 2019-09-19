@@ -12,10 +12,14 @@ import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cafe.pojo.Cafe
+import com.gitturami.bike.model.cafe.pojo.SummaryCafe
 import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.path.pojo.PathItem
+import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
+import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.map.TmapManager
@@ -155,13 +159,30 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         finishSearchView.text = text
     }
 
-    override fun setSelectDialogContants(id: String) {
+    override fun loadDetailInfoOfStation(id: String) {
         presenter.loadDetailInfoOfStation(id)
+    }
+
+    override fun loadDetailInfoOfCafe(name: String) {
+        presenter.loadDetailInfoOfCafe(name)
+    }
+
+    override fun loadDetailInfoOfLeisure(title: String) {
+        presenter.loadDetailInfoOfLeisure(title)
+    }
+
+    override fun loadDetailInfoOfRestaurant(name: String) {
+        presenter.loadDetailInfoOfRestaurant(name)
     }
 
     override fun setSelectBottomSheet(station: Station) {
         selectLocationSheetManager.initStation(station)
         selectLocationSheetManager.collapseSelectSheet()
+    }
+
+    override fun setItemBottomSheet(item: DefaultItem) {
+        itemSheetManager.setItem(item)
+        itemSheetManager.collapseSheet()
     }
 
     override fun onBackPressed() {
@@ -200,16 +221,16 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         }
     }
 
-    override fun setRestaurantMarkers(x: Double, y: Double, restaurant: Restaurant) {
+    override fun setRestaurantMarkers() {
         presenter.setRestaurantMarkers()
     }
-    override fun setCafeMarkers(x: Double, y: Double, cafe: Cafe) {
+    override fun setCafeMarkers() {
         presenter.setCafeMarkers()
     }
-    override fun setLeisureMarkers(x: Double, y: Double, leisure: Leisure) {
+    override fun setLeisureMarkers() {
         presenter.setLeisureMarkers()
     }
-    override fun setTerrainMarkers(x: Double, y: Double, leisure: Leisure) {
+    override fun setTerrainMarkers() {
         presenter.setTerrainMarkers()
     }
 
@@ -218,31 +239,21 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 clickListener = object: TMapMarkerItem2() {
                     override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
                         Logger.i(TAG, "onSingleTapUp(): $station")
-                        setSelectDialogContants(station.stationId);
+                        loadDetailInfoOfStation(station.stationId)
                         return super.onSingleTapUp(p, mapView)
                     }
                 })
     }
 
-    override fun setMarker(x: Double, y: Double, restaurant: Restaurant) {
-        tMapManager.setMarker(
-                x = x,
-                y = y,
-                restaurant = restaurant,
-                clickListener = object: TMapMarkerItem2() {
-                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                        presenter.setState(State.POST_SELECT_WAYPOINT)
-                        itemSheetManager.setItem(restaurant)
-                        return super.onSingleTapUp(p, mapView)
-                    }
-        })
+    override fun setMarker(x: Double, y: Double, restaurant: SummaryRestaurant) {
+        tMapManager.setMarker(x, y, restaurant)
     }
 
-    override fun setMarker(x: Double, y: Double, cafe: Cafe) {
+    override fun setMarker(x: Double, y: Double, cafe: SummaryCafe) {
         tMapManager.setMarker(x, y, cafe)
     }
 
-    override fun setMarker(x: Double, y: Double, leisure: Leisure) {
+    override fun setMarker(x: Double, y: Double, leisure: SummaryLeisure) {
         tMapManager.setMarker(x, y, leisure)
     }
 
@@ -285,7 +296,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         detailWayPointSheetManager.expandWayPointSheet()
     }
 
-    override fun addWayPointItem(item: DefaultItem) {
+    override fun addWayPointItem(item: DefaultSummaryItem) {
         detailWayPointSheetManager.addItem(item)
     }
 

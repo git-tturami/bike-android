@@ -6,10 +6,12 @@ import android.graphics.PointF
 import android.location.Location
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
-import com.gitturami.bike.model.cafe.pojo.Cafe
+import com.gitturami.bike.model.cafe.pojo.SummaryCafe
 import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.path.pojo.PathItem
+import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
+import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainActivity
@@ -86,38 +88,55 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
             station.shared in 20..50 -> bitmapManager.yellowMarker
             else -> bitmapManager.redMarker
         }
-        setMarker(x, y, station.stationId, bitmap, clickListener)
-    }
 
-    fun setMarker(x: Double, y: Double, restaurant: Restaurant, clickListener: TMapMarkerItem2) {
-
-        setMarker(x, y, restaurant.UPSO_SNO, bitmapManager.restaurantMarker, clickListener)
-
-    }
-
-    fun setMarker(x: Double, y: Double, cafe: Cafe) {
         val markerOverlay = object: TMapMarkerItem2() {
             override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : $cafe")
+                Logger.i(TAG, "onSingleTapUp() : ${station.stationId}")
+                mainView.loadDetailInfoOfStation(station.stationId)
                 return super.onSingleTapUp(p, mapView)
             }
         }
-        val NMTrim :String = cafe.NM.replace(" ", "")
-        setMarker(x, y, NMTrim, bitmapManager.greenMarker, markerOverlay)
 
+        setMarker(x, y, station.stationId, bitmap, markerOverlay)
     }
 
-    fun setMarker(x: Double, y: Double, leisure: Leisure) {
+    fun setMarker(x: Double, y: Double, restaurant: SummaryRestaurant) {
         val markerOverlay = object: TMapMarkerItem2() {
             override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : $leisure")
+                Logger.i(TAG, "onSingleTapUp() : ${restaurant.UPSO_NM}")
+                mainView.loadDetailInfoOfRestaurant(restaurant.UPSO_NM)
+                return super.onSingleTapUp(p, mapView)
+            }
+        }
+        val nameTrim: String = restaurant.UPSO_NM.replace(" ", "")
+
+        setMarker(x, y, nameTrim, bitmapManager.restaurantMarker, markerOverlay)
+    }
+
+    fun setMarker(x: Double, y: Double, cafe: SummaryCafe) {
+        val markerOverlay = object: TMapMarkerItem2() {
+            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                Logger.i(TAG, "onSingleTapUp() : ${cafe.NM}")
+                mainView.loadDetailInfoOfCafe(cafe.NM)
+                return super.onSingleTapUp(p, mapView)
+            }
+        }
+        val NMTrim: String = cafe.NM.replace(" ", "")
+
+        setMarker(x, y, NMTrim, bitmapManager.cafeMarker, markerOverlay)
+    }
+
+    fun setMarker(x: Double, y: Double, leisure: SummaryLeisure) {
+        val markerOverlay = object: TMapMarkerItem2() {
+            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                Logger.i(TAG, "onSingleTapUp() : ${leisure.title}")
+                mainView.loadDetailInfoOfLeisure(leisure.title)
                 return super.onSingleTapUp(p, mapView)
             }
         }
         val titleTrim :String = leisure.title.replace(" ", "")
 
-        setMarker(x, y, titleTrim, bitmapManager.greenMarker, markerOverlay)
-
+        setMarker(x, y, titleTrim, bitmapManager.leisureMarker, markerOverlay)
     }
 
     private fun setMarker(x: Double, y: Double, id: String, icon: Bitmap, tMapOverlay: TMapMarkerItem2) {

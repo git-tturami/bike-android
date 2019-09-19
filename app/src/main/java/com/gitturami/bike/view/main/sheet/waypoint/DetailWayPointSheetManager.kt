@@ -7,6 +7,7 @@ import com.gitturami.bike.adapter.contact.WayPointAdapterContact
 import com.gitturami.bike.data.RecyclerItem
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.view.main.MainActivity
 import com.gitturami.bike.view.main.sheet.waypoint.listener.CategorySheetListener
 import com.gitturami.bike.view.main.sheet.waypoint.listener.DetailWayPointSheetListener
@@ -82,11 +83,11 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
         wayPointView.notifyAdapter()
     }
 
-    fun addItem(item: DefaultItem) {
+    fun addItem(item: DefaultSummaryItem) {
         if (wayPointModel.getSize() < 10) {
-            Logger.i(TAG, "addItem: ${item.getName()}, ${item.getTel()}")
+            Logger.i(TAG, "addItem: ${item.getID()}")
             wayPointModel.addItem(
-                    RecyclerItem(item.getName(), item.getTel())
+                    RecyclerItem(item.getID(), "")
             )
             wayPointView.notifyAdapter()
         }

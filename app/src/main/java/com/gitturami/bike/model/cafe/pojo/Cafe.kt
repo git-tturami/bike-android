@@ -31,5 +31,6 @@ data class Cafe(
         val DETAIL_STAT_NM: String
 ): DefaultItem {
     override fun getName(): String = NM
-    override fun getTel(): String = XCODE
+    override fun getTel(): String = TEL
+    override fun getAddress(): String = ADDR
 }

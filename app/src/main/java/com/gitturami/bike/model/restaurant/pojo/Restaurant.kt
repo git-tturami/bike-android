@@ -37,4 +37,5 @@ data class Restaurant(
 ) : DefaultItem {
     override fun getName(): String = UPSO_NM
     override fun getTel(): String = TEL_NO
+    override fun getAddress(): String = RDN_DETAIL_ADDR
 }
