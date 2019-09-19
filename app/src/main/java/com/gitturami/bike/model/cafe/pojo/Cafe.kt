@@ -1,5 +1,7 @@
 package com.gitturami.bike.model.cafe.pojo
 
+import com.gitturami.bike.model.common.pojo.DefaultItem
+
 data class Cafe(
         val NM: String,
         val ADDR_OLD: String,
@@ -27,4 +29,7 @@ data class Cafe(
         val YCODE: String,
         val PERMISSION_NO: String,
         val DETAIL_STAT_NM: String
-)
+): DefaultItem {
+    override fun getName(): String = NM
+    override fun getTel(): String = XCODE
+}

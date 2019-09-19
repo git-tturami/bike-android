@@ -6,6 +6,8 @@ import android.graphics.PointF
 import android.location.Location
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.cafe.pojo.Cafe
+import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
@@ -99,6 +101,31 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
             }
         }
         setMarker(x, y, restaurant.UPSO_SNO, bitmapManager.markerGreen, markerOverlay)
+
+    }
+
+    fun setMarker(x: Double, y: Double, cafe: Cafe) {
+        val markerOverlay = object: TMapMarkerItem2() {
+            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                Logger.i(TAG, "onSingleTapUp() : $cafe")
+                return super.onSingleTapUp(p, mapView)
+            }
+        }
+        val NMTrim :String = cafe.NM.replace(" ", "")
+        setMarker(x, y, NMTrim, bitmapManager.markerGreen, markerOverlay)
+
+    }
+
+    fun setMarker(x: Double, y: Double, leisure: Leisure) {
+        val markerOverlay = object: TMapMarkerItem2() {
+            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                Logger.i(TAG, "onSingleTapUp() : $leisure")
+                return super.onSingleTapUp(p, mapView)
+            }
+        }
+        val titleTrim :String = leisure.title.replace(" ", "")
+
+        setMarker(x, y, titleTrim, bitmapManager.markerGreen, markerOverlay)
 
     }
 
