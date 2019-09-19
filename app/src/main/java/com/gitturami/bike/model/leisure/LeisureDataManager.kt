@@ -5,6 +5,7 @@ import com.gitturami.bike.model.DataManager
 import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.leisure.pojo.LeisureResponse
 import com.gitturami.bike.model.leisure.pojo.LeisureResponseBody
+import io.reactivex.Single
 
 class LeisureDataManager(context: Context): DataManager(context) {
     private var api: LeisureApi = retrofitConfig.getRetrofit().create(LeisureApi::class.java)
@@ -29,5 +30,5 @@ class LeisureDataManager(context: Context): DataManager(context) {
 
     val summariesLeisure = api.getLeisureSummaries()
     val summariesTerrain = api.getTerrainSummaries()
-    fun getLeisureByName(name: String): Leisure? = api.getLeisureByName(name).execute().body()
+    fun getLeisureByName(name: String): Single<Leisure>? = api.getLeisureByName(name)
 }

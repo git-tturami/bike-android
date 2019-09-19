@@ -24,4 +24,5 @@ data class Leisure(
 ): DefaultItem {
     override fun getName(): String = title
     override fun getTel(): String = mapx
+    override fun getAddress(): String = addr1
 }

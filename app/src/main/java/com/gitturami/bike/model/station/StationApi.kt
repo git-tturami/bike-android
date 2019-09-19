@@ -14,11 +14,11 @@ interface StationApi {
     fun getStationById(@Query("id") id: String): Single<Station>
 
     @GET("/stations/name")
-    fun getStationByName(@Query("name") name: String): Call<Station>
+    fun getStationByName(@Query("name") name: String): Single<Station>
 
     // TODO : It is temporarily not enabled. (Server issue)
     @GET("/stations/close")
-    fun getNearByStation(@Query("lat") lat: Float, @Query("lon") lon: Float): Call<StationResponse>
+    fun getNearByStation(@Query("lat") lat: Float, @Query("lon") lon: Float): Single<StationResponse>
 
     @GET("/stations/enable")
     fun getEnableStation(): Observable<StationResponse>

@@ -88,6 +88,24 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .subscribe { station -> view.setSelectBottomSheet(station) }
     }
 
+    override fun loadDetailInfoOfCafe(name: String) {
+        cafeDataManager.getCafeByName(name)!!
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { cafe -> view.setItemBottomSheet(cafe) }
+    }
+
+    override fun loadDetailInfoOfLeisure(title: String) {
+        leisureDataManager.getLeisureByName(title)!!
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { leisure -> view.setItemBottomSheet(leisure)}
+    }
+
+    override fun loadDetailInfoOfRestaurant(name: String) {
+        // TODO: implement to search restaurant by name
+    }
+
     // TODO : Below setters can be combined.
     override fun setStationMarkers() {
         Logger.i(TAG, "#### Request station information ####")
@@ -119,7 +137,6 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            //Logger.i(TAG, "restaurant : $it")
                             view.setMarker(it.XCODE.toDouble(), it.YCODE.toDouble(), it)
                             view.addWayPointItem(it)
                         },
@@ -142,7 +159,6 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            //Logger.i(TAG, "restaurant : $it")
                             view.setMarker(it.mapx.toDouble(), it.mapy.toDouble(), it)
                             view.addWayPointItem(it)
                         },
@@ -157,6 +173,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 )
         )
     }
+
     override fun setTerrainMarkers() {
         Logger.i(TAG, "#### Request Terrain information ####")
         disposal.add(leisureDataManager.summariesTerrain
@@ -165,9 +182,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            //Logger.i(TAG, "restaurant : $it")
-                            view.setMarker(it.mapx.toDouble(), it.mapy.toDouble(), it)
-                            view.addWayPointItem(it)
+                            // view.setMarker(it.mapx.toDouble(), it.mapy.toDouble(), it)
+                            // view.addWayPointItem(it)
                         },
                         { e ->
                             Logger.e(TAG, "onError(): $e")
@@ -189,9 +205,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            //Logger.i(TAG, "restaurant : $it")
-                            view.setMarker(it.Y_DNTS.toDouble(), it.X_CNTS.toDouble(), it)
-                            view.addWayPointItem(it)
+                            // view.setMarker(it.X_CNTS.toDouble(), it.Y_DNTS.toDouble(), it)
+                            // view.addWayPointItem(it)
                         },
                         { e ->
                             Logger.e(TAG, "onError(): $e")
