@@ -5,6 +5,8 @@ import com.gitturami.bike.model.cafe.pojo.Cafe
 import android.content.Context
 import com.gitturami.bike.R
 import com.gitturami.bike.model.cafe.CafeDataManager
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -39,4 +41,22 @@ class CafeDataMangerTest{
                 {err -> println(err)}
         )
     }
+
+    @Test
+    fun getCafeSummariesGetResponse(){
+        val cafeResponse = cafeDataManager.summariesCafe
+        cafeResponse.subscribe(
+                {it -> println(it)},
+                {err -> println(err)}
+        )
+    }
+
+    @Test fun getCafeByNameMustGetResponse(){
+        val cafeName = "곰미커피"
+        val cafeResponse : Cafe? = cafeDataManager.getCafeByName(cafeName)
+        println(cafeResponse)
+        assertNotNull(cafeResponse)
+        assertEquals(cafeName, cafeResponse?.NM)
+    }
+
 }
