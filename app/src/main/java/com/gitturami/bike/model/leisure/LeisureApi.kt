@@ -1,7 +1,12 @@
 package com.gitturami.bike.model.leisure
 
+import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.leisure.pojo.LeisureResponse
+import com.gitturami.bike.model.leisure.pojo.LeisureResponseBody
 import retrofit2.http.GET
+import retrofit2.http.Query
+import retrofit2.Call
+import io.reactivex.Observable
 
 interface LeisureApi {
     @GET("/leisure/list")
@@ -30,4 +35,13 @@ interface LeisureApi {
 
     @GET("/leisure/foods")
     fun getAllFoods(): LeisureResponse
+
+    @GET("/leisure/summaries")
+    fun getLeisureSummaries(): Observable<List<Leisure>>
+
+    @GET("/leisure/terrain/summaries")
+    fun getTerrainSummaries(): Observable<List<Leisure>>
+
+    @GET("/leisure/name")
+    fun getLeisureByName(@Query("name") name : String) : Call<Leisure>
 }
