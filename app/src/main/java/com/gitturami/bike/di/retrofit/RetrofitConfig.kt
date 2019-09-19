@@ -13,7 +13,17 @@ class RetrofitConfig(val context: Context) {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+    private val tMapRetrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://apis.openapi.sk.com")
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
     fun getRetrofit(): Retrofit {
         return retrofit
+    }
+
+    fun getTmapRetrofit(): Retrofit {
+        return tMapRetrofit
     }
 }

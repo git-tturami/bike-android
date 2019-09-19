@@ -8,11 +8,14 @@ import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cafe.pojo.Cafe
 import com.gitturami.bike.model.leisure.pojo.Leisure
+import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainActivity
 import com.skt.Tmap.*
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,34 +76,21 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         initTmapGps()
     }
 
-    fun setMarker(x: Double, y: Double, station: SummaryStation) {
+    fun setMarker(x: Double, y: Double, station: SummaryStation, clickListener: TMapMarkerItem2) {
         if (isMarked) {
             return
         }
+
         val bitmap = when {
             station.shared > 50 -> bitmapManager.greenMarker
             station.shared in 20..50 -> bitmapManager.yellowMarker
             else -> bitmapManager.redMarker
         }
-
-        val markerOverlay = object: TMapMarkerItem2() {
-            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : ${station.stationId}")
-                mainView.setSelectDialogContants(station.stationId)
-                return super.onSingleTapUp(p, mapView)
-            }
-        }
-
-        setMarker(x, y, station.stationId, bitmap, markerOverlay)
+        setMarker(x, y, station.stationId, bitmap, clickListener)
     }
 
     fun setMarker(x: Double, y: Double, restaurant: Restaurant, clickListener: TMapMarkerItem2) {
-//        val clickListener = object: TMapMarkerItem2() {
-//            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-//                Logger.i(TAG, "onSingleTapUp() : $restaurant")
-//                return super.onSingleTapUp(p, mapView)
-//            }
-//        }
+
         setMarker(x, y, restaurant.UPSO_SNO, bitmapManager.restaurantMarker, clickListener)
 
     }
@@ -113,7 +103,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
             }
         }
         val NMTrim :String = cafe.NM.replace(" ", "")
-        setMarker(x, y, NMTrim, bitmapManager.markerGreen, markerOverlay)
+        setMarker(x, y, NMTrim, bitmapManager.greenMarker, markerOverlay)
 
     }
 
@@ -126,11 +116,15 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         }
         val titleTrim :String = leisure.title.replace(" ", "")
 
-        setMarker(x, y, titleTrim, bitmapManager.markerGreen, markerOverlay)
+        setMarker(x, y, titleTrim, bitmapManager.greenMarker, markerOverlay)
 
     }
 
     private fun setMarker(x: Double, y: Double, id: String, icon: Bitmap, tMapOverlay: TMapMarkerItem2) {
+        if (id == "testId") {
+            Logger.i(TAG, "path : $x, $y")
+        }
+
         val point = TMapPoint(x, y)
         val markerItem = TMapMarkerItem()
         markerItem.icon = icon
@@ -153,22 +147,62 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     }
 
     fun findPath(start: Station, end: Station, bottomSheetAction: () -> Unit) {
-        isFindPath = true
-        val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
-        val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
-        try {
-            val data = TMapData()
-            data.findPathData(startTMapPoint, endTMapPoint) { path ->
-                CoroutineScope(Dispatchers.Main).launch {
-                    path.lineWidth = 10f
-                    path.lineColor = Color.BLUE
-                    tMapView.addTMapPath(path)
-                    bottomSheetAction()
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+//        isFindPath = true
+//        val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
+//        val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
+//        try {
+//            val data = TMapData()
+//            data.findPathData(startTMapPoint, endTMapPoint) { path ->
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    path.lineWidth = 10f
+//                    path.lineColor = Color.BLUE
+//                    tMapView.addTMapPath(path)
+//                    bottomSheetAction()
+//                }
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+    }
+
+    fun markPath(pathItem: PathItem) {
+
+        var distance = 0
+        val posList = arrayListOf<TMapPoint>()
+
+        val disposal = CompositeDisposable()
+        val job = Observable.fromIterable(pathItem.features)
+                .subscribe(
+                        {
+                            when (it.geometry.type) {
+                                "Point" -> {
+                                    posList.add(TMapPoint(it.geometry.coordinates.asJsonArray[1].asDouble,
+                                            it.geometry.coordinates.asJsonArray[0].asDouble))
+                                }
+                                "LineString" -> {
+                                    Logger.i(TAG, it.properties.toString())
+                                    distance += it.properties.get("distance").asInt
+                                }
+                            }
+                        },
+                        { t -> },
+                        {
+                            Logger.i(TAG, "Distance = $distance")
+                            drawLine(posList)
+                            isFindPath = true
+                        }
+                )
+        disposal.add(job)
+    }
+
+    fun drawLine(posList: List<TMapPoint>) {
+        val line = TMapPolyLine()
+        line.lineColor = Color.BLUE
+        line.lineWidth = 2f
+        for (pos in posList) {
+            line.addLinePoint(pos)
         }
+        tMapView.addTMapPolyLine("line", line)
     }
 
     fun hideStationMarker() {
@@ -186,6 +220,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         }
 
         isFindPath = false
-        tMapView.removeTMapPath()
+        // tMapView.removeTMapPath()
+        tMapView.removeAllTMapPolyLine()
     }
 }

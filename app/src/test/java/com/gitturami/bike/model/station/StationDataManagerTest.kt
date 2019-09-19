@@ -29,22 +29,22 @@ class StationDataManagerTest {
         assertNotNull(stationDataManager.retrofitConfig)
     }
 
-    @Test fun getStationByIdMustGetResponse() {
-        val stationId = "ST-10"
-        val stationResponse: Station? = stationDataManager.getStationById(stationId)
-        println(stationResponse)
-        assertNotNull(stationResponse)
-        assertEquals(stationId, stationResponse?.stationId)
-
-    }
-
-    @Test fun getStationByNameMustGetResponse() {
-        val stationName ="108. 서교동 사거리"
-        val stationResponse: Station? = stationDataManager.getStationByName(stationName)
-        println(stationResponse)
-        assertNotNull(stationResponse)
-        assertEquals(stationName, stationResponse?.stationName)
-    }
+//    @Test fun getStationByIdMustGetResponse() {
+//        val stationId = "ST-10"
+//        val stationResponse: Station? = stationDataManager.getStationById(stationId)
+//        println(stationResponse)
+//        assertNotNull(stationResponse)
+//        assertEquals(stationId, stationResponse?.stationId)
+//
+//    }
+//
+//    @Test fun getStationByNameMustGetResponse() {
+//        val stationName ="108. 서교동 사거리"
+//        val stationResponse = stationDataManager.getStationByName(stationName)
+//        println(stationResponse)
+//        assertNotNull(stationResponse)
+//        assertEquals(stationName, stationResponse?.stationName)
+//    }
 
     @Test fun getAllStationMustGetResponse() {
         val stationResponse = stationDataManager.allStationList
