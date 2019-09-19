@@ -24,13 +24,22 @@ class CategorySheetManager(activity: MainActivity) {
         sheetListener = CategorySheetListener(sheetBehavior, activity.getPresenter())
         sheetBehavior.bottomSheetCallback = sheetListener
 
-        activity.category_cafe.setOnClickListener{v -> activity.getPresenter().setState(State.SELECT_WAYPOINT) }
-        activity.category_leisure.setOnClickListener{v -> activity.getPresenter().setState(State.SELECT_WAYPOINT)}
+        activity.category_cafe.setOnClickListener{v ->
+            activity.getPresenter().setState(State.SELECT_WAYPOINT)
+            activity.getPresenter().setCafeMarkers()
+        }
+        activity.category_leisure.setOnClickListener{v ->
+            activity.getPresenter().setState(State.SELECT_WAYPOINT)
+            activity.getPresenter().setLeisureMarkers()
+        }
         activity.category_restaurant.setOnClickListener{ v ->
             activity.getPresenter().setState(State.SELECT_WAYPOINT)
             activity.getPresenter().setRestaurantMarkers()
         }
-        activity.category_terrain.setOnClickListener{v -> activity.getPresenter().setState(State.SELECT_WAYPOINT)}
+        activity.category_terrain.setOnClickListener{v ->
+            activity.getPresenter().setState(State.SELECT_WAYPOINT)
+            activity.getPresenter().setTerrainMarkers()
+        }
     }
 
     fun collapseWayPointSheet() {

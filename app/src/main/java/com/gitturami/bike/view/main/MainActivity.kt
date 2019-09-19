@@ -11,7 +11,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.cafe.pojo.Cafe
 import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
@@ -29,6 +31,7 @@ import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {
+
     companion object {
         private val TAG = "MainActivity"
     }
@@ -194,6 +197,15 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     override fun setRestaurantMarkers(x: Double, y: Double, restaurant: Restaurant) {
         presenter.setRestaurantMarkers()
     }
+    override fun setCafeMarkers(x: Double, y: Double, cafe: Cafe) {
+        presenter.setCafeMarkers()
+    }
+    override fun setLeisureMarkers(x: Double, y: Double, leisure: Leisure) {
+        presenter.setLeisureMarkers()
+    }
+    override fun setTerrainMarkers(x: Double, y: Double, leisure: Leisure) {
+        presenter.setTerrainMarkers()
+    }
 
     override fun setMarker(x: Double, y: Double, station: SummaryStation) {
         tMapManager.setMarker(x, y, station)
@@ -211,6 +223,14 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                         return super.onSingleTapUp(p, mapView)
                     }
         })
+    }
+
+    override fun setMarker(x: Double, y: Double, cafe: Cafe) {
+        tMapManager.setMarker(x, y, cafe)
+    }
+
+    override fun setMarker(x: Double, y: Double, leisure: Leisure) {
+        tMapManager.setMarker(x, y, leisure)
     }
 
     override fun onCompleteMarking() {

@@ -6,6 +6,7 @@ import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cafe.CafeDataManager
+import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
@@ -47,6 +48,9 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     @Inject
     lateinit var cafeDataManager: CafeDataManager
+
+    @Inject
+    lateinit var leisureDataManager: LeisureDataManager
 
     init {
         injectDataManager(context)
@@ -104,17 +108,71 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     override fun setCafeMarkers() {
-        disposal.add(cafeDataManager.allCafe
+        Logger.i(TAG, "#### Request cafe information ####")
+        disposal.add(cafeDataManager.summariesCafe
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { Logger.i(TAG, "onNext()") },
+                        {
+                            //Logger.i(TAG, "restaurant : $it")
+                            view.setMarker(it.XCODE.toDouble(), it.YCODE.toDouble(), it)
+                            view.addWayPointItem(it)
+                        },
                         { e ->
                             Logger.e(TAG, "onError(): $e")
                             view.showToast("카페 정보를 받아오는 도중에 문제가 발생했습니다.")
                         },
-                        { Logger.i(TAG, "onComplete()") }
+                        {
+                            Logger.i(TAG, "onComplete() : set recycler view")
+                            view.onCompleteMarking()
+                        }
+                )
+        )
+    }
+    override fun setLeisureMarkers() {
+        Logger.i(TAG, "#### Request leisure information ####")
+        disposal.add(leisureDataManager.summariesLeisure
+                .flatMap{list -> Observable.fromIterable(list)}
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            //Logger.i(TAG, "restaurant : $it")
+                            view.setMarker(it.mapx.toDouble(), it.mapy.toDouble(), it)
+                            view.addWayPointItem(it)
+                        },
+                        { e ->
+                            Logger.e(TAG, "onError(): $e")
+                            view.showToast("레저 정보를 받아오는 도중에 문제가 발생했습니다.")
+                        },
+                        {
+                            Logger.i(TAG, "onComplete() : set recycler view")
+                            view.onCompleteMarking()
+                        }
+                )
+        )
+    }
+    override fun setTerrainMarkers() {
+        Logger.i(TAG, "#### Request Terrain information ####")
+        disposal.add(leisureDataManager.summariesTerrain
+                .flatMap{list -> Observable.fromIterable(list)}
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            //Logger.i(TAG, "restaurant : $it")
+                            view.setMarker(it.mapx.toDouble(), it.mapy.toDouble(), it)
+                            view.addWayPointItem(it)
+                        },
+                        { e ->
+                            Logger.e(TAG, "onError(): $e")
+                            view.showToast("자연 정보를 받아오는 도중에 문제가 발생했습니다.")
+                        },
+                        {
+                            Logger.i(TAG, "onComplete() : set recycler view")
+                            view.onCompleteMarking()
+                        }
                 )
         )
     }
