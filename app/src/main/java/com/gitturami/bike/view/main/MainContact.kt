@@ -1,6 +1,8 @@
 package com.gitturami.bike.view.main
 
+import com.gitturami.bike.model.cafe.pojo.Cafe
 import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
@@ -16,7 +18,12 @@ interface MainContact {
         fun setStationMarkers()
         fun setRestaurantMarkers(x: Double, y: Double, restaurant: Restaurant)
         fun setMarker(x: Double, y: Double, station: SummaryStation)
+        fun setCafeMarkers(x: Double, y: Double, cafe: Cafe)
+        fun setLeisureMarkers(x: Double, y: Double, leisure: Leisure)
+        fun setTerrainMarkers(x: Double, y: Double, leisure: Leisure)
         fun setMarker(x: Double, y: Double, restaurant: Restaurant)
+        fun setMarker(x: Double, y: Double, cafe: Cafe)
+        fun setMarker(x: Double, y: Double, leisure: Leisure)
         fun onCompleteMarking()
         fun changeMarker(station: Station)
         fun setStartSearchView(text: String)
@@ -42,6 +49,8 @@ interface MainContact {
         fun setStationMarkers()
         fun setCafeMarkers()
         fun setRestaurantMarkers()
+        fun setLeisureMarkers()
+        fun setTerrainMarkers()
         fun setSearchView(text: String)
         fun getState(): State
         fun setState(state: State)

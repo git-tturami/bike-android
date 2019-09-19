@@ -1,5 +1,7 @@
 package com.gitturami.bike.model.leisure.pojo
 
+import com.gitturami.bike.model.common.pojo.DefaultItem
+
 data class Leisure(
         val addr1: String,
         val areacode: Int,
@@ -19,4 +21,7 @@ data class Leisure(
         val sigungucode: Int,
         val title: String,
         val zipcode: String
-)
+): DefaultItem {
+    override fun getName(): String = title
+    override fun getTel(): String = mapx
+}

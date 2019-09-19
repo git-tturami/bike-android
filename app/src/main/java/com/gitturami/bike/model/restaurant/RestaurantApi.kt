@@ -8,4 +8,5 @@ import retrofit2.http.GET
 interface RestaurantApi {
     @GET("/restaurants/list")
     fun getAllRestaurant(): Observable<List<Restaurant>>
+
 }
