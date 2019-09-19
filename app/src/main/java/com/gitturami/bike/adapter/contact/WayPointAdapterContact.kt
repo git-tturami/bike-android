@@ -8,8 +8,10 @@ interface WayPointAdapterContact {
         fun notifyAdapter()
     }
     interface Model {
-        fun addItems(recyclerList: List<RecyclerItem>)
+        fun addItem(item: RecyclerItem)
+        fun addItems(recyclerList: MutableList<RecyclerItem>)
         fun getItem(position: Int): RecyclerItem
         fun clearItem()
+        fun getSize(): Int
     }
 }

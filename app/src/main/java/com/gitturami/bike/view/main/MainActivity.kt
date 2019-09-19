@@ -10,12 +10,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.map.TmapManager
-import com.gitturami.bike.view.main.presenter.MainContact
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.SelectLocationSheetManager
-import com.gitturami.bike.view.main.sheet.waypoint.WayPointSheetManager
+import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
+import com.gitturami.bike.view.main.sheet.waypoint.CategorySheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,8 +30,12 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     private lateinit var presenter: MainContact.Presenter
 
-    private val bottomSheetManager by lazy {
-        WayPointSheetManager(this) { state: State -> presenter.setState(state) }
+    private val wayPointSheetManager by lazy {
+        CategorySheetManager(this)
+    }
+
+    private val detailWayPointSheetManager by lazy {
+        DetailWayPointSheetManager(this) { state: State -> presenter.setState(state)}
     }
 
     private val tMapManager by lazy {
@@ -51,8 +57,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         checkPermission()
 
         presenter.takeView(this)
-        presenter.registerObserver()
+        setStationMarkers()
     }
+
+    override fun getPresenter(): MainContact.Presenter = presenter
 
     private fun checkPermission() {
         if (!checkLocationPermission()) {
@@ -74,8 +82,12 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun findPath(start: Station, end: Station) {
         tMapManager.findPath(start, end) {
-            bottomSheetManager.collapseWayPointSheet()
+            presenter.setState(State.SELECT_CATEGORY)
         }
+    }
+
+    override fun hidePath() {
+        tMapManager.hidePath()
     }
 
     override fun clearPath() {
@@ -117,13 +129,11 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     override fun setStartSearchView(text: String) {
         Logger.i(TAG, "setStartSearchView : $text")
         startSearchView.text = text
-        presenter.setState(State.SET_START)
     }
 
     override fun setFinishSearchView(text: String) {
         Logger.i(TAG, "setFinishSearchView : $text")
         finishSearchView.text = text
-        presenter.setState(State.SET_FINISH)
     }
 
     override fun setSelectDialogContants(station: Station) {
@@ -137,22 +147,28 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 Toast.makeText(applicationContext, "출발지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
                 presenter.setState(State.PREPARE)
-                startSearchView.text = ""
             }
             State.SET_FINISH -> {
                 Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
                 presenter.setState(State.SET_START)
-                bottomSheetManager.hiddenWayPointSheet()
-                finishSearchView.text = ""
+                wayPointSheetManager.hiddenWayPointSheet()
             }
-            State.MIN_WAYPOINT_SHEET -> {
-                presenter.setState(State.SET_FINISH)
-                bottomSheetManager.hiddenWayPointSheet()
+            State.SELECT_CATEGORY -> {
+                Toast.makeText(applicationContext, "초기화", Toast.LENGTH_SHORT).show()
+                presenter.setState(State.PREPARE)
+                presenter.setStationMarkers()
+            }
+            State.SELECT_WAYPOINT -> {
+                presenter.setState(State.SELECT_CATEGORY)
+            }
+            State.HALF_WAYPOINT_SHEET -> {
+                presenter.setState(State.SELECT_CATEGORY)
+                detailWayPointSheetManager.collapseWayPointSheet()
             }
             State.FULL_WAYPOINT_SHEET -> {
-                presenter.setState(State.MIN_WAYPOINT_SHEET)
-                bottomSheetManager.collapseWayPointSheet()
+                presenter.setState(State.SELECT_CATEGORY)
+                detailWayPointSheetManager.halfWayPointSheet()
             }
             else -> {
                 super.onBackPressed()
@@ -160,12 +176,61 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         }
     }
 
+    override fun setStationMarkers() {
+        if (!tMapManager.isMarked) {
+            presenter.setStationMarkers()
+        }
+    }
+
+    override fun setRestaurantMarkers(x: Double, y: Double, restaurant: Restaurant) {
+        presenter.setRestaurantMarkers()
+    }
+
     override fun setMarker(x: Double, y: Double, station: Station) {
         tMapManager.setMarker(x, y, station)
     }
 
-    override fun hideStationMarker() {
+    override fun setMarker(x: Double, y: Double, restaurant: Restaurant) {
+        tMapManager.setMarker(x, y, restaurant)
+    }
+
+    override fun onCompleteMarking() {
+        Logger.i(TAG, "onCompleteMarking")
+        tMapManager.isMarked = true
+    }
+
+    override fun changeMarker(station: Station) {
+        tMapManager.changeMarker(station)
+    }
+
+    override fun hideAllMarkers() {
+        wayPointSheetManager.hiddenWayPointSheet()
+        detailWayPointSheetManager.collapseWayPointSheet()
         tMapManager.hideStationMarker()
+    }
+
+    override fun hideCategorySheet() {
+        wayPointSheetManager.hiddenWayPointSheet()
+    }
+
+    override fun collapseCategorySheet() {
+        wayPointSheetManager.collapseWayPointSheet()
+    }
+
+    override fun hideWayPointSheet() {
+        detailWayPointSheetManager.hiddenWayPointSheet()
+    }
+
+    override fun halfWayPointSheet() {
+        detailWayPointSheetManager.halfWayPointSheet()
+    }
+
+    override fun expandWayPointSheet() {
+        detailWayPointSheetManager.expandWayPointSheet()
+    }
+
+    override fun addWayPointItem(item: DefaultItem) {
+        detailWayPointSheetManager.addItem(item)
     }
 
     override fun onDestroy() {

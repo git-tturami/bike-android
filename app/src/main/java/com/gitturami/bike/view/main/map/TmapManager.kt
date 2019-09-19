@@ -1,10 +1,12 @@
 package com.gitturami.bike.view.main.map
 
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
 import com.skt.Tmap.*
@@ -18,6 +20,8 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         const val TAG = "TmapManager"
     }
     private var isTracking = true
+    private var isFindPath = false
+    var isMarked = false
     private val tMapView = TMapView(activity)
     private val tMapGps = TMapGpsManager(activity)
     private val bitmapManager: BitmapManager by lazy {
@@ -67,34 +71,61 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     }
 
     fun setMarker(x: Double, y: Double, station: Station) {
-        val markerItem = TMapMarkerItem()
-        val mapPoint = TMapPoint(x, y)
+        if (isMarked) {
+            return
+        }
         val bitmap = when {
             station.shared > 50 -> bitmapManager.markerGreen
             station.shared in 20..50 -> bitmapManager.markerYellow
             else -> bitmapManager.markerRed
         }
-        markerItem.icon = bitmap
-        markerItem.setPosition(0.5f, 1.0f)
-        markerItem.tMapPoint = mapPoint
-        markerItem.id = station.stationId
-        tMapView.addMarkerItem(station.stationId, markerItem)
 
-        val markerItem2 = object: TMapMarkerItem2() {
+        val markerOverlay = object: TMapMarkerItem2() {
             override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
                 Logger.i(TAG, "onSingleTapUp() : $station")
                 mainView.setSelectDialogContants(station)
                 return super.onSingleTapUp(p, mapView)
             }
         }
-        markerItem2.icon = bitmap
-        markerItem2.setPosition(0.5f, 1.0f)
-        markerItem2.tMapPoint = mapPoint
-        markerItem2.id = station.stationId
-        tMapView.addMarkerItem2(station.stationId, markerItem2)
+
+        setMarker(x, y, station.stationId, bitmap, markerOverlay)
+    }
+
+    fun setMarker(x: Double, y: Double, restaurant: Restaurant) {
+        val markerOverlay = object: TMapMarkerItem2() {
+            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                Logger.i(TAG, "onSingleTapUp() : $restaurant")
+                return super.onSingleTapUp(p, mapView)
+            }
+        }
+        setMarker(x, y, restaurant.UPSO_SNO, bitmapManager.markerGreen, markerOverlay)
+
+    }
+
+    private fun setMarker(x: Double, y: Double, id: String, icon: Bitmap, tMapOverlay: TMapMarkerItem2) {
+        val point = TMapPoint(x, y)
+        val markerItem = TMapMarkerItem()
+        markerItem.icon = icon
+        markerItem.setPosition(0.5f, 1.0f)
+        markerItem.tMapPoint = point
+        markerItem.id = id
+        tMapView.addMarkerItem(id, markerItem)
+
+        val markerOverlay = tMapOverlay
+        markerOverlay.icon = icon
+        markerOverlay.setPosition(0.5f, 1.0f)
+        markerOverlay.tMapPoint = point
+        markerOverlay.id = id
+        tMapView.addMarkerItem2(id, markerOverlay)
+    }
+
+    fun changeMarker(station: Station) {
+        // TODO: add marker at selected station
+        // tMapView.removeMarkerItem(station.stationId)
     }
 
     fun findPath(start:Station, end: Station, bottomSheetAction: () -> Unit) {
+        isFindPath = true
         val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
         val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
         try {
@@ -113,6 +144,20 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     }
 
     fun hideStationMarker() {
+        if (!isMarked) {
+            return
+        }
+
+        isMarked = false
         tMapView.removeAllMarkerItem()
+    }
+
+    fun hidePath() {
+        if (!isFindPath) {
+            return
+        }
+
+        isFindPath = false
+        tMapView.removeTMapPath()
     }
 }
