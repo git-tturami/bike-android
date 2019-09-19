@@ -14,6 +14,7 @@ import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cafe.pojo.Cafe
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.leisure.pojo.Leisure
+import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
@@ -97,6 +98,11 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         tMapManager.findPath(start, end) {
             presenter.setState(State.SELECT_CATEGORY)
         }
+    }
+
+    override fun markPath(pathItem: PathItem) {
+        tMapManager.markPath(pathItem)
+        presenter.setState(State.SELECT_CATEGORY)
     }
 
     override fun hidePath() {
@@ -208,7 +214,14 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun setMarker(x: Double, y: Double, station: SummaryStation) {
-        tMapManager.setMarker(x, y, station)
+        tMapManager.setMarker(x = x, y = y, station = station,
+                clickListener = object: TMapMarkerItem2() {
+                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                        Logger.i(TAG, "onSingleTapUp(): $station")
+                        setSelectDialogContants(station.stationId);
+                        return super.onSingleTapUp(p, mapView)
+                    }
+                })
     }
 
     override fun setMarker(x: Double, y: Double, restaurant: Restaurant) {

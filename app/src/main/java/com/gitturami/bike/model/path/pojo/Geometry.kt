@@ -1,4 +1,8 @@
 package com.gitturami.bike.model.path.pojo
 
-class Geometry {
-}
+import com.google.gson.JsonElement
+
+data class Geometry(
+        val type: String,
+        val coordinates: JsonElement
+)
