@@ -8,6 +8,7 @@ import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainContact
 import com.gitturami.bike.view.main.presenter.handler.*
 import com.gitturami.bike.view.main.state.State
@@ -72,10 +73,17 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         }
     }
 
+    override fun loadDetailInfoOfStation(id: String) {
+        stationDataManager.getStationById(id)!!
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { station -> view.setSelectBottomSheet(station) }
+    }
+
     // TODO : Below setters can be combined.
     override fun setStationMarkers() {
         Logger.i(TAG, "#### Request station information ####")
-        disposal.add(stationDataManager.allStationList
+        disposal.add(stationDataManager.allSummaryStationList
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -156,14 +164,12 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     private fun setStartStation(station: Station?) {
-        if (station == null) view.setMarker(startStation!!.stationLatitude.toDouble(), startStation!!.stationLongitude.toDouble(), startStation!!)
         startStation = station
         if (station != null) view.changeMarker(station)
     }
 
     private fun setFinishStation(station: Station?) {
         if (station == null) {
-            view.setMarker(finishStation!!.stationLatitude.toDouble(), finishStation!!.stationLongitude.toDouble(), finishStation!!)
             view.clearPath()
         }
         finishStation = station

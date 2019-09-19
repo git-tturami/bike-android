@@ -8,6 +8,7 @@ import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainActivity
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -70,7 +71,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         initTmapGps()
     }
 
-    fun setMarker(x: Double, y: Double, station: Station) {
+    fun setMarker(x: Double, y: Double, station: SummaryStation) {
         if (isMarked) {
             return
         }
@@ -82,8 +83,8 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
 
         val markerOverlay = object: TMapMarkerItem2() {
             override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : $station")
-                mainView.setSelectDialogContants(station)
+                Logger.i(TAG, "onSingleTapUp() : ${station.stationId}")
+                mainView.setSelectDialogContants(station.stationId)
                 return super.onSingleTapUp(p, mapView)
             }
         }
@@ -124,7 +125,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         // tMapView.removeMarkerItem(station.stationId)
     }
 
-    fun findPath(start:Station, end: Station, bottomSheetAction: () -> Unit) {
+    fun findPath(start: Station, end: Station, bottomSheetAction: () -> Unit) {
         isFindPath = true
         val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
         val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())

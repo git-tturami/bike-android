@@ -10,6 +10,7 @@ import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
 import com.gitturami.bike.view.main.MainContact
 import com.gitturami.bike.view.main.state.State
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet.view.*
 
@@ -31,7 +32,7 @@ class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activ
 
     fun initStation(station: Station) {
         this.station = station
-        val parsedTitle = station.stationName.split(".")[1].trim()
+        val parsedTitle = station.stationName!!.split(".")[1].trim()
         bottomSheet.stationTitle.text = parsedTitle
         bottomSheet.stationEnable.text = "· 대여가능 : ${station.parkingBikeTotCnt}"
         bottomSheet.stationTotal.text = "· 총 자전거 : ${station.rackTotCnt}"

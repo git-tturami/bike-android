@@ -61,7 +61,7 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
     fun hiddenWayPointSheet() {
         sheetBehavior.isHideable = true
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-    }
+    } 
 
     fun expandWayPointSheet() {
         sheetBehavior.isHideable = false
