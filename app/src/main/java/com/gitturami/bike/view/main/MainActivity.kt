@@ -19,6 +19,7 @@ import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
 import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
+import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.SelectLocationSheetManager
@@ -92,12 +93,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         settingButton.setOnClickListener {
             val intent = Intent(applicationContext, SettingActivity::class.java)
             startActivity(intent)
-        }
-    }
-
-    override fun findPath(start: Station, end: Station) {
-        tMapManager.findPath(start, end) {
-            presenter.setState(State.SELECT_CATEGORY)
         }
     }
 
@@ -231,6 +226,17 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter.setTerrainMarkers()
     }
 
+    override fun setMarker(type: ItemType, x: Double, y: Double, item: DefaultSummaryItem) {
+        tMapManager.setMarker(type, x, y, item,
+                object: TMapMarkerItem2() {
+                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                        Logger.i(TAG, "onSingleTapUp(): $item")
+                        return super.onSingleTapUp(p, mapView)
+                    }
+                }
+        )
+    }
+
     override fun setMarker(x: Double, y: Double, station: SummaryStation) {
         tMapManager.setMarker(x = x, y = y, station = station,
                 clickListener = object: TMapMarkerItem2() {
@@ -240,18 +246,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                         return super.onSingleTapUp(p, mapView)
                     }
                 })
-    }
-
-    override fun setMarker(x: Double, y: Double, restaurant: SummaryRestaurant) {
-        tMapManager.setMarker(x, y, restaurant)
-    }
-
-    override fun setMarker(x: Double, y: Double, cafe: SummaryCafe) {
-        tMapManager.setMarker(x, y, cafe)
-    }
-
-    override fun setMarker(x: Double, y: Double, leisure: SummaryLeisure) {
-        tMapManager.setMarker(x, y, leisure)
     }
 
     override fun onCompleteMarking() {

@@ -10,13 +10,13 @@ import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
+import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.model.cafe.pojo.SummaryCafe as SummaryCafe
 
 interface MainContact {
     interface View {
         fun getPresenter(): Presenter
-        fun findPath(start: Station, end: Station)
         fun hidePath()
         fun clearPath()
         fun showToast(title: String)
@@ -27,9 +27,7 @@ interface MainContact {
         fun setTerrainMarkers()
         fun setMarker(x: Double, y: Double, station: SummaryStation)
         fun markPath(pathItem: PathItem)
-        fun setMarker(x: Double, y: Double, restaurant: SummaryRestaurant)
-        fun setMarker(x: Double, y: Double, cafe: SummaryCafe)
-        fun setMarker(x: Double, y: Double, leisure: SummaryLeisure)
+        fun setMarker(type: ItemType, x: Double, y: Double, item: DefaultSummaryItem)
         fun onCompleteMarking()
         fun changeMarker(station: Station)
         fun setStartSearchView(text: String)
