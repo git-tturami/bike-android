@@ -7,6 +7,7 @@ import android.location.Location
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cafe.pojo.SummaryCafe
+import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
@@ -97,54 +98,45 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
             }
         }
 
-        setMarker(x, y, station.stationId, bitmap, markerOverlay)
+        setMarker(ItemType.STATION, x, y, station.stationId, bitmap, markerOverlay)
     }
 
-    fun setMarker(x: Double, y: Double, restaurant: SummaryRestaurant) {
-        val markerOverlay = object: TMapMarkerItem2() {
-            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : ${restaurant.UPSO_NM}")
-                mainView.loadDetailInfoOfRestaurant(restaurant.UPSO_NM)
-                return super.onSingleTapUp(p, mapView)
+    fun setMarker(type: ItemType, x: Double, y: Double, summaryItem: DefaultSummaryItem, clickListener: TMapMarkerItem2) {
+        var bitmap: Bitmap =
+            when (type) {
+                ItemType.CAFE -> {
+                    bitmapManager.cafeMarker
+                }
+                ItemType.RESTAURANT -> {
+                    bitmapManager.restaurantMarker
+                }
+                ItemType.LEISURE -> {
+                    bitmapManager.leisureMarker
+                }
+                ItemType.TERRAIN -> {
+                    bitmapManager.terrainMarker
+                }
+                else -> {
+                    bitmapManager.redMarker
+                }
             }
-        }
-        val nameTrim: String = restaurant.UPSO_NM.replace(" ", "")
 
-        setMarker(x, y, nameTrim, bitmapManager.restaurantMarker, markerOverlay)
+        setMarker(type, x, y, summaryItem.getID().replace(" ", "").trim(), bitmap, clickListener)
     }
 
-    fun setMarker(x: Double, y: Double, cafe: SummaryCafe) {
-        val markerOverlay = object: TMapMarkerItem2() {
-            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : ${cafe.NM}")
-                mainView.loadDetailInfoOfCafe(cafe.NM)
-                return super.onSingleTapUp(p, mapView)
-            }
-        }
-        val NMTrim: String = cafe.NM.replace(" ", "")
-
-        setMarker(x, y, NMTrim, bitmapManager.cafeMarker, markerOverlay)
-    }
-
-    fun setMarker(x: Double, y: Double, leisure: SummaryLeisure) {
-        val markerOverlay = object: TMapMarkerItem2() {
-            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : ${leisure.title}")
-                mainView.loadDetailInfoOfLeisure(leisure.title)
-                return super.onSingleTapUp(p, mapView)
-            }
-        }
-        val titleTrim :String = leisure.title.replace(" ", "")
-
-        setMarker(x, y, titleTrim, bitmapManager.leisureMarker, markerOverlay)
-    }
-
-    private fun setMarker(x: Double, y: Double, id: String, icon: Bitmap, tMapOverlay: TMapMarkerItem2) {
+    private fun setMarker(type: ItemType, x: Double, y: Double, id: String, icon: Bitmap, tMapOverlay: TMapMarkerItem2) {
         if (id == "testId") {
             Logger.i(TAG, "path : $x, $y")
         }
 
         val point = TMapPoint(x, y)
+        if (type == ItemType.CAFE) {
+            point.mKatecLat = y
+            point.mKatecLon = x
+            val katec = TMapKatec()
+
+        }
+
         val markerItem = TMapMarkerItem()
         markerItem.icon = icon
         markerItem.setPosition(0.5f, 1.0f)
@@ -163,25 +155,6 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     fun changeMarker(station: Station) {
         // TODO: add marker at selected station
         // tMapView.removeMarkerItem(station.stationId)
-    }
-
-    fun findPath(start: Station, end: Station, bottomSheetAction: () -> Unit) {
-//        isFindPath = true
-//        val startTMapPoint = TMapPoint(start.stationLatitude.toDouble(), start.stationLongitude.toDouble())
-//        val endTMapPoint = TMapPoint(end.stationLatitude.toDouble(), end.stationLongitude.toDouble())
-//        try {
-//            val data = TMapData()
-//            data.findPathData(startTMapPoint, endTMapPoint) { path ->
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    path.lineWidth = 10f
-//                    path.lineColor = Color.BLUE
-//                    tMapView.addTMapPath(path)
-//                    bottomSheetAction()
-//                }
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
     }
 
     fun markPath(pathItem: PathItem) {

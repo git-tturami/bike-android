@@ -11,6 +11,7 @@ import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainContact
+import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.presenter.handler.*
 import com.gitturami.bike.view.main.state.State
 
@@ -142,7 +143,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            view.setMarker(it.XCODE.toDouble(), it.YCODE.toDouble(), it)
+                            view.setMarker(ItemType.CAFE, it.YCODE.toDouble(), it.XCODE.toDouble(), it)
                             view.addWayPointItem(it)
                         },
                         { e ->
@@ -164,7 +165,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            view.setMarker(it.mapx.toDouble(), it.mapy.toDouble(), it)
+                            view.setMarker(ItemType.LEISURE, it.mapy.toDouble(), it.mapx.toDouble(), it)
                             view.addWayPointItem(it)
                         },
                         { e ->
@@ -187,8 +188,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            // view.setMarker(it.mapx.toDouble(), it.mapy.toDouble(), it)
-                            // view.addWayPointItem(it)
+                             view.setMarker(ItemType.TERRAIN, it.mapy.toDouble(), it.mapx.toDouble(), it)
+                             view.addWayPointItem(it)
                         },
                         { e ->
                             Logger.e(TAG, "onError(): $e")
@@ -204,14 +205,14 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun setRestaurantMarkers() {
         Logger.i(TAG, "#### Request restaurant information ####")
-        disposal.add(restaurantDataManager.allRestaurant
+        disposal.add(restaurantDataManager.allLightRestaurant
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            // view.setMarker(it.X_CNTS.toDouble(), it.Y_DNTS.toDouble(), it)
-                            // view.addWayPointItem(it)
+                            view.setMarker(ItemType.RESTAURANT, it.Y_DNTS.toDouble(), it.X_CNTS.toDouble(), it)
+                            view.addWayPointItem(it)
                         },
                         { e ->
                             Logger.e(TAG, "onError(): $e")

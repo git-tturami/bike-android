@@ -42,7 +42,7 @@ interface LeisureApi {
     fun getLeisureSummaries(): Observable<List<SummaryLeisure>>
 
     @GET("/leisure/terrain/summaries")
-    fun getTerrainSummaries(): Observable<List<Leisure>>
+    fun getTerrainSummaries(): Observable<List<SummaryLeisure>>
 
     @GET("/leisure/name")
     fun getLeisureByName(@Query("name") name : String) : Single<Leisure>
