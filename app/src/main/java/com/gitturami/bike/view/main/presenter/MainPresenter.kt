@@ -10,7 +10,6 @@ import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainContact
 import com.gitturami.bike.view.main.presenter.handler.*
 import com.gitturami.bike.view.main.state.State
