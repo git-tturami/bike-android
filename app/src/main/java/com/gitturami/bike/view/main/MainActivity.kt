@@ -11,14 +11,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
-import com.gitturami.bike.model.cafe.pojo.Cafe
 import com.gitturami.bike.model.cafe.pojo.SummaryCafe
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
-import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
-import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
