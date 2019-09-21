@@ -82,24 +82,30 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     override fun loadDetailInfoOfStation(id: String) {
-        stationDataManager.getStationById(id)!!
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { station -> view.setSelectBottomSheet(station) }
+        disposal.add(
+                stationDataManager.getStationById(id)!!
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { station -> view.setSelectBottomSheet(station) }
+        )
     }
 
     override fun loadDetailInfoOfCafe(name: String) {
-        cafeDataManager.getCafeByName(name)!!
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { cafe -> view.setItemBottomSheet(cafe) }
+        disposal.add(
+                cafeDataManager.getCafeByName(name)!!
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { cafe -> view.setItemBottomSheet(cafe) }
+        )
     }
 
     override fun loadDetailInfoOfLeisure(title: String) {
-        leisureDataManager.getLeisureByName(title)!!
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { leisure -> view.setItemBottomSheet(leisure)}
+        disposal.add(
+                leisureDataManager.getLeisureByName(title)!!
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { leisure -> view.setItemBottomSheet(leisure)}
+        )
     }
 
     override fun loadDetailInfoOfRestaurant(name: String) {
@@ -241,21 +247,23 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     override fun findPath(start: Station, end: Station) {
-        pathManager.getPath(start.stationLongitude.toDouble(),
-                start.stationLatitude.toDouble(),
-                end.stationLongitude.toDouble(),
-                end.stationLatitude.toDouble(),
-                start.stationName,
-                end.stationName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            //Logger.i(TAG, "$it")
-                            view.markPath(it)
-                        },
-                        { t -> Logger.e(TAG, "$t") }
-                )
+        disposal.add(
+                pathManager.getPath(start.stationLongitude.toDouble(),
+                        start.stationLatitude.toDouble(),
+                        end.stationLongitude.toDouble(),
+                        end.stationLatitude.toDouble(),
+                        start.stationName,
+                        end.stationName)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    //Logger.i(TAG, "$it")
+                                    view.markPath(it)
+                                },
+                                { t -> Logger.e(TAG, "$t") }
+                        )
+        )
     }
 
     private fun setStartStation(station: Station?) {
@@ -269,7 +277,6 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         }
         finishStation = station
         if (station != null) {
-            view.findPath(startStation!!, finishStation!!)
             findPath(startStation!!, finishStation!!)
             view.changeMarker(station)
         }
