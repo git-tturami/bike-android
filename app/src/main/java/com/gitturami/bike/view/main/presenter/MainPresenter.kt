@@ -115,6 +115,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     // TODO : Below setters can be combined.
     override fun setStationMarkers() {
         Logger.i(TAG, "#### Request station information ####")
+        view.startLoading()
         disposal.add(stationDataManager.allSummaryStationList
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -130,6 +131,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         {
                             Logger.i(TAG, "onComplete()")
                             view.onCompleteMarking()
+                            view.endLoading()
                         }
                 )
         )
@@ -243,6 +245,54 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         when (state) {
             State.SET_START -> setStartStation(station)
             State.SET_FINISH -> setFinishStation(station)
+        }
+    }
+
+    override fun requestDetailItem(type: ItemType, param: String) {
+        // TODO : We need to refactor this method.
+        when (type) {
+            ItemType.CAFE -> {
+                cafeDataManager.getCafeByName(param)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    Logger.i(TAG, "$it")
+                                    view.setItem(it)
+                                },
+                                {
+                                    e -> Logger.e(TAG, "onError() : $e")
+                                }
+                        )
+            }
+            ItemType.RESTAURANT -> {
+                restaurantDataManager.restaurantByName(param)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    Logger.i(TAG, "$it")
+                                    view.setItem(it)
+                                },
+                                {
+                                    e -> Logger.e(TAG, "onError() : $e")
+                                }
+                        )
+            }
+            ItemType.LEISURE, ItemType.TERRAIN -> {
+                leisureDataManager.getLeisureByName(param)!!
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    Logger.i(TAG, "$it")
+                                    view.setItem(it)
+                                },
+                                {
+                                    e -> Logger.e(TAG, "onError() : $e")
+                                }
+                        )
+            }
         }
     }
 

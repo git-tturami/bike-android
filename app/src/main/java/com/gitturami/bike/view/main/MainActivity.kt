@@ -3,10 +3,14 @@ package com.gitturami.bike.view.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.gitturami.bike.R
@@ -32,6 +36,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skt.Tmap.TMapMarkerItem2
 import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.activity_main.*
+import android.graphics.drawable.ColorDrawable
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import kotlinx.android.synthetic.main.layout_loading_img.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {
 
@@ -231,10 +241,16 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 object: TMapMarkerItem2() {
                     override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
                         Logger.i(TAG, "onSingleTapUp(): $item")
+                        presenter.setState(State.POST_SELECT_WAYPOINT)
+                        presenter.requestDetailItem(type, item.getID())
                         return super.onSingleTapUp(p, mapView)
                     }
                 }
         )
+    }
+
+    override fun setItem(item: DefaultItem) {
+        itemSheetManager.setItem(item)
     }
 
     override fun setMarker(x: Double, y: Double, station: SummaryStation) {
@@ -297,6 +313,28 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun hideItemSheet() {
         itemSheetManager.hideSheet()
+    }
+
+    val dialog: AppCompatDialog by lazy {
+        val dialog = AppCompatDialog(this)
+        dialog.setCancelable(false)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setContentView(R.layout.layout_loading_img)
+        Glide.with(this)
+                .asGif()
+                .load(R.raw.loading)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(dialog.img_view_loading)
+        dialog
+    }
+
+    override fun startLoading() {
+        Logger.i(TAG, "startLoading")
+        dialog.show()
+    }
+
+    override fun endLoading() {
+        dialog.dismiss()
     }
 
     override fun onDestroy() {
