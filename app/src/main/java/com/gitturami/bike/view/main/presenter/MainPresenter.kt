@@ -5,6 +5,7 @@ import com.gitturami.bike.di.model.DaggerDataManagerComponent
 import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.cache.CacheManager
 import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.leisure.LeisureDataManager
@@ -41,6 +42,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
             State.SELECT_WAYPOINT to WayPointHandler(),
             State.POST_SELECT_WAYPOINT to PostSelectHandler()
     )
+    private var cacheManager: CacheManager
 
     @Inject
     lateinit var stationDataManager: StationDataManager
@@ -59,6 +61,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     init {
         injectDataManager(context)
+        cacheManager = CacheManager()
     }
 
     private fun injectDataManager(context: Context) {
@@ -126,8 +129,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     override fun setStationMarkers() {
         Logger.i(TAG, "#### Request station information ####")
         view.startLoading()
-        disposal.add(stationDataManager.allSummaryStationList
-                .flatMap{list -> Observable.fromIterable(list)}
+        disposal.add(stationDataManager.getAllSummaryStationList(cacheManager)
+                .concatMap { list -> Observable.fromIterable(list) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

@@ -6,6 +6,6 @@ data class SummaryLeisure(val title: String
                           , val mapx: String, val mapy: String): DefaultSummaryItem
 {
     override fun getID(): String = title
-    override fun getLatitude(): String = mapx
-    override fun getLongitude(): String = mapy
+    override fun getLatitude(): String = mapy
+    override fun getLongitude(): String = mapx
 }
