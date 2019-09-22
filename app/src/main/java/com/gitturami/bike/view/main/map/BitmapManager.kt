@@ -18,20 +18,28 @@ class BitmapManager(val context: Context) {
         drawableToBitmap(R.drawable.ic_map_marker_material_yellow)
     }
 
+    val departureMarker: Bitmap by lazy {
+        drawableToBitmap(R.drawable.ic_departure)
+    }
+
+    val arrivalmarker: Bitmap by lazy {
+        drawableToBitmap(R.drawable.ic_arrival)
+    }
+
     val restaurantMarker: Bitmap by lazy {
-        drawableToMarker(R.drawable.ic_mark_restaurant1)
+        drawableToMarker(R.drawable.ic_restaurant)
     }
 
     val cafeMarker: Bitmap by lazy {
-        drawableToMarker(R.drawable.ic_mark_cafe1)
+        drawableToMarker(R.drawable.ic_cafe)
     }
 
     val leisureMarker: Bitmap by lazy {
-        drawableToMarker(R.drawable.ic_mark_festival1)
+        drawableToMarker(R.drawable.ic_festival)
     }
 
     val terrainMarker: Bitmap by lazy {
-        drawableToMarker(R.drawable.ic_mark_terrain1)
+        drawableToMarker(R.drawable.ic_terrain)
     }
 
     private fun drawableToBitmap(resId: Int): Bitmap {

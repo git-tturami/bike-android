@@ -26,6 +26,7 @@ interface MainContact {
         fun setLeisureMarkers()
         fun setTerrainMarkers()
         fun setMarker(x: Double, y: Double, station: SummaryStation)
+        fun setItem(item: DefaultItem)
         fun markPath(pathItem: PathItem)
         fun setMarker(type: ItemType, x: Double, y: Double, item: DefaultSummaryItem)
         fun onCompleteMarking()
@@ -47,6 +48,8 @@ interface MainContact {
         fun expandWayPointSheet()
         fun collapseItemSheet()
         fun hideItemSheet()
+        fun startLoading()
+        fun endLoading()
 
         fun addWayPointItem(item: DefaultSummaryItem)
     }
@@ -67,6 +70,7 @@ interface MainContact {
         fun setState(state: State)
         fun setLocation(station: Station?)
         fun findPath(start: Station, end: Station)
+        fun requestDetailItem(type: ItemType, param: String)
         fun destroy()
     }
 }

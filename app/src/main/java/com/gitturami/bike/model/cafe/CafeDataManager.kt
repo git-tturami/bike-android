@@ -12,5 +12,5 @@ class CafeDataManager(context: Context): DataManager(context) {
 
     val allCafe: Observable<List<Cafe>> = api.getAllCafe()
     val summariesCafe: Observable<List<SummaryCafe>> = api.getCafeSummaries()
-    fun getCafeByName(name: String): Single<Cafe>? = api.getCafeByName(name)
+    fun getCafeByName(name: String): Single<Cafe> = api.getCafeByName(name)
 }
