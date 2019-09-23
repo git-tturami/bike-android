@@ -33,4 +33,6 @@ data class Cafe(
     override fun getName(): String = NM
     override fun getTel(): String = TEL
     override fun getAddress(): String = ADDR
+    override fun getLatitude(): String = XCODE
+    override fun getLongitude(): String = YCODE
 }

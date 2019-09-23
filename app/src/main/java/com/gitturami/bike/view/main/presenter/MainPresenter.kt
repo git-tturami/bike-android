@@ -6,6 +6,7 @@ import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cafe.CafeDataManager
+import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
@@ -82,29 +83,38 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     override fun loadDetailInfoOfStation(id: String) {
+        view.startLoading()
         disposal.add(
                 stationDataManager.getStationById(id)!!
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { station -> view.setSelectBottomSheet(station) }
+                        .subscribe { station ->
+                            view.setSelectBottomSheet(station)
+                            view.endLoading()}
         )
     }
 
     override fun loadDetailInfoOfCafe(name: String) {
+        view.startLoading()
         disposal.add(
                 cafeDataManager.getCafeByName(name)!!
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { cafe -> view.setItemBottomSheet(cafe) }
+                        .subscribe { cafe ->
+                            view.setItemBottomSheet(cafe)
+                            view.endLoading()}
         )
     }
 
     override fun loadDetailInfoOfLeisure(title: String) {
+        view.startLoading()
         disposal.add(
                 leisureDataManager.getLeisureByName(title)!!
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { leisure -> view.setItemBottomSheet(leisure)}
+                        .subscribe { leisure ->
+                            view.setItemBottomSheet(leisure)
+                            view.endLoading()}
         )
     }
 
@@ -139,6 +149,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun setCafeMarkers() {
         Logger.i(TAG, "#### Request cafe information ####")
+        view.startLoading()
         disposal.add(cafeDataManager.summariesCafe
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -155,12 +166,14 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         {
                             Logger.i(TAG, "onComplete() : set recycler view")
                             view.onCompleteMarking()
+                            view.endLoading()
                         }
                 )
         )
     }
     override fun setLeisureMarkers() {
         Logger.i(TAG, "#### Request leisure information ####")
+        view.startLoading()
         disposal.add(leisureDataManager.summariesLeisure
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -177,6 +190,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         {
                             Logger.i(TAG, "onComplete() : set recycler view")
                             view.onCompleteMarking()
+                            view.endLoading()
                         }
                 )
         )
@@ -184,6 +198,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun setTerrainMarkers() {
         Logger.i(TAG, "#### Request Terrain information ####")
+        view.startLoading()
         disposal.add(leisureDataManager.summariesTerrain
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -200,6 +215,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         {
                             Logger.i(TAG, "onComplete() : set recycler view")
                             view.onCompleteMarking()
+                            view.endLoading()
                         }
                 )
         )
@@ -207,6 +223,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun setRestaurantMarkers() {
         Logger.i(TAG, "#### Request restaurant information ####")
+        view.startLoading()
         disposal.add(restaurantDataManager.allLightRestaurant
                 .flatMap{list -> Observable.fromIterable(list)}
                 .subscribeOn(Schedulers.io())
@@ -223,6 +240,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         {
                             Logger.i(TAG, "onComplete() : set recycler view")
                             view.onCompleteMarking()
+                            view.endLoading()
                         }
                 )
         )
@@ -250,6 +268,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun requestDetailItem(type: ItemType, param: String) {
         // TODO : We need to refactor this method.
+        view.startLoading()
         when (type) {
             ItemType.CAFE -> {
                 cafeDataManager.getCafeByName(param)
@@ -259,6 +278,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                 {
                                     Logger.i(TAG, "$it")
                                     view.setItem(it)
+                                    setState(State.POST_SELECT_WAYPOINT)
+                                    view.endLoading()
                                 },
                                 {
                                     e -> Logger.e(TAG, "onError() : $e")
@@ -273,9 +294,12 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                 {
                                     Logger.i(TAG, "$it")
                                     view.setItem(it)
+                                    setState(State.POST_SELECT_WAYPOINT)
+                                    view.endLoading()
                                 },
                                 {
                                     e -> Logger.e(TAG, "onError() : $e")
+
                                 }
                         )
             }
@@ -287,6 +311,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                 {
                                     Logger.i(TAG, "$it")
                                     view.setItem(it)
+                                    setState(State.POST_SELECT_WAYPOINT)
+                                    view.endLoading()
                                 },
                                 {
                                     e -> Logger.e(TAG, "onError() : $e")
@@ -316,9 +342,30 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         )
     }
 
+    override fun setWayPointAndFindPath(wayPoint: DefaultItem) {
+        disposal.add(
+                pathManager.getPathIncludeWayPoint(startStation?.stationLongitude!!.toDouble(),
+                        startStation!!.stationLatitude.toDouble(),
+                        finishStation!!.stationLongitude.toDouble(),
+                        finishStation!!.stationLatitude.toDouble(),
+                        startStation!!.stationName,
+                        finishStation!!.stationName,
+                        wayPoint.getLatitude() + "," + wayPoint.getLongitude())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    //Logger.i(TAG, "$it")
+                                    view.markPath(it)
+                                },
+                                { t -> Logger.e(TAG, "$t") }
+                        )
+        )
+    }
+
     private fun setStartStation(station: Station?) {
         startStation = station
-        if (station != null) view.changeMarker(station)
+        if (station != null) view.setStartMarker(station)
     }
 
     private fun setFinishStation(station: Station?) {
@@ -328,7 +375,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         finishStation = station
         if (station != null) {
             findPath(startStation!!, finishStation!!)
-            view.changeMarker(station)
+            view.setFinishMarker(station)
         }
     }
 

@@ -30,7 +30,8 @@ interface MainContact {
         fun markPath(pathItem: PathItem)
         fun setMarker(type: ItemType, x: Double, y: Double, item: DefaultSummaryItem)
         fun onCompleteMarking()
-        fun changeMarker(station: Station)
+        fun setStartMarker(station: Station)
+        fun setFinishMarker(station: Station)
         fun setStartSearchView(text: String)
         fun setFinishSearchView(text: String)
         fun loadDetailInfoOfStation(id: String)
@@ -70,6 +71,7 @@ interface MainContact {
         fun setState(state: State)
         fun setLocation(station: Station?)
         fun findPath(start: Station, end: Station)
+        fun setWayPointAndFindPath(wayPoint: DefaultItem)
         fun requestDetailItem(type: ItemType, param: String)
         fun destroy()
     }

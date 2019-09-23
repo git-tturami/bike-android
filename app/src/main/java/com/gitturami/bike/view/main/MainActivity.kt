@@ -6,21 +6,16 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
-import com.gitturami.bike.model.cafe.pojo.SummaryCafe
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.path.pojo.PathItem
-import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
-import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.map.ItemType
@@ -32,15 +27,21 @@ import com.gitturami.bike.view.main.sheet.waypoint.CategorySheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.ItemSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 import com.skt.Tmap.TMapMarkerItem2
 import com.skt.Tmap.TMapView
+
 import kotlinx.android.synthetic.main.activity_main.*
+
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AlertDialog
+import android.view.View
 import androidx.appcompat.app.AppCompatDialog
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+
 import kotlinx.android.synthetic.main.layout_loading_img.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {
@@ -71,6 +72,19 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         ItemSheetManager(this)
     }
 
+    private val loadingDialog: AppCompatDialog by lazy {
+        val dialog = AppCompatDialog(this)
+        dialog.setCancelable(false)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setContentView(R.layout.layout_loading_img)
+        Glide.with(this)
+                .asGif()
+                .load(R.raw.loading2)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(dialog.img_view_loading)
+        dialog
+    }
+
     private val REQUEST_LOCATION_PERMISSION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +98,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
         presenter.takeView(this)
         setStationMarkers()
+
+        itemSheetManager.setButtonClickListener(View.OnClickListener {
+            presenter.setWayPointAndFindPath(itemSheetManager.selectedItem!!)
+        })
     }
 
     override fun getPresenter(): MainContact.Presenter = presenter
@@ -192,16 +210,20 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             State.SET_START -> {
                 Toast.makeText(applicationContext, "출발지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
+                tMapManager.hideMarkerById("start")
                 presenter.setState(State.PREPARE)
             }
             State.SET_FINISH -> {
                 Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
                 presenter.setState(State.SET_START)
+                tMapManager.hideMarkerById("end")
                 wayPointSheetManager.hiddenWayPointSheet()
             }
             State.SELECT_CATEGORY -> {
                 Toast.makeText(applicationContext, "초기화", Toast.LENGTH_SHORT).show()
+                tMapManager.hideMarkerById("start")
+                tMapManager.hideMarkerById("end")
                 presenter.setState(State.PREPARE)
                 presenter.setStationMarkers()
             }
@@ -241,7 +263,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 object: TMapMarkerItem2() {
                     override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
                         Logger.i(TAG, "onSingleTapUp(): $item")
-                        presenter.setState(State.POST_SELECT_WAYPOINT)
                         presenter.requestDetailItem(type, item.getID())
                         return super.onSingleTapUp(p, mapView)
                     }
@@ -269,8 +290,12 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         tMapManager.isMarked = true
     }
 
-    override fun changeMarker(station: Station) {
-        tMapManager.changeMarker(station)
+    override fun setStartMarker(station: Station) {
+        tMapManager.setStartMarker(station)
+    }
+
+    override fun setFinishMarker(station: Station) {
+        tMapManager.setFinishMarker(station)
     }
 
     override fun hideAllMarkers() {
@@ -315,26 +340,13 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         itemSheetManager.hideSheet()
     }
 
-    val dialog: AppCompatDialog by lazy {
-        val dialog = AppCompatDialog(this)
-        dialog.setCancelable(false)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setContentView(R.layout.layout_loading_img)
-        Glide.with(this)
-                .asGif()
-                .load(R.raw.loading)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(dialog.img_view_loading)
-        dialog
-    }
-
     override fun startLoading() {
         Logger.i(TAG, "startLoading")
-        dialog.show()
+        loadingDialog.show()
     }
 
     override fun endLoading() {
-        dialog.dismiss()
+        loadingDialog.dismiss()
     }
 
     override fun onDestroy() {

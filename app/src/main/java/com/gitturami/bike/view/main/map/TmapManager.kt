@@ -4,25 +4,22 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
+
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
-import com.gitturami.bike.model.cafe.pojo.SummaryCafe
+import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
-import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.path.pojo.PathItem
-import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
-import com.gitturami.bike.model.restaurant.pojo.Restaurant
-import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainActivity
+
 import com.skt.Tmap.*
+
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallback {
     companion object {
@@ -37,6 +34,8 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         BitmapManager(activity.applicationContext)
     }
     private val mainView: MainActivity = activity
+
+    private val idList = arrayListOf<String>()
 
     init {
         initTmapView(activity)
@@ -82,6 +81,9 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     fun setMarker(x: Double, y: Double, station: SummaryStation, clickListener: TMapMarkerItem2) {
         if (isMarked) {
             return
+        }
+        if (!idList.contains(station.stationId)) {
+            idList.add(station.stationId)
         }
 
         val bitmap = when {
@@ -152,13 +154,25 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         tMapView.addMarkerItem2(id, markerOverlay)
     }
 
-    fun changeMarker(station: Station) {
-        // TODO: add marker at selected station
-        // tMapView.removeMarkerItem(station.stationId)
+    fun setStartMarker(station: Station) {
+        val markerItem = TMapMarkerItem()
+        markerItem.icon = bitmapManager.departureMarker
+        markerItem.setPosition(0.5f, 1.0f)
+        markerItem.tMapPoint = TMapPoint(station.stationLatitude.toDouble(), station.stationLongitude.toDouble())
+        markerItem.id = "start"
+        tMapView.addMarkerItem("start", markerItem)
+    }
+
+    fun setFinishMarker(station: Station) {
+        val markerItem = TMapMarkerItem()
+        markerItem.icon = bitmapManager.arrivalmarker
+        markerItem.setPosition(0.5f, 1.0f)
+        markerItem.tMapPoint = TMapPoint(station.stationLatitude.toDouble(), station.stationLongitude.toDouble())
+        markerItem.id = "end"
+        tMapView.addMarkerItem("end", markerItem)
     }
 
     fun markPath(pathItem: PathItem) {
-
         var distance = 0
         val posList = arrayListOf<TMapPoint>()
 
@@ -201,18 +215,22 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         if (!isMarked) {
             return
         }
-
         isMarked = false
-        tMapView.removeAllMarkerItem()
+        // tMapView.removeAllMarkerItem()
+        for (id in idList) {
+            tMapView.removeMarkerItem(id)
+        }
+    }
+
+    fun hideMarkerById(id: String) {
+        tMapView.removeMarkerItem(id)
     }
 
     fun hidePath() {
         if (!isFindPath) {
             return
         }
-
         isFindPath = false
-        // tMapView.removeTMapPath()
         tMapView.removeAllTMapPolyLine()
     }
 }

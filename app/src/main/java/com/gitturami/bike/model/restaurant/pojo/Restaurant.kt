@@ -38,4 +38,6 @@ data class Restaurant(
     override fun getName(): String = UPSO_NM
     override fun getTel(): String = TEL_NO
     override fun getAddress(): String = RDN_DETAIL_ADDR
+    override fun getLatitude(): String = Y_DNTS
+    override fun getLongitude(): String = X_CNTS
 }

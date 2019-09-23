@@ -25,4 +25,6 @@ data class Leisure(
     override fun getName(): String = title
     override fun getTel(): String = mapx
     override fun getAddress(): String = addr1
+    override fun getLatitude(): String = mapx
+    override fun getLongitude(): String = mapy
 }

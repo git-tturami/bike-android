@@ -18,4 +18,16 @@ interface PathService {
                 @Query("endY")endY: Double,
                 @Query("startName")startName: String,
                 @Query("endName")endName: String): Single<PathItem>
+
+        @POST("/tmap/routes/pedestrian")
+        fun getPath(
+                @Query("version")version: Int,
+                @Query("format")format: String,
+                @Query("startX")startX: Double,
+                @Query("startY")startY: Double,
+                @Query("endX")endX: Double,
+                @Query("endY")endY: Double,
+                @Query("startName")startName: String,
+                @Query("endName")endName: String,
+                @Query("passList")passList: String): Single<PathItem>
 }

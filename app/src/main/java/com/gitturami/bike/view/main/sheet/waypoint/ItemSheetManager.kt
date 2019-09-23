@@ -1,6 +1,8 @@
 package com.gitturami.bike.view.main.sheet.waypoint
 
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.view.main.MainActivity
@@ -15,6 +17,10 @@ class ItemSheetManager(activity: MainActivity) {
 
     private val sheet: ConstraintLayout = activity.item_bottom_sheet
     private val behavior: BottomSheetBehavior<ConstraintLayout>
+    private val button = activity.item_select_but
+    var selectedItem: DefaultItem? = null
+    var lat = 0.0
+    var lon = 0.0
 
     init {
         behavior = BottomSheetBehavior.from(sheet)
@@ -41,5 +47,15 @@ class ItemSheetManager(activity: MainActivity) {
     fun setItem(item: DefaultItem) {
         sheet.item_title.text = item.getName()
         sheet.item_addr.text = item.getAddress()
+        lat = item.getLatitude().toDouble()
+        lon = item.getLongitude().toDouble()
+        selectedItem = item
+        Logger.i(TAG, "$lat, $lon")
+    }
+
+    fun getSelectedItemId() = sheet.item_title.text.toString()
+
+    fun setButtonClickListener(listener: View.OnClickListener) {
+        button.setOnClickListener(listener)
     }
 }

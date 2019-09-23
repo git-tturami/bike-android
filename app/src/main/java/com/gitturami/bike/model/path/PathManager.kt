@@ -12,9 +12,22 @@ class PathManager(context: Context): DataManager(context) {
     private var api: PathService = retrofitConfig.getTmapRetrofit().create(PathService::class.java)
 
     fun getPath(
-            startX: Double, startY: Double,
-                endX: Double,
-                endY: Double,
-                startName: String,
-                endName: String): Single<PathItem> = api.getPath(1, "json", startX, startY, endX, endY, startName, endName)
+            startX: Double,
+            startY: Double,
+            endX: Double,
+            endY: Double,
+            startName: String,
+            endName: String): Single<PathItem>
+            = api.getPath(1, "json", startX, startY, endX, endY, startName, endName)
+
+    fun getPathIncludeWayPoint(
+            startX: Double,
+            startY: Double,
+            endX: Double,
+            endY: Double,
+            startName: String,
+            endName: String,
+            passLists: String): Single<PathItem>
+            = api.getPath(1, "json", startX, startY, endX, endY, startName, endName, passLists)
+
 }
