@@ -19,6 +19,7 @@ interface PathService {
                 @Query("startName")startName: String,
                 @Query("endName")endName: String): Single<PathItem>
 
+        @Headers("appKey: 3826adf1-c99a-4e69-95c5-3763539465ea", "Content-Type: application/x-www-form-urlencoded")
         @POST("/tmap/routes/pedestrian")
         fun getPath(
                 @Query("version")version: Int,

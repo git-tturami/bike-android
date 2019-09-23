@@ -40,4 +40,6 @@ data class Restaurant(
     override fun getAddress(): String = RDN_DETAIL_ADDR
     override fun getLatitude(): String = Y_DNTS
     override fun getLongitude(): String = X_CNTS
+    override fun getImage1Url(): String? = null
+    override fun getImage2Url(): String? = null
 }

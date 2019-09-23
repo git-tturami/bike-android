@@ -2,6 +2,7 @@ package com.gitturami.bike.view.main.sheet.waypoint
 
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.Glide
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.restaurant.pojo.Restaurant
@@ -18,6 +19,7 @@ class ItemSheetManager(activity: MainActivity) {
     private val sheet: ConstraintLayout = activity.item_bottom_sheet
     private val behavior: BottomSheetBehavior<ConstraintLayout>
     private val button = activity.item_select_but
+    private val imgView = activity.item_img
     var selectedItem: DefaultItem? = null
     var lat = 0.0
     var lon = 0.0
@@ -50,6 +52,17 @@ class ItemSheetManager(activity: MainActivity) {
         lat = item.getLatitude().toDouble()
         lon = item.getLongitude().toDouble()
         selectedItem = item
+
+        if (selectedItem?.getImage1Url() != null) {
+            Logger.i(TAG, "set image view : ${selectedItem?.getImage1Url()}")
+            Glide.with(sheet)
+                    .load(selectedItem?.getImage1Url())
+                    .override(512, 256)
+                    .into(imgView)
+        } else {
+            // TODO : when image is null, imgView's background must be set empty img.
+        }
+
         Logger.i(TAG, "$lat, $lon")
     }
 

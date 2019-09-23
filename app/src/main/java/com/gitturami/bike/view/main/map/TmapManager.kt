@@ -135,8 +135,6 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         if (type == ItemType.CAFE) {
             point.mKatecLat = y
             point.mKatecLon = x
-            val katec = TMapKatec()
-
         }
 
         val markerItem = TMapMarkerItem()
