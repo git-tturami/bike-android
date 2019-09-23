@@ -346,19 +346,19 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     }
 
     override fun setWayPointAndFindPath(wayPoint: DefaultItem) {
+        Logger.i(TAG, "wayPoint : $wayPoint")
         disposal.add(
-                pathManager.getPathIncludeWayPoint(startStation?.stationLongitude!!.toDouble(),
+                pathManager.getPathIncludeWayPoint(startStation!!.stationLongitude.toDouble(),
                         startStation!!.stationLatitude.toDouble(),
                         finishStation!!.stationLongitude.toDouble(),
                         finishStation!!.stationLatitude.toDouble(),
                         startStation!!.stationName,
                         finishStation!!.stationName,
-                        wayPoint.getLatitude() + "," + wayPoint.getLongitude())
+                        wayPoint.getLongitude() + "," + wayPoint.getLatitude())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
-                                    //Logger.i(TAG, "$it")
                                     view.markPath(it)
                                 },
                                 { t -> Logger.e(TAG, "$t") }

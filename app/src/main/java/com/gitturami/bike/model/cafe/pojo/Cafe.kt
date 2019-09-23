@@ -35,4 +35,6 @@ data class Cafe(
     override fun getAddress(): String = ADDR
     override fun getLatitude(): String = XCODE
     override fun getLongitude(): String = YCODE
+    override fun getImage1Url(): String? = null
+    override fun getImage2Url(): String? = null
 }
