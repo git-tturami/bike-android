@@ -32,7 +32,6 @@ class StationDataManager(context: Context): DataManager(context) {
 
     @SuppressLint("CheckResult")
     fun getAllSummaryStationList(cacheManager: CacheManager): Observable<List<SummaryStation>> {
-
         val allSummaryStationList: Observable<List<SummaryStation>>
                 = if (cacheManager.isEmpty()) api.getSummaryOfStation()
                 else cacheManager.get()
@@ -42,6 +41,8 @@ class StationDataManager(context: Context): DataManager(context) {
         }
         return allSummaryStationList
     }
+
+    fun getAllSummaryStationList() = api.getSummaryOfStation()
 
     val allStationList: Observable<List<Station>> = api.getAllStation()
 }

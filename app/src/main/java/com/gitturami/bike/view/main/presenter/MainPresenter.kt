@@ -5,6 +5,7 @@ import com.gitturami.bike.di.model.DaggerDataManagerComponent
 import com.gitturami.bike.di.model.DataManagerModule
 import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
+import com.gitturami.bike.model.cache.CacheList
 import com.gitturami.bike.model.cache.CacheManager
 import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.common.pojo.DefaultItem
@@ -12,6 +13,7 @@ import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
 import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainContact
 import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.presenter.handler.*
@@ -43,6 +45,17 @@ class MainPresenter(context: Context) : MainContact.Presenter {
             State.POST_SELECT_WAYPOINT to PostSelectHandler()
     )
     private var cacheManager: CacheManager
+    private val stationList: MutableList<SummaryStation> = mutableListOf()
+    private var requestedTime = 0L
+
+    private val cacheMap: Map<ItemType, CacheList> = hashMapOf(
+            ItemType.STATION to CacheList(),
+            ItemType.CAFE to CacheList(),
+            ItemType.RESTAURANT to CacheList(),
+            ItemType.TERRAIN to CacheList(),
+            ItemType.LEISURE to CacheList()
+    )
+
 
     @Inject
     lateinit var stationDataManager: StationDataManager
@@ -93,7 +106,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { station ->
                             view.setSelectBottomSheet(station)
-                            view.endLoading()}
+                            view.endLoading()
+                        }
         )
     }
 
@@ -105,7 +119,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { cafe ->
                             view.setItemBottomSheet(cafe)
-                            view.endLoading()}
+                            view.endLoading()
+                        }
         )
     }
 
@@ -117,7 +132,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { leisure ->
                             view.setItemBottomSheet(leisure)
-                            view.endLoading()}
+                            view.endLoading()
+                        }
         )
     }
 
@@ -129,32 +145,47 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     override fun setStationMarkers() {
         Logger.i(TAG, "#### Request station information ####")
         view.startLoading()
-        disposal.add(stationDataManager.getAllSummaryStationList(cacheManager)
-                .concatMap { list -> Observable.fromIterable(list) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            view.setMarker(it.stationLatitude.toDouble(), it.stationLongitude.toDouble(), it)
-                        },
-                        { e ->
-                            Logger.e(TAG, "onError() : $e")
-                            view.showToast("따릉이 정거장 정보를 받아오는 도중에 문제가 발생했습니다.")
-                        },
-                        {
-                            Logger.i(TAG, "onComplete()")
-                            view.onCompleteMarking()
-                            view.endLoading()
-                        }
-                )
-        )
+        val currentTime = System.currentTimeMillis()
+        val cacheList = cacheMap.getValue(ItemType.STATION)
+        val needCache = cacheList.needCache(currentTime)
+        var observable =
+                when (needCache) {
+                    true -> {
+                        cacheList.requestedTime = currentTime
+                        cacheList.itemList.clear()
+                        stationDataManager.getAllSummaryStationList()
+                                .flatMap { list -> Observable.fromIterable(list) }
+                    }
+                    false -> {
+                        Observable.fromIterable(cacheList.itemList)
+                    }
+                }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    view.setMarker(ItemType.STATION, it.getLatitude().toDouble(), it.getLongitude().toDouble(), it)
+                                    if (needCache) {
+                                        cacheList.itemList.add(it)
+                                    }
+                                },
+                                { e ->
+                                    Logger.e(TAG, "onError() : $e")
+                                    view.showToast("따릉이 정거장 정보를 받아오는 도중에 문제가 발생했습니다.")
+                                    cacheList.clear()
+                                },
+                                {
+                                    Logger.i(TAG, "onComplete()")
+                                    view.onCompleteMarking()
+                                    view.endLoading()
+                                }
+                        )
+        disposal.add(observable)
     }
 
     override fun setCafeMarkers() {
         Logger.i(TAG, "#### Request cafe information ####")
         view.startLoading()
         disposal.add(cafeDataManager.summariesCafe
-                .flatMap{list -> Observable.fromIterable(list)}
+                .flatMap { list -> Observable.fromIterable(list) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -174,42 +205,68 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 )
         )
     }
+
     override fun setLeisureMarkers() {
         Logger.i(TAG, "#### Request leisure information ####")
+
         view.startLoading()
-        disposal.add(leisureDataManager.summariesLeisure
-                .flatMap{list -> Observable.fromIterable(list)}
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            view.setMarker(ItemType.LEISURE, it.mapy.toDouble(), it.mapx.toDouble(), it)
-                            view.addWayPointItem(it)
-                        },
-                        { e ->
-                            Logger.e(TAG, "onError(): $e")
-                            view.showToast("레저 정보를 받아오는 도중에 문제가 발생했습니다.")
-                        },
-                        {
-                            Logger.i(TAG, "onComplete() : set recycler view")
-                            view.onCompleteMarking()
-                            view.endLoading()
-                        }
-                )
-        )
+        val currentTime = System.currentTimeMillis()
+        val cacheList = cacheMap.getValue(ItemType.LEISURE)
+        val needCache = cacheList.needCache(currentTime)
+        var observable =
+                when (needCache) {
+                    true -> {
+                        cacheList.requestedTime = currentTime
+                        cacheList.itemList.clear()
+                        leisureDataManager.summariesLeisure
+                                .flatMap { list -> Observable.fromIterable(list) }
+                    }
+                    false -> {
+                        Observable.fromIterable(cacheList.itemList)
+                    }
+                }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    view.setMarker(ItemType.LEISURE, it.getLatitude().toDouble(), it.getLongitude().toDouble(), it)
+                                    view.addWayPointItem(it)
+                                    if (needCache) {
+                                        cacheList.itemList.add(it)
+                                    }
+                                },
+                                { e ->
+                                    Logger.e(TAG, "onError(): $e")
+                                    view.showToast("레저 정보를 받아오는 도중에 문제가 발생했습니다.")
+                                    cacheList.clear()
+                                },
+                                {
+                                    Logger.i(TAG, "onComplete() : set recycler view")
+                                    view.onCompleteMarking()
+                                    view.endLoading()
+                                }
+                        )
+        disposal.add(observable)
     }
 
     override fun setTerrainMarkers() {
         Logger.i(TAG, "#### Request Terrain information ####")
         view.startLoading()
-        disposal.add(leisureDataManager.summariesTerrain
-                .flatMap{list -> Observable.fromIterable(list)}
-                .subscribeOn(Schedulers.io())
+        val currentTime = System.currentTimeMillis()
+        val cacheList = cacheMap.getValue(ItemType.TERRAIN)
+        val needCache = cacheList.needCache(currentTime)
+        val observable = when (needCache) {
+            true -> {
+                leisureDataManager.summariesTerrain
+                        .flatMap { list -> Observable.fromIterable(list) }
+            }
+            false -> {
+                Observable.fromIterable(cacheList.itemList)
+            }
+        }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                             view.setMarker(ItemType.TERRAIN, it.mapy.toDouble(), it.mapx.toDouble(), it)
-                             view.addWayPointItem(it)
+                            view.setMarker(ItemType.TERRAIN, it.getLatitude().toDouble(), it.getLongitude().toDouble(), it)
+                            view.addWayPointItem(it)
                         },
                         { e ->
                             Logger.e(TAG, "onError(): $e")
@@ -221,14 +278,26 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                             view.endLoading()
                         }
                 )
-        )
+
+        disposal.add(observable)
     }
 
     override fun setRestaurantMarkers() {
         Logger.i(TAG, "#### Request restaurant information ####")
         view.startLoading()
+        val currentTime = System.currentTimeMillis()
+        val cacheList = cacheMap.getValue(ItemType.RESTAURANT)
+        val needCache = cacheList.needCache(currentTime)
+        when (needCache) {
+            true -> {
+
+            }
+            false -> {
+
+            }
+        }
         disposal.add(restaurantDataManager.allLightRestaurant
-                .flatMap{list -> Observable.fromIterable(list)}
+                .flatMap { list -> Observable.fromIterable(list) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -284,8 +353,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                     setState(State.POST_SELECT_WAYPOINT)
                                     view.endLoading()
                                 },
-                                {
-                                    e -> Logger.e(TAG, "onError() : $e")
+                                { e ->
+                                    Logger.e(TAG, "onError() : $e")
                                 }
                         )
             }
@@ -300,8 +369,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                     setState(State.POST_SELECT_WAYPOINT)
                                     view.endLoading()
                                 },
-                                {
-                                    e -> Logger.e(TAG, "onError() : $e")
+                                { e ->
+                                    Logger.e(TAG, "onError() : $e")
 
                                 }
                         )
@@ -317,8 +386,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                     setState(State.POST_SELECT_WAYPOINT)
                                     view.endLoading()
                                 },
-                                {
-                                    e -> Logger.e(TAG, "onError() : $e")
+                                { e ->
+                                    Logger.e(TAG, "onError() : $e")
                                 }
                         )
             }

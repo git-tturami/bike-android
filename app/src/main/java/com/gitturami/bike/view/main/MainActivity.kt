@@ -259,15 +259,26 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun setMarker(type: ItemType, x: Double, y: Double, item: DefaultSummaryItem) {
-        tMapManager.setMarker(type, x, y, item,
+        val overlay = when (type) {
+            ItemType.STATION -> {
                 object: TMapMarkerItem2() {
                     override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                        Logger.i(TAG, "onSingleTapUp(): $item")
+                        loadDetailInfoOfStation(item.getID())
+                        return super.onSingleTapUp(p, mapView)
+                    }
+                }
+            }
+            else -> {
+                object: TMapMarkerItem2() {
+                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
                         presenter.requestDetailItem(type, item.getID())
                         return super.onSingleTapUp(p, mapView)
                     }
                 }
-        )
+            }
+        }
+
+        tMapManager.setMarker(type, x, y, item, overlay)
     }
 
     override fun setItem(item: DefaultItem) {
