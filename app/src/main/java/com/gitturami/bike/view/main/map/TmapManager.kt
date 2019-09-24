@@ -103,9 +103,18 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         setMarker(ItemType.STATION, x, y, station.stationId, bitmap, markerOverlay)
     }
 
+    fun getStationBitmapIcon(station: SummaryStation) = when {
+        station.shared > 50 -> bitmapManager.greenMarker
+        station.shared in 20..50 -> bitmapManager.yellowMarker
+        else -> bitmapManager.redMarker
+    }
+
     fun setMarker(type: ItemType, x: Double, y: Double, summaryItem: DefaultSummaryItem, clickListener: TMapMarkerItem2) {
         var bitmap: Bitmap =
             when (type) {
+                ItemType.STATION -> {
+                    getStationBitmapIcon(summaryItem as SummaryStation)
+                }
                 ItemType.CAFE -> {
                     bitmapManager.cafeMarker
                 }
