@@ -1,17 +1,16 @@
 package com.gitturami.bike.view.main.map
 
-import android.graphics.Bitmap
+import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
-import com.gitturami.bike.model.common.pojo.DefaultItem
-import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.path.pojo.PathItem
-import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainActivity
 
 import com.skt.Tmap.*
@@ -33,7 +32,24 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     private val bitmapManager: BitmapManager by lazy {
         BitmapManager(activity.applicationContext)
     }
-    private val mainView: MainActivity = activity
+    private val bitmapMap = hashMapOf(
+            ItemType.CAFE to bitmapManager.cafeMarker,
+            ItemType.LEISURE to bitmapManager.leisureMarker,
+            ItemType.TERRAIN to bitmapManager.terrainMarker,
+            ItemType.ARRIVAL to bitmapManager.arrivalmarker,
+            ItemType.DEPARTURE to bitmapManager.departureMarker,
+            ItemType.LAYOVER to bitmapManager.layoverMarker,
+            ItemType.RESTAURANT to bitmapManager.restaurantMarker,
+            ItemType.STATION_EMPTY to bitmapManager.greenMarker,
+            ItemType.STATION_SUITE to bitmapManager.yellowMarker,
+            ItemType.STATION_FULL to bitmapManager.redMarker
+    )
+
+    enum class Constants {
+        DEPARTURE,
+        ARRIVAL,
+        LAYOVER
+    }
 
     private val idList = arrayListOf<String>()
 
@@ -66,10 +82,6 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         tMapView.setCenterPoint(location.longitude, location.latitude)
     }
 
-    fun addTMapPath(path: TMapPolyLine) {
-        tMapView.addTMapPath(path)
-    }
-
     fun clearPath() {
         tMapView.removeTMapPath()
     }
@@ -78,105 +90,53 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         initTmapGps()
     }
 
-    fun setMarker(x: Double, y: Double, station: SummaryStation, clickListener: TMapMarkerItem2) {
-        if (isMarked) {
-            return
-        }
-        if (!idList.contains(station.stationId)) {
-            idList.add(station.stationId)
-        }
-
-        val bitmap = when {
-            station.shared > 50 -> bitmapManager.greenMarker
-            station.shared in 20..50 -> bitmapManager.yellowMarker
-            else -> bitmapManager.redMarker
-        }
-
-        val markerOverlay = object: TMapMarkerItem2() {
-            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                Logger.i(TAG, "onSingleTapUp() : ${station.stationId}")
-                mainView.loadDetailInfoOfStation(station.stationId)
-                return super.onSingleTapUp(p, mapView)
-            }
-        }
-
-        setMarker(ItemType.STATION, x, y, station.stationId, bitmap, markerOverlay)
+    fun setMarker(x: Double, y: Double, id: String, type: ItemType) {
+        setMarker(x = x,
+                y = y,
+                id = id,
+                type = type,
+                onClick = {})
     }
 
-    fun getStationBitmapIcon(station: SummaryStation) = when {
-        station.shared > 50 -> bitmapManager.greenMarker
-        station.shared in 20..50 -> bitmapManager.yellowMarker
-        else -> bitmapManager.redMarker
-    }
-
-    fun setMarker(type: ItemType, x: Double, y: Double, summaryItem: DefaultSummaryItem, clickListener: TMapMarkerItem2) {
-        var bitmap: Bitmap =
-            when (type) {
-                ItemType.STATION -> {
-                    getStationBitmapIcon(summaryItem as SummaryStation)
-                }
-                ItemType.CAFE -> {
-                    bitmapManager.cafeMarker
-                }
-                ItemType.RESTAURANT -> {
-                    bitmapManager.restaurantMarker
-                }
-                ItemType.LEISURE -> {
-                    bitmapManager.leisureMarker
-                }
-                ItemType.TERRAIN -> {
-                    bitmapManager.terrainMarker
-                }
-                else -> {
-                    bitmapManager.redMarker
-                }
-            }
-
-        setMarker(type, x, y, summaryItem.getID().replace(" ", "").trim(), bitmap, clickListener)
-    }
-
-    private fun setMarker(type: ItemType, x: Double, y: Double, id: String, icon: Bitmap, tMapOverlay: TMapMarkerItem2) {
-        if (id == "testId") {
-            Logger.i(TAG, "path : $x, $y")
-        }
-
-        val point = TMapPoint(x, y)
-        if (type == ItemType.CAFE) {
-            point.mKatecLat = y
-            point.mKatecLon = x
-        }
-
+    fun setMarker(x: Double, y: Double, id: String, type: ItemType, onClick: () -> Unit) {
         val markerItem = TMapMarkerItem()
-        markerItem.icon = icon
+        markerItem.icon = bitmapMap.getValue(type)
         markerItem.setPosition(0.5f, 1.0f)
-        markerItem.tMapPoint = point
+        markerItem.tMapPoint = TMapPoint(x, y)
         markerItem.id = id
         tMapView.addMarkerItem(id, markerItem)
 
-        val markerOverlay = tMapOverlay
-        markerOverlay.icon = icon
+        val markerOverlay = object: TMapMarkerItem2() {
+            override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
+                onClick.invoke()
+                return super.onSingleTapUp(p, mapView)
+            }
+        }
+        markerOverlay.icon = bitmapMap.getValue(type)
         markerOverlay.setPosition(0.5f, 1.0f)
-        markerOverlay.tMapPoint = point
+        markerOverlay.tMapPoint = markerItem.tMapPoint
         markerOverlay.id = id
         tMapView.addMarkerItem2(id, markerOverlay)
+
+        if (!isStation(type)) {
+            categoryIdList.add(id)
+        }
     }
 
-    fun setStartMarker(station: Station) {
-        val markerItem = TMapMarkerItem()
-        markerItem.icon = bitmapManager.departureMarker
-        markerItem.setPosition(0.5f, 1.0f)
-        markerItem.tMapPoint = TMapPoint(station.stationLatitude.toDouble(), station.stationLongitude.toDouble())
-        markerItem.id = "start"
-        tMapView.addMarkerItem("start", markerItem)
-    }
+    private fun isStation(item: ItemType) = item == ItemType.STATION_EMPTY ||
+            item == ItemType.STATION_SUITE ||
+            item == ItemType.STATION_FULL ||
+            item == ItemType.ARRIVAL ||
+            item == ItemType.DEPARTURE
 
-    fun setFinishMarker(station: Station) {
-        val markerItem = TMapMarkerItem()
-        markerItem.icon = bitmapManager.arrivalmarker
-        markerItem.setPosition(0.5f, 1.0f)
-        markerItem.tMapPoint = TMapPoint(station.stationLatitude.toDouble(), station.stationLongitude.toDouble())
-        markerItem.id = "end"
-        tMapView.addMarkerItem("end", markerItem)
+    fun setMarkerByShared(id: String, shared: Int) {
+        val bitmap = when {
+            shared > 50 -> bitmapManager.greenMarker
+            shared in 20..50 -> bitmapManager.yellowMarker
+            else -> bitmapManager.redMarker
+        }
+        tMapView.getMarkerItemFromID(id).icon = bitmap
+        idList.add(id)
     }
 
     fun markPath(pathItem: PathItem) {
@@ -193,12 +153,11 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
                                             it.geometry.coordinates.asJsonArray[0].asDouble))
                                 }
                                 "LineString" -> {
-                                    Logger.i(TAG, it.properties.toString())
                                     distance += it.properties.get("distance").asInt
                                 }
                             }
                         },
-                        { t -> },
+                        { t -> Logger.e(TAG, "onError() :{ $t") },
                         {
                             Logger.i(TAG, "Distance = $distance")
                             drawLine(posList)
@@ -219,18 +178,10 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     }
 
     fun hideStationMarker() {
-        if (!isMarked) {
-            return
-        }
-        isMarked = false
-        // tMapView.removeAllMarkerItem()
         for (id in idList) {
             tMapView.removeMarkerItem(id)
         }
-    }
-
-    fun hideMarkerById(id: String) {
-        tMapView.removeMarkerItem(id)
+        idList.clear()
     }
 
     fun hidePath() {
@@ -239,5 +190,30 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         }
         isFindPath = false
         tMapView.removeAllTMapPolyLine()
+    }
+
+    fun removeDepartureMarker() {
+        tMapView.removeMarkerItem(Constants.DEPARTURE.name)
+    }
+
+    fun removeArrivalMarker() {
+        tMapView.removeMarkerItem(Constants.ARRIVAL.name)
+    }
+
+    private val categoryIdList = arrayListOf<String>()
+
+    fun addCategoryId(id: String) {
+        categoryIdList.add(id)
+    }
+
+    fun removeCategoryMarkers() {
+        for (id in categoryIdList) {
+            tMapView.removeMarkerItem(id)
+        }
+        categoryIdList.clear()
+    }
+
+    fun removeAllMarkers() {
+        tMapView.removeAllMarkerItem()
     }
 }

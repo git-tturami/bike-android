@@ -8,6 +8,7 @@ class CategoryHandler: StateHandler {
     override fun onStateChanged(view: MainContact.View) {
         Logger.i(TAG, "onStateChanged() : Set Select Category")
         view.hideAllMarkers()
+        view.hideCategoryMarkers()
         view.hideWayPointSheet()
         view.hideItemSheet()
         view.collapseCategorySheet()

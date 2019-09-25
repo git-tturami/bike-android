@@ -1,15 +1,10 @@
 package com.gitturami.bike.view.main
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PointF
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
@@ -17,7 +12,6 @@ import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
@@ -29,9 +23,6 @@ import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
-import com.skt.Tmap.TMapMarkerItem2
-import com.skt.Tmap.TMapView
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -85,8 +76,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         dialog
     }
 
-    private val REQUEST_LOCATION_PERMISSION = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -94,7 +83,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter = MainPresenter(applicationContext)
 
         initSettingButton()
-        checkPermission()
 
         presenter.takeView(this)
         setStationMarkers()
@@ -105,17 +93,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun getPresenter(): MainContact.Presenter = presenter
-
-    private fun checkPermission() {
-        if (!checkLocationPermission()) {
-            Logger.i(TAG, "need permission")
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    REQUEST_LOCATION_PERMISSION)
-        } else {
-            initFloatingButtonAction()
-        }
-    }
 
     private fun initSettingButton() {
         settingButton.setOnClickListener {
@@ -148,27 +125,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
-    private fun checkLocationPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_LOCATION_PERMISSION -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    Logger.i(TAG, "permission granted")
-                    initFloatingButtonAction()
-                } else {
-                    Logger.i(TAG, "permission denied")
-                }
-                return
-            }
-        }
-    }
-
     override fun setStartSearchView(text: String) {
         Logger.i(TAG, "setStartSearchView : $text")
         startSearchView.text = text
@@ -177,22 +133,6 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     override fun setFinishSearchView(text: String) {
         Logger.i(TAG, "setFinishSearchView : $text")
         finishSearchView.text = text
-    }
-
-    override fun loadDetailInfoOfStation(id: String) {
-        presenter.loadDetailInfoOfStation(id)
-    }
-
-    override fun loadDetailInfoOfCafe(name: String) {
-        presenter.loadDetailInfoOfCafe(name)
-    }
-
-    override fun loadDetailInfoOfLeisure(title: String) {
-        presenter.loadDetailInfoOfLeisure(title)
-    }
-
-    override fun loadDetailInfoOfRestaurant(name: String) {
-        presenter.loadDetailInfoOfRestaurant(name)
     }
 
     override fun setSelectBottomSheet(station: Station) {
@@ -207,25 +147,29 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun onBackPressed() {
         when (presenter.getState()) {
+            State.SET_STATION -> {
+
+            }
             State.SET_START -> {
                 Toast.makeText(applicationContext, "출발지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
-                tMapManager.hideMarkerById("start")
+                tMapManager.removeDepartureMarker()
                 presenter.setState(State.PREPARE)
             }
             State.SET_FINISH -> {
                 Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
                 presenter.setState(State.SET_START)
-                tMapManager.hideMarkerById("end")
+                tMapManager.removeArrivalMarker()
                 wayPointSheetManager.hiddenWayPointSheet()
             }
             State.SELECT_CATEGORY -> {
                 Toast.makeText(applicationContext, "초기화", Toast.LENGTH_SHORT).show()
-                tMapManager.hideMarkerById("start")
-                tMapManager.hideMarkerById("end")
+                tMapManager.removeArrivalMarker()
+                tMapManager.removeDepartureMarker()
                 presenter.setState(State.PREPARE)
                 presenter.setStationMarkers()
+                tMapManager.removeCategoryMarkers()
             }
             State.SELECT_WAYPOINT -> {
                 presenter.setState(State.SELECT_CATEGORY)
@@ -258,42 +202,22 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter.setTerrainMarkers()
     }
 
-    override fun setMarker(type: ItemType, x: Double, y: Double, item: DefaultSummaryItem) {
-        val overlay = when (type) {
-            ItemType.STATION -> {
-                object: TMapMarkerItem2() {
-                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                        loadDetailInfoOfStation(item.getID())
-                        return super.onSingleTapUp(p, mapView)
-                    }
-                }
-            }
-            else -> {
-                object: TMapMarkerItem2() {
-                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                        presenter.requestDetailItem(type, item.getID())
-                        return super.onSingleTapUp(p, mapView)
-                    }
-                }
-            }
-        }
+    override fun setMarkerColorByShared(id: String, shared: Int) {
+        tMapManager.setMarkerByShared(id, shared)
+    }
 
-        tMapManager.setMarker(type, x, y, item, overlay)
+    override fun setMarker(type: ItemType, item: DefaultSummaryItem, onClick: () -> Unit) {
+        tMapManager.setMarker(
+                x = item.getLatitude().toDouble(),
+                y = item.getLongitude().toDouble(),
+                id = item.getID(),
+                type = type,
+                onClick = onClick
+        )
     }
 
     override fun setItem(item: DefaultItem) {
         itemSheetManager.setItem(item)
-    }
-
-    override fun setMarker(x: Double, y: Double, station: SummaryStation) {
-        tMapManager.setMarker(x = x, y = y, station = station,
-                clickListener = object: TMapMarkerItem2() {
-                    override fun onSingleTapUp(p: PointF?, mapView: TMapView?): Boolean {
-                        Logger.i(TAG, "onSingleTapUp(): $station")
-                        loadDetailInfoOfStation(station.stationId)
-                        return super.onSingleTapUp(p, mapView)
-                    }
-                })
     }
 
     override fun onCompleteMarking() {
@@ -302,17 +226,28 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun setStartMarker(station: Station) {
-        tMapManager.setStartMarker(station)
+        tMapManager.setMarker(
+                x = station.stationLatitude.toDouble(),
+                y = station.stationLongitude.toDouble(),
+                id = TmapManager.Constants.DEPARTURE.name,
+                type = ItemType.DEPARTURE)
     }
 
     override fun setFinishMarker(station: Station) {
-        tMapManager.setFinishMarker(station)
+        tMapManager.setMarker(
+                x = station.stationLatitude.toDouble(),
+                y = station.stationLongitude.toDouble(),
+                id = TmapManager.Constants.ARRIVAL.name,
+                type = ItemType.ARRIVAL)
     }
 
     override fun hideAllMarkers() {
-        wayPointSheetManager.hiddenWayPointSheet()
-        detailWayPointSheetManager.collapseWayPointSheet()
         tMapManager.hideStationMarker()
+    }
+
+    override fun hideCategoryMarkers() {
+        Logger.i(TAG, "hideCategoryMarkers")
+        tMapManager.removeCategoryMarkers()
     }
 
     override fun hideCategorySheet() {

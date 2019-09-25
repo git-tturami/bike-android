@@ -22,6 +22,10 @@ class BitmapManager(val context: Context) {
         drawableToBitmap(R.drawable.ic_departure)
     }
 
+    val layoverMarker: Bitmap by lazy {
+        drawableToBitmap(R.drawable.ic_layover)
+    }
+
     val arrivalmarker: Bitmap by lazy {
         drawableToBitmap(R.drawable.ic_arrival)
     }
