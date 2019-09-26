@@ -10,6 +10,7 @@ import com.gitturami.bike.view.main.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_item_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_item_bottom_sheet.view.*
+import kotlinx.coroutines.selects.select
 
 class ItemSheetManager(activity: MainActivity) {
     companion object {
@@ -19,7 +20,8 @@ class ItemSheetManager(activity: MainActivity) {
     private val sheet: ConstraintLayout = activity.item_bottom_sheet
     private val behavior: BottomSheetBehavior<ConstraintLayout>
     private val button = activity.item_select_but
-    private val imgView = activity.item_img
+    private val mainImgView = activity.item_main_img
+    private val subImgView1 = activity.item_sub_img1
     var selectedItem: DefaultItem? = null
     var lat = 0.0
     var lon = 0.0
@@ -41,7 +43,7 @@ class ItemSheetManager(activity: MainActivity) {
     fun collapseSheet() {
         if (behavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
             behavior.isHideable = false
-            behavior.peekHeight = 400
+            behavior.peekHeight = 450
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
@@ -54,11 +56,21 @@ class ItemSheetManager(activity: MainActivity) {
         selectedItem = item
 
         if (selectedItem?.getImage1Url() != null) {
-            Logger.i(TAG, "set image view : ${selectedItem?.getImage1Url()}")
+            Logger.i(TAG, "set image1 view : ${selectedItem?.getImage1Url()}")
             Glide.with(sheet)
                     .load(selectedItem?.getImage1Url())
-                    .override(512, 256)
-                    .into(imgView)
+                    .override(228, 155)
+                    .into(mainImgView)
+        } else {
+            // TODO : when image is null, imgView's background must be set empty img.
+        }
+
+        if (selectedItem?.getImage2Url() != null) {
+            Logger.i(TAG, "set image2 view : ${selectedItem?.getImage2Url()}")
+            Glide.with(sheet)
+                    .load(selectedItem?.getImage2Url())
+                    .override(113, 77)
+                    .into(subImgView1)
         } else {
             // TODO : when image is null, imgView's background must be set empty img.
         }

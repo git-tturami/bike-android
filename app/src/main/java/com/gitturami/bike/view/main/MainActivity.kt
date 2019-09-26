@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun markPath(pathItem: PathItem) {
         tMapManager.markPath(pathItem)
+        // TODO: define new state
         presenter.setState(State.SELECT_CATEGORY)
     }
 
@@ -165,11 +166,13 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             }
             State.SELECT_CATEGORY -> {
                 Toast.makeText(applicationContext, "초기화", Toast.LENGTH_SHORT).show()
+                presenter.setLocation(null)
                 tMapManager.removeArrivalMarker()
                 tMapManager.removeDepartureMarker()
+                tMapManager.removeCategoryMarkers()
+                detailWayPointSheetManager.clearItem()
                 presenter.setState(State.PREPARE)
                 presenter.setStationMarkers()
-                tMapManager.removeCategoryMarkers()
             }
             State.SELECT_WAYPOINT -> {
                 presenter.setState(State.SELECT_CATEGORY)
@@ -225,6 +228,14 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         tMapManager.isMarked = true
     }
 
+    override fun setWayPointMarker(item: DefaultItem) {
+        tMapManager.setMarker(
+                x = item.getLatitude().toDouble(),
+                y = item.getLongitude().toDouble(),
+                id = TmapManager.Constants.LAYOVER.name,
+                type = ItemType.LAYOVER)
+    }
+
     override fun setStartMarker(station: Station) {
         tMapManager.setMarker(
                 x = station.stationLatitude.toDouble(),
@@ -239,6 +250,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 y = station.stationLongitude.toDouble(),
                 id = TmapManager.Constants.ARRIVAL.name,
                 type = ItemType.ARRIVAL)
+    }
+
+    override fun clearWayPointRecyclerItemList() {
+        detailWayPointSheetManager.clearItem()
     }
 
     override fun hideAllMarkers() {
