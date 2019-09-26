@@ -8,7 +8,7 @@ class WayPointHandler: StateHandler {
     override fun onStateChanged(view: MainContact.View) {
         Logger.i(TAG, "onStateChanged() : WayPoint")
         view.hideCategorySheet()
-        view.halfWayPointSheet()
+        view.collapseWayPointSheet()
         view.hideItemSheet()
     }
 }

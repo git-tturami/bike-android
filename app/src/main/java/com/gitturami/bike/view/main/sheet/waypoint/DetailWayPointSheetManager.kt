@@ -56,6 +56,7 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
 
     fun collapseWayPointSheet() {
         sheetBehavior.isHideable = false
+        sheetBehavior.peekHeight = 150
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -95,6 +96,7 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
 
     fun clearItem() {
         wayPointModel.clearItem()
+        wayPointView.notifyAdapter()
     }
 
     // TODO: add selected location of item in Path.

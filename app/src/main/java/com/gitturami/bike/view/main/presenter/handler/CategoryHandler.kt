@@ -11,6 +11,7 @@ class CategoryHandler: StateHandler {
         view.hideCategoryMarkers()
         view.hideWayPointSheet()
         view.hideItemSheet()
+        view.clearWayPointRecyclerItemList()
         view.collapseCategorySheet()
     }
 }

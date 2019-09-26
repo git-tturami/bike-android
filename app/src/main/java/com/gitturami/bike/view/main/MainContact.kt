@@ -50,6 +50,8 @@ interface MainContact {
         fun endLoading()
 
         fun addWayPointItem(item: DefaultSummaryItem)
+        fun setWayPointMarker(item: DefaultItem)
+        fun clearWayPointRecyclerItemList()
     }
 
     interface Presenter {

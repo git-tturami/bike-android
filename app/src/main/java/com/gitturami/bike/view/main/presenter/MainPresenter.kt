@@ -9,6 +9,7 @@ import com.gitturami.bike.model.cache.CacheList
 import com.gitturami.bike.model.cache.CacheManager
 import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
@@ -365,6 +366,10 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         when (state) {
             State.SET_START -> setStartStation(station)
             State.SET_FINISH -> setFinishStation(station)
+            State.SELECT_CATEGORY -> {
+                setStartStation(null)
+                setFinishStation(null)
+            }
         }
     }
 
@@ -459,6 +464,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .subscribe(
                                 {
                                     view.markPath(it)
+                                    view.setWayPointMarker(wayPoint)
                                 },
                                 { t -> Logger.e(TAG, "$t") }
                         )

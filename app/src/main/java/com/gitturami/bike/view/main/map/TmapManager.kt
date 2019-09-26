@@ -200,6 +200,10 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         tMapView.removeMarkerItem(Constants.ARRIVAL.name)
     }
 
+    fun removeLayoverMarker() {
+        tMapView.removeMarkerItem(Constants.LAYOVER.name)
+    }
+
     private val categoryIdList = arrayListOf<String>()
 
     fun addCategoryId(id: String) {
