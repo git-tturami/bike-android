@@ -9,9 +9,7 @@ import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.StationResponse
 import com.gitturami.bike.model.station.pojo.SummaryStation
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class StationDataManager(context: Context): DataManager(context) {

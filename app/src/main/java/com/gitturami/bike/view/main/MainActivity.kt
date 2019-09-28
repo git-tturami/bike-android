@@ -2,10 +2,14 @@ package com.gitturami.bike.view.main
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.widget.*
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.appcompat.app.AppCompatDialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.common.pojo.DefaultItem
@@ -16,23 +20,13 @@ import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.SelectLocationSheetManager
-import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.CategorySheetManager
+import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.ItemSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 import kotlinx.android.synthetic.main.activity_main.*
-
-import android.graphics.drawable.ColorDrawable
-import android.view.View
-import androidx.appcompat.app.AppCompatDialog
-
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-
 import kotlinx.android.synthetic.main.layout_loading_img.*
 
 class MainActivity : AppCompatActivity(), MainContact.View {

@@ -1,18 +1,11 @@
 package com.gitturami.bike.view.main
 
-import com.gitturami.bike.model.cafe.pojo.Cafe
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
-import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.path.pojo.PathItem
-import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
-import com.gitturami.bike.model.restaurant.pojo.Restaurant
-import com.gitturami.bike.model.restaurant.pojo.SummaryRestaurant
 import com.gitturami.bike.model.station.pojo.Station
-import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.state.State
-import com.gitturami.bike.model.cafe.pojo.SummaryCafe as SummaryCafe
 
 interface MainContact {
     interface View {

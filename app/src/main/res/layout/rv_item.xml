@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/waypoint_item"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:orientation="vertical"
-    android:background="@color/colorlightgrey"
+    android:background="#ffffff"
 
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
@@ -13,47 +14,65 @@
     app:behavior_skipCollapsed="false">
 
     <RelativeLayout
-        android:id="@+id/recommend_locationname"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/colorlightgrey"
-        android:paddingTop="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        tools:ignore="UselessParent">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/recommend_itemTitle"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:textColor="@android:color/black"
+                android:textSize="19sp"
+                android:layout_marginStart="12dp"/>
 
-                <TextView
-                    android:id="@+id/recommend_itemTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Title"
-                    android:textColor="@android:color/black"
-                    android:textSize="19sp"/>
-
-                <TextView
-                    android:id="@+id/recommend_itemSubTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SubTitle"
-                    android:textColor="@android:color/black"
-                    android:textSize="12sp"
-                    android:layout_marginTop="5dp"/>
-            </LinearLayout>
-            <RelativeLayout
+            <TextView
+                android:id="@+id/recommend_itemAddress"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="5dp"/>
         </LinearLayout>
-    </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_alignParentEnd="true">
+
+            <TextView
+                android:id="@+id/recommend_itemDistance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3.5km"
+                android:textSize="19sp"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="12dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/black"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
 </LinearLayout>

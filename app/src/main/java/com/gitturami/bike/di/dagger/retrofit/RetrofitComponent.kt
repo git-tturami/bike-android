@@ -1,9 +1,6 @@
 package com.gitturami.bike.di.dagger.retrofit
 
-import android.content.Context
 import com.gitturami.bike.model.DataManager
-import com.gitturami.bike.model.station.StationDataManager
-import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 

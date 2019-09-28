@@ -1,23 +1,15 @@
 package com.gitturami.bike.view.main.map
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.view.main.MainActivity
-
 import com.skt.Tmap.*
-
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-
 import kotlinx.android.synthetic.main.activity_main.*
 
 class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallback {
