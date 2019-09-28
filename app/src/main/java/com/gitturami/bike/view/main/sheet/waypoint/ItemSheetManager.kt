@@ -5,12 +5,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.common.pojo.DefaultItem
-import com.gitturami.bike.model.restaurant.pojo.Restaurant
 import com.gitturami.bike.view.main.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_item_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_item_bottom_sheet.view.*
-import kotlinx.coroutines.selects.select
 
 class ItemSheetManager(activity: MainActivity) {
     companion object {

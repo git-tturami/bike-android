@@ -9,7 +9,6 @@ import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.view.main.MainActivity
-import com.gitturami.bike.view.main.sheet.waypoint.listener.CategorySheetListener
 import com.gitturami.bike.view.main.sheet.waypoint.listener.DetailWayPointSheetListener
 import com.gitturami.bike.view.main.state.State
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -56,7 +55,7 @@ class DetailWayPointSheetManager(activity: MainActivity, listener: (State) -> Un
 
     fun collapseWayPointSheet() {
         sheetBehavior.isHideable = false
-        sheetBehavior.peekHeight = 150
+        sheetBehavior.peekHeight = 195
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 

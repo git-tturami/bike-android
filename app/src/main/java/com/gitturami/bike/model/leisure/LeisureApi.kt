@@ -2,13 +2,11 @@ package com.gitturami.bike.model.leisure
 
 import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.leisure.pojo.LeisureResponse
-import com.gitturami.bike.model.leisure.pojo.LeisureResponseBody
 import com.gitturami.bike.model.leisure.pojo.SummaryLeisure
-import retrofit2.http.GET
-import retrofit2.http.Query
-import retrofit2.Call
 import io.reactivex.Observable
 import io.reactivex.Single
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface LeisureApi {
     @GET("/leisure/list")

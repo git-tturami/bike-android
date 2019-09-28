@@ -1,6 +1,5 @@
 package com.gitturami.bike.view.main.sheet.select
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -10,7 +9,7 @@ import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.MainActivity
 import com.gitturami.bike.view.main.MainContact
 import com.gitturami.bike.view.main.state.State
-import io.reactivex.disposables.CompositeDisposable
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet.view.*
 

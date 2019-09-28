@@ -3,29 +3,26 @@ package com.gitturami.bike.view.main.presenter
 import android.content.Context
 import com.gitturami.bike.di.model.DaggerDataManagerComponent
 import com.gitturami.bike.di.model.DataManagerModule
-import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.cache.CacheList
 import com.gitturami.bike.model.cache.CacheManager
 import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.common.pojo.DefaultItem
-import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
+import com.gitturami.bike.model.station.StationDataManager
 import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.model.station.pojo.SummaryStation
 import com.gitturami.bike.view.main.MainContact
 import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.presenter.handler.*
 import com.gitturami.bike.view.main.state.State
-
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-
-import javax.inject.Inject
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class MainPresenter(context: Context) : MainContact.Presenter {
     companion object {

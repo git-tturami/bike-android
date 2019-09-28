@@ -2,7 +2,7 @@ package com.gitturami.bike.view.intro
 
 import android.Manifest
 import android.content.Intent
-import android.content.Intent.*
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

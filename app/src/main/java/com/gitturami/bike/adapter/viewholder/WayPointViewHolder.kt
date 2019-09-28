@@ -3,7 +3,6 @@ package com.gitturami.bike.adapter.viewholder
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gitturami.bike.R
@@ -17,13 +16,19 @@ class WayPointViewHolder(context: Context, parent: ViewGroup?, private val click
         itemView.recommend_itemTitle as TextView
     }
 
-    private val subtitleTextView by lazy {
-        itemView.recommend_itemSubTitle as TextView
+    private val addressTextView by lazy {
+        itemView.recommend_itemAddress as TextView
+    }
+
+    private val distanceTextView by lazy {
+        itemView.recommend_itemDistance as TextView
     }
 
     fun onBind(data : RecyclerItem, position: Int) {
         titleTextView.text = data.title
-        subtitleTextView.text = data.content
+        addressTextView.text = data.content
+        // TODO: get distance
+        distanceTextView.text = "3.5km"
 
         itemView.setOnClickListener {
             clickListenerFunc?.invoke(position)

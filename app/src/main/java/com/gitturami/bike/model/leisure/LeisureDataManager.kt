@@ -4,7 +4,6 @@ import android.content.Context
 import com.gitturami.bike.model.DataManager
 import com.gitturami.bike.model.leisure.pojo.Leisure
 import com.gitturami.bike.model.leisure.pojo.LeisureResponse
-import com.gitturami.bike.model.leisure.pojo.LeisureResponseBody
 import io.reactivex.Single
 
 class LeisureDataManager(context: Context): DataManager(context) {
