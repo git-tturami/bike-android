@@ -246,6 +246,14 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 type = ItemType.ARRIVAL)
     }
 
+    override fun hideStartMarker() {
+        tMapManager.removeMarkerByType(ItemType.DEPARTURE)
+    }
+
+    override fun hideFinishMarker() {
+        tMapManager.removeMarkerByType(ItemType.ARRIVAL)
+    }
+
     override fun clearWayPointRecyclerItemList() {
         detailWayPointSheetManager.clearItem()
     }

@@ -24,6 +24,8 @@ interface MainContact {
         fun setMarker(type: ItemType, item: DefaultSummaryItem, onClick: () -> Unit)
         fun setStartMarker(station: Station)
         fun setFinishMarker(station: Station)
+        fun hideStartMarker()
+        fun hideFinishMarker()
         fun hideCategoryMarkers()
         fun setMarkerColorByShared(id: String, shared: Int)
         fun setStartSearchView(text: String)
