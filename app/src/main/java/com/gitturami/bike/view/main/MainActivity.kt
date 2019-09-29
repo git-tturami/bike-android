@@ -185,10 +185,13 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             State.POST_SELECT_WAYPOINT -> {
                 presenter.setState(State.SELECT_WAYPOINT)
             }
+            State.CLICKED_WAYPOINT -> {
+                presenter.resetPath()
+                presenter.setState(State.SELECT_CATEGORY)
+            }
             State.SHOW_SCREENSHOT -> {
-                // TODO: back button
                 hideScreenshotDialog()
-                presenter.setState(State.POST_SELECT_WAYPOINT)
+                presenter.setState(State.SELECT_WAYPOINT)
             }
             else -> {
                 super.onBackPressed()
@@ -342,6 +345,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun endLoading() {
         loadingDialog.dismiss()
+    }
+
+    override fun getState(): State {
+        return presenter.getState()
     }
 
     override fun onDestroy() {

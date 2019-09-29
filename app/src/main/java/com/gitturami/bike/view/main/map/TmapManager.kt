@@ -9,6 +9,7 @@ import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.view.main.MainActivity
+import com.gitturami.bike.view.main.map.listener.TMapListener
 import com.skt.Tmap.*
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -49,6 +50,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
 
     init {
         initTmapView(activity)
+        tMapView.setOnClickListenerCallBack(TMapListener(activity))
         initTmapGps()
     }
 

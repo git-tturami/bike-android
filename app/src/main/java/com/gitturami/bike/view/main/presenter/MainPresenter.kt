@@ -8,7 +8,6 @@ import com.gitturami.bike.model.cache.CacheList
 import com.gitturami.bike.model.cache.CacheManager
 import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.common.pojo.DefaultItem
-import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
@@ -44,6 +43,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
             State.SELECT_CATEGORY to CategoryHandler(),
             State.SELECT_WAYPOINT to WayPointHandler(),
             State.POST_SELECT_WAYPOINT to PostSelectHandler(),
+            State.CLICKED_WAYPOINT to ClickedWayPointHandler(),
             State.SHOW_SCREENSHOT to ScreenshotHandler()
     )
     private var cacheManager: CacheManager
@@ -438,6 +438,10 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         }
     }
 
+    override fun resetPath() {
+        findPath(startStation!!, finishStation!!)
+    }
+
     override fun findPath(start: Station, end: Station) {
         disposal.add(
                 pathManager.getPath(start.stationLongitude.toDouble(),
@@ -474,9 +478,9 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .subscribe(
                                 {
                                     this.distance = view.markPath(it)
-                                    view.setWayPointMarker(wayPoint)
                                     this.wayPoint = wayPoint
-                                    setState(State.SHOW_SCREENSHOT)
+                                    setState(State.CLICKED_WAYPOINT)
+                                    view.setWayPointMarker(wayPoint)
                                 },
                                 { t -> Logger.e(TAG, "$t") }
                         )

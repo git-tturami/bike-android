@@ -50,6 +50,7 @@ interface MainContact {
         fun clearWayPointRecyclerItemList()
         fun showScreenshotDialog()
         fun hideScreenshotDialog()
+        fun getState(): State
     }
 
     interface Presenter {
@@ -75,5 +76,6 @@ interface MainContact {
         fun getEndStationName(): String?
         fun getWayPointName(): String?
         fun getDistance(): Int
+        fun resetPath()
     }
 }
