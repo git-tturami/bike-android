@@ -326,7 +326,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         val startStationName = presenter.getStartStationName()!!
         val finishStationName = presenter.getEndStationName()!!
         val wayPointName = presenter.getWayPointName()!!
-        val distance = presenter.getDistance().toString()
+        val distance = presenter.getDistance().toString() + " m"
 
         screenshotDialog.show(screenShot, startStationName, wayPointName, finishStationName, distance)
     }
