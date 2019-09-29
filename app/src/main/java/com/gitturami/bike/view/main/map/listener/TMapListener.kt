@@ -30,12 +30,11 @@ class TMapListener(private val activity: MainActivity): TMapView.OnClickListener
     }
 
     private fun checkState(): Boolean {
-        when(activity.getState()){
-            State.SHOW_START -> return true
-            State.SHOW_FINISH -> return true
-            State.SELECT_WAYPOINT -> return true
+        return when(activity.getState()){
+            State.SHOW_START -> true
+            State.SHOW_FINISH -> true
+            State.POST_SELECT_WAYPOINT -> true
+            else -> false
         }
-
-        return false
     }
 }

@@ -76,5 +76,6 @@ interface MainContact {
         fun getEndStationName(): String?
         fun getWayPointName(): String?
         fun getDistance(): Int
+        fun resetPath()
     }
 }
