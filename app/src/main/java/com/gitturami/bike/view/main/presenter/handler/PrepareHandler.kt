@@ -10,6 +10,8 @@ class PrepareHandler: StateHandler {
         view.setStartSearchView("")
         view.setFinishSearchView("")
         view.hidePath()
+        view.hideStartMarker()
+        view.hideFinishMarker()
         view.setStationMarkers()
         view.hideCategorySheet()
         view.hideWayPointSheet()

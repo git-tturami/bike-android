@@ -212,4 +212,9 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     fun removeAllMarkers() {
         tMapView.removeAllMarkerItem()
     }
+
+    fun removeMarkerByType(type: ItemType) {
+        tMapView.removeMarkerItem(type.name)
+        tMapView.removeMarkerItem2(type.name)
+    }
 }
