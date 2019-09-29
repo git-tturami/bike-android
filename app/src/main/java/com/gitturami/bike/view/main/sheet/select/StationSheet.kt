@@ -79,6 +79,10 @@ class StationSheet(val presenter: MainContact.Presenter, val activity: MainActiv
             bottomSheetBehavior.peekHeight = 250
         }
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        when(activity.getState()){
+            State.SHOW_START -> activity.setButton.text = "출발지 선택"
+            State.SHOW_FINISH -> activity.setButton.text = "도착지 선택"
+        }
     }
 
     fun hiddenSelectSheet() {
