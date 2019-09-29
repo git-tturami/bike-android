@@ -50,6 +50,7 @@ interface MainContact {
         fun clearWayPointRecyclerItemList()
         fun showScreenshotDialog()
         fun hideScreenshotDialog()
+        fun getState(): State
     }
 
     interface Presenter {

@@ -344,6 +344,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         loadingDialog.dismiss()
     }
 
+    override fun getState(): State {
+        return presenter.getState()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
