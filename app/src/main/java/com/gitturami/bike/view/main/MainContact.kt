@@ -19,7 +19,7 @@ interface MainContact {
         fun setLeisureMarkers()
         fun setTerrainMarkers()
         fun setItem(item: DefaultItem)
-        fun markPath(pathItem: PathItem)
+        fun markPath(pathItem: PathItem): Int
         fun onCompleteMarking()
         fun setMarker(type: ItemType, item: DefaultSummaryItem, onClick: () -> Unit)
         fun setStartMarker(station: Station)
@@ -48,6 +48,8 @@ interface MainContact {
         fun addWayPointItem(item: DefaultSummaryItem)
         fun setWayPointMarker(item: DefaultItem)
         fun clearWayPointRecyclerItemList()
+        fun showScreenshotDialog()
+        fun hideScreenshotDialog()
     }
 
     interface Presenter {
@@ -69,5 +71,9 @@ interface MainContact {
         fun setWayPointAndFindPath(wayPoint: DefaultItem)
         fun requestDetailItem(type: ItemType, param: String)
         fun destroy()
+        fun getStartStationName(): String?
+        fun getEndStationName(): String?
+        fun getWayPointName(): String?
+        fun getDistance(): Int
     }
 }

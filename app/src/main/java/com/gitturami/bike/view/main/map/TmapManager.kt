@@ -1,8 +1,10 @@
 package com.gitturami.bike.view.main.map
 
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
+import androidx.core.view.drawToBitmap
 import com.gitturami.bike.R
 import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.model.path.pojo.PathItem
@@ -131,7 +133,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         idList.add(id)
     }
 
-    fun markPath(pathItem: PathItem) {
+    fun markPath(pathItem: PathItem): Int {
         var distance = 0
         val posList = arrayListOf<TMapPoint>()
 
@@ -157,6 +159,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
                         }
                 )
         disposal.add(job)
+        return distance
     }
 
     fun drawLine(posList: List<TMapPoint>) {
@@ -215,5 +218,9 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     fun removeMarkerByType(type: ItemType) {
         tMapView.removeMarkerItem(type.name)
         tMapView.removeMarkerItem2(type.name)
+    }
+
+    fun screenShot(): Bitmap {
+        return tMapView.drawToBitmap(Bitmap.Config.ARGB_8888)
     }
 }

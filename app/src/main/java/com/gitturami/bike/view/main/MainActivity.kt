@@ -16,10 +16,12 @@ import com.gitturami.bike.model.common.pojo.DefaultItem
 import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.path.pojo.PathItem
 import com.gitturami.bike.model.station.pojo.Station
+import com.gitturami.bike.utils.ScreenShotUtil
 import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.StationSheet
+import com.gitturami.bike.view.main.screenshot.ScreenshotDialog
 import com.gitturami.bike.view.main.sheet.waypoint.CategorySheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.ItemSheetManager
@@ -70,6 +72,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         dialog
     }
 
+    private val screenshotDialog by lazy {
+        ScreenshotDialog(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -95,10 +101,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         }
     }
 
-    override fun markPath(pathItem: PathItem) {
-        tMapManager.markPath(pathItem)
-        // TODO: define new state
-        presenter.setState(State.SELECT_CATEGORY)
+    override fun markPath(pathItem: PathItem): Int {
+        return tMapManager.markPath(pathItem)
     }
 
     override fun hidePath() {
@@ -180,6 +184,11 @@ class MainActivity : AppCompatActivity(), MainContact.View {
             }
             State.POST_SELECT_WAYPOINT -> {
                 presenter.setState(State.SELECT_WAYPOINT)
+            }
+            State.SHOW_SCREENSHOT -> {
+                // TODO: back button
+                hideScreenshotDialog()
+                presenter.setState(State.POST_SELECT_WAYPOINT)
             }
             else -> {
                 super.onBackPressed()
@@ -308,6 +317,22 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun hideItemSheet() {
         itemSheetManager.hideSheet()
+    }
+
+    override fun showScreenshotDialog() {
+        // TODO: implement distance and screenshot
+        val screenShot = tMapManager.screenShot()
+        ScreenShotUtil.saveBitmapToGallay(screenShot)
+        val startStationName = presenter.getStartStationName()!!
+        val finishStationName = presenter.getEndStationName()!!
+        val wayPointName = presenter.getWayPointName()!!
+        val distance = presenter.getDistance().toString()
+
+        screenshotDialog.show(screenShot, startStationName, wayPointName, finishStationName, distance)
+    }
+
+    override fun hideScreenshotDialog() {
+        screenshotDialog.hide()
     }
 
     override fun startLoading() {
