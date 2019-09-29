@@ -172,6 +172,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     fun hideStationMarker() {
         for (id in idList) {
             tMapView.removeMarkerItem(id)
+            tMapView.removeMarkerItem2(id)
         }
         idList.clear()
     }
@@ -186,14 +187,12 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
 
     fun removeDepartureMarker() {
         tMapView.removeMarkerItem(Constants.DEPARTURE.name)
+        tMapView.removeMarkerItem2(Constants.DEPARTURE.name)
     }
 
     fun removeArrivalMarker() {
         tMapView.removeMarkerItem(Constants.ARRIVAL.name)
-    }
-
-    fun removeLayoverMarker() {
-        tMapView.removeMarkerItem(Constants.LAYOVER.name)
+        tMapView.removeMarkerItem2(Constants.ARRIVAL.name)
     }
 
     private val categoryIdList = arrayListOf<String>()

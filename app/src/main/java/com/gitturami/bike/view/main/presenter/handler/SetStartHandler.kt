@@ -8,5 +8,6 @@ class SetStartHandler: StateHandler {
     override fun onStateChanged(view: MainContact.View) {
         Logger.i(TAG, "onStateChanged() : Set Start")
         view.setFinishSearchView("")
+        view.hideStationSheet()
     }
 }

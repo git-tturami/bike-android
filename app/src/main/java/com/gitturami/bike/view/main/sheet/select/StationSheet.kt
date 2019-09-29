@@ -13,10 +13,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet.view.*
 
-class SelectLocationSheetManager(val presenter: MainContact.Presenter, val activity: MainActivity) {
+class StationSheet(val presenter: MainContact.Presenter, val activity: MainActivity) {
 
     companion object {
-        val TAG = "SelectLocationSheetManager"
+        val TAG = "StationSheet"
     }
 
     private lateinit var station: Station

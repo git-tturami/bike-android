@@ -13,6 +13,7 @@ class PrepareHandler: StateHandler {
         view.hideStartMarker()
         view.hideFinishMarker()
         view.setStationMarkers()
+        view.hideStationSheet()
         view.hideCategorySheet()
         view.hideWayPointSheet()
     }

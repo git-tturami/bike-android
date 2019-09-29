@@ -95,7 +95,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun loadDetailInfoOfStation(id: String) {
         Logger.i(TAG, "loadDetailInfoOfStation")
-        // setState(State.SET_STATION)
+        // setState(State.SHOW_START)
         view.startLoading()
         disposal.add(
                 stationDataManager.getStationById(id)!!
@@ -176,6 +176,14 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                     view.setMarker(type, it) {
                                         Logger.i(TAG, "tap on station marker")
                                         loadDetailInfoOfStation(it.getID())
+                                        when (state) {
+                                            State.PREPARE -> {
+                                                setState(State.SHOW_START)
+                                            }
+                                            State.SET_START -> {
+                                                setState(State.SHOW_FINISH)
+                                            }
+                                        }
                                     }
                                     view.setMarkerColorByShared(it.getID(), it.shared)
                                     if (needCache) {
@@ -348,11 +356,11 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun setSearchView(text: String) {
         when (state) {
-            State.PREPARE -> {
+            State.SHOW_START -> {
                 view.setStartSearchView(text)
                 setState(State.SET_START)
             }
-            State.SET_START -> {
+            State.SHOW_FINISH -> {
                 view.setFinishSearchView(text)
                 setState(State.SET_FINISH)
             }
@@ -488,4 +496,3 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         disposal.dispose()
     }
 }
-
