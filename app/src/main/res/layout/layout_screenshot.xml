@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="400dp"
+        android:background="@drawable/border">
+
+        <ImageView
+            android:id="@+id/result_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp" >
+
+            <LinearLayout
+                android:id="@+id/arrive_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp">
+
+                <TextView
+                    android:id="@+id/result_path_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Path"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp"
+                    android:layout_marginStart="12dp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@android:color/white"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/result_arrive_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Arrive"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:layout_marginStart="12dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentEnd="true">
+
+                    <TextView
+                        android:id="@+id/result_distance_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="3.5km"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginEnd="12dp"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/share_button"
+            android:layout_width="300dp"
+            android:layout_height="42dp"
+            android:text="공유하기"
+            android:textColor="@android:color/black"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

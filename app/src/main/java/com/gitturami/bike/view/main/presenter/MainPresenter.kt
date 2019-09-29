@@ -8,6 +8,7 @@ import com.gitturami.bike.model.cache.CacheList
 import com.gitturami.bike.model.cache.CacheManager
 import com.gitturami.bike.model.cafe.CafeDataManager
 import com.gitturami.bike.model.common.pojo.DefaultItem
+import com.gitturami.bike.model.common.pojo.DefaultSummaryItem
 import com.gitturami.bike.model.leisure.LeisureDataManager
 import com.gitturami.bike.model.path.PathManager
 import com.gitturami.bike.model.restaurant.RestaurantDataManager
@@ -34,13 +35,16 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     private var state: State = State.PREPARE
     private var startStation: Station? = null
     private var finishStation: Station? = null
+    private var wayPoint: DefaultItem? = null
+    private var distance: Int = 0
     private val stateHandlers: Map<State, StateHandler> = hashMapOf(
             State.PREPARE to PrepareHandler(),
             State.SET_START to SetStartHandler(),
             State.SET_FINISH to SetFinishHandler(),
             State.SELECT_CATEGORY to CategoryHandler(),
             State.SELECT_WAYPOINT to WayPointHandler(),
-            State.POST_SELECT_WAYPOINT to PostSelectHandler()
+            State.POST_SELECT_WAYPOINT to PostSelectHandler(),
+            State.SHOW_SCREENSHOT to ScreenshotHandler()
     )
     private var cacheManager: CacheManager
 
@@ -447,7 +451,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .subscribe(
                                 {
                                     //Logger.i(TAG, "$it")
-                                    view.markPath(it)
+                                    this.distance = view.markPath(it)
+                                    setState(State.SELECT_CATEGORY)
                                 },
                                 { t -> Logger.e(TAG, "$t") }
                         )
@@ -468,8 +473,10 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
-                                    view.markPath(it)
+                                    this.distance = view.markPath(it)
                                     view.setWayPointMarker(wayPoint)
+                                    this.wayPoint = wayPoint
+                                    setState(State.SHOW_SCREENSHOT)
                                 },
                                 { t -> Logger.e(TAG, "$t") }
                         )
@@ -495,4 +502,33 @@ class MainPresenter(context: Context) : MainContact.Presenter {
     override fun destroy() {
         disposal.dispose()
     }
+
+    override fun getStartStationName(): String? {
+        val list = startStation!!.stationName.split(" ")
+        var name = ""
+        for (i in list.indices) {
+            if (i == 0) continue
+            name += (list[i] + " ")
+        }
+        return name
+    }
+
+    override fun getEndStationName(): String? {
+        val list = finishStation!!.stationName.split(" ")
+        var name = ""
+        for (i in list.indices) {
+            if (i == 0) continue
+            name += (list[i] + " ")
+        }
+        return name
+    }
+
+    override fun getWayPointName(): String? {
+        return wayPoint!!.getName()
+    }
+
+    override fun getDistance(): Int {
+        return distance
+    }
 }
+
