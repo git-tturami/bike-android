@@ -2,8 +2,9 @@ package com.gitturami.bike.view.main.state
 
 enum class State {
     PREPARE,
-    SET_STATION,
+    SHOW_START,
     SET_START,
+    SHOW_FINISH,
     SET_FINISH,
     SELECT_CATEGORY,
     SELECT_WAYPOINT,

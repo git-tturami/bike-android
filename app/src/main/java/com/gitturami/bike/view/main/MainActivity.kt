@@ -19,7 +19,7 @@ import com.gitturami.bike.model.station.pojo.Station
 import com.gitturami.bike.view.main.map.ItemType
 import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
-import com.gitturami.bike.view.main.sheet.select.SelectLocationSheetManager
+import com.gitturami.bike.view.main.sheet.select.StationSheet
 import com.gitturami.bike.view.main.sheet.waypoint.CategorySheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.ItemSheetManager
@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         TmapManager(this)
     }
 
-    private val selectLocationSheetManager by lazy {
-        SelectLocationSheetManager(presenter, this)
+    private val stationSheetManager by lazy {
+        StationSheet(presenter, this)
     }
 
     private val itemSheetManager by lazy {
@@ -131,8 +131,12 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun setSelectBottomSheet(station: Station) {
-        selectLocationSheetManager.initStation(station)
-        selectLocationSheetManager.collapseSelectSheet()
+        stationSheetManager.initStation(station)
+        stationSheetManager.collapseSelectSheet()
+    }
+
+    override fun hideStationSheet() {
+        stationSheetManager.hiddenSelectSheet()
     }
 
     override fun setItemBottomSheet(item: DefaultItem) {
@@ -142,14 +146,17 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun onBackPressed() {
         when (presenter.getState()) {
-            State.SET_STATION -> {
-
+            State.SHOW_START -> {
+                presenter.setState(State.PREPARE)
             }
             State.SET_START -> {
                 Toast.makeText(applicationContext, "출발지 초기화", Toast.LENGTH_SHORT).show()
                 presenter.setLocation(null)
                 tMapManager.removeDepartureMarker()
                 presenter.setState(State.PREPARE)
+            }
+            State.SHOW_FINISH -> {
+                presenter.setState(State.SET_START)
             }
             State.SET_FINISH -> {
                 Toast.makeText(applicationContext, "도착지 초기화", Toast.LENGTH_SHORT).show()

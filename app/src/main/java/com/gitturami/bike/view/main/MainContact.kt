@@ -31,6 +31,7 @@ interface MainContact {
         fun setStartSearchView(text: String)
         fun setFinishSearchView(text: String)
         fun setSelectBottomSheet(station: Station)
+        fun hideStationSheet()
         fun setItemBottomSheet(item: DefaultItem)
         fun hideAllMarkers()
         fun hideCategorySheet()
