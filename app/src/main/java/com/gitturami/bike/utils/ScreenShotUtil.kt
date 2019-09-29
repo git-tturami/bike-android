@@ -12,7 +12,7 @@ object ScreenShotUtil {
 
     fun saveBitmapToGallay(bitmap: Bitmap) {
         val root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val dir = File("$root/bike")
+        val dir = File("${root.absolutePath}/bike")
         dir.mkdir()
         val currentTime = System.currentTimeMillis()
         val fileName = "Image-$currentTime.jpg"
