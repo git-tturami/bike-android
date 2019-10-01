@@ -4,109 +4,126 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bottom_sheet"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:padding="10dp"
-
     app:behavior_hideable="true"
     app:behavior_skipCollapsed="false"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_camera"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="16dp"
-            android:text="경유지 선택"/>
+            android:clickable="true"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_place_black_24dp" />
 
         <LinearLayout
+            android:id="@+id/layout_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:gravity="center">
-            <LinearLayout
-                android:id="@+id/category_cafe"
-                android:layout_width="wrap_content"
+            android:background="@drawable/bottom_sheet"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:padding="10dp"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/ic_category_cafe"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="카페"/>
-            </LinearLayout>
+                android:textAlignment="center"
+                android:textSize="16dp"
+                android:text="경유지 선택"/>
 
             <LinearLayout
-                android:id="@+id/category_restaurant"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/ic_category_restaurant"/>
-                <TextView
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:gravity="center">
+                <LinearLayout
+                    android:id="@+id/category_cafe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="식당"/>
-            </LinearLayout>
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/ic_category_cafe"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="카페"/>
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/category_terrain"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/ic_category_terrain"/>
-                <TextView
+                <LinearLayout
+                    android:id="@+id/category_restaurant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="자연"/>
-            </LinearLayout>
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/ic_category_restaurant"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="식당"/>
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/category_leisure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/ic_category_festival"/>
-                <TextView
+                <LinearLayout
+                    android:id="@+id/category_terrain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="레저"/>
-            </LinearLayout>
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/ic_category_terrain"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="자연"/>
+                </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/category_leisure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/ic_category_festival"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="레저"/>
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

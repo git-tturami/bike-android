@@ -45,9 +45,6 @@ interface MainContact {
         fun startLoading()
         fun endLoading()
 
-        fun showCameraSheet()
-        fun hideCameraSheet()
-
         fun addWayPointItem(item: DefaultSummaryItem)
         fun setWayPointMarker(item: DefaultItem)
         fun clearWayPointRecyclerItemList()
