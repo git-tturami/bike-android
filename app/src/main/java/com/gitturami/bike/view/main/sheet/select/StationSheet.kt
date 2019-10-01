@@ -31,7 +31,13 @@ class StationSheet(val presenter: MainContact.Presenter, val activity: MainActiv
 
     fun initStation(station: Station) {
         this.station = station
-        val parsedTitle = station.stationName!!.split(".")[1].trim()
+        if (station.stationName.contains(".")) {
+
+        }
+        val parsedTitle = when (station.stationName.contains(".")) {
+            true -> station.stationName!!.split(".")[1].trim()
+            false -> station.stationName!!.trim()
+        }
         bottomSheet.stationTitle.text = parsedTitle
         bottomSheet.stationEnable.text = "· 대여가능 : ${station.parkingBikeTotCnt}"
         bottomSheet.stationTotal.text = "· 총 자전거 : ${station.rackTotCnt}"

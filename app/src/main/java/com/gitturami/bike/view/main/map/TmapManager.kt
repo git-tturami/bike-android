@@ -146,7 +146,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
                             when (it.geometry.type) {
                                 "Point" -> {
                                     posList.add(TMapPoint(it.geometry.coordinates.asJsonArray[1].asDouble,
-                                            it.geometry.coordinates.asJsonArray[0].asDouble))
+                                             it.geometry.coordinates.asJsonArray[0].asDouble))
                                 }
                                 "LineString" -> {
                                     distance += it.properties.get("distance").asInt

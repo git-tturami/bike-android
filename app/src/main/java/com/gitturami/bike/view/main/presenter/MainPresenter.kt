@@ -111,7 +111,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                     view.endLoading()
                                 },
                                 { e ->
-                                    Logger.e(TAG, "onError")
+                                    Logger.e(TAG, "onError : $e")
                                     view.showToast("따릉이 정거장 로드 중 오류가 발생했습니다.")
                                     view.endLoading()
                                 })
@@ -247,7 +247,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                     true -> {
                         cacheList.requestedTime = currentTime
                         cacheList.itemList.clear()
-                        leisureDataManager.summariesLeisure
+                        leisureDataManager.summariesCourses
                                 .flatMap { list -> Observable.fromIterable(list) }
                     }
                     false -> {
