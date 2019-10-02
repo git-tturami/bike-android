@@ -14,15 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_place_black_24dp" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab_camera"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:clickable="true"-->
+<!--            android:layout_gravity="bottom|right"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:src="@drawable/ic_place_black_24dp" />-->
 
         <LinearLayout
             android:id="@+id/layout_category"
@@ -50,7 +50,7 @@
                 android:layout_marginBottom="15dp"
                 android:gravity="center">
                 <LinearLayout
-                    android:id="@+id/category_cafe"
+                    android:id="@+id/category_shopping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
@@ -60,11 +60,11 @@
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/ic_category_cafe"/>
+                        android:background="@drawable/ic_shopping"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="카페"/>
+                        android:text="쇼핑"/>
                 </LinearLayout>
 
                 <LinearLayout

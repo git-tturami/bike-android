@@ -22,6 +22,7 @@ import com.gitturami.bike.view.main.map.TmapManager
 import com.gitturami.bike.view.main.presenter.MainPresenter
 import com.gitturami.bike.view.main.sheet.select.StationSheet
 import com.gitturami.bike.view.main.screenshot.ScreenshotDialog
+import com.gitturami.bike.view.main.sheet.result.ResultSheet
 import com.gitturami.bike.view.main.sheet.waypoint.CategorySheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.DetailWayPointSheetManager
 import com.gitturami.bike.view.main.sheet.waypoint.ItemSheetManager
@@ -57,6 +58,10 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     private val itemSheetManager by lazy {
         ItemSheetManager(this)
+    }
+
+    private val resultSheet by lazy {
+        ResultSheet(this)
     }
 
     private val loadingDialog: AppCompatDialog by lazy {
@@ -336,6 +341,20 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun hideScreenshotDialog() {
         screenshotDialog.hide()
+    }
+
+    override fun expandResultSheet() {
+        resultSheet.setItem(
+                this,
+                presenter.getStartStationName()!!,
+                presenter.getEndStationName()!!,
+                presenter.getWayPointName()!!
+        )
+        resultSheet.openSheet()
+    }
+
+    override fun hideResultSheet() {
+        resultSheet.hideSheet()
     }
 
     override fun startLoading() {

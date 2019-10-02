@@ -37,7 +37,11 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
             ItemType.RESTAURANT to bitmapManager.restaurantMarker,
             ItemType.STATION_EMPTY to bitmapManager.greenMarker,
             ItemType.STATION_SUITE to bitmapManager.yellowMarker,
-            ItemType.STATION_FULL to bitmapManager.redMarker
+            ItemType.STATION_FULL to bitmapManager.redMarker,
+            ItemType.HOTEL to bitmapManager.hotelMarker,
+            ItemType.FOOD to bitmapManager.foodMarker,
+            ItemType.SHOPPING to bitmapManager.shoppingMarker,
+            ItemType.PARK to bitmapManager.parkMarker
     )
 
     enum class Constants {
@@ -209,6 +213,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
     fun removeCategoryMarkers() {
         for (id in categoryIdList) {
             tMapView.removeMarkerItem(id)
+            tMapView.removeMarkerItem2(id)
         }
         categoryIdList.clear()
     }

@@ -31,6 +31,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     lateinit var view: MainContact.View
     val disposal = CompositeDisposable()
+    private var prevState: State = State.PREPARE
     private var state: State = State.PREPARE
     private var startStation: Station? = null
     private var finishStation: Station? = null
@@ -89,9 +90,14 @@ class MainPresenter(context: Context) : MainContact.Presenter {
 
     override fun getState(): State = state
 
+    override fun restoreState() {
+        setState(prevState)
+    }
+
     override fun setState(state: State) {
         if (this.state != state) {
             Logger.i(TAG, "setState: $state")
+            this.prevState = this.state
             this.state = state
             stateHandlers[state]?.onStateChanged(view)
         }
@@ -207,6 +213,34 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                 }
                         )
         disposal.add(observable)
+    }
+
+    override fun setShoppingMarkers() {
+        Logger.i(TAG, "#### Request shopping information ####")
+        view.startLoading()
+        disposal.add(leisureDataManager.summariesShopping
+                .flatMap { list -> Observable.fromIterable(list) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            view.setMarker(ItemType.SHOPPING, it) {
+                                requestDetailItem(ItemType.SHOPPING, it.getID())
+                            }
+                            view.addWayPointItem(it)
+                        },
+                        {
+                            e ->
+                            Logger.e(TAG, "onError(): $e")
+                            view.showToast("쇼핑 정보를 받아오는 도중에 문제가 발생했습니다.")
+                        },
+                        {
+                            Logger.i(TAG, "onComplete() : set recycler view")
+                            view.onCompleteMarking()
+                            view.endLoading()
+                        }
+                )
+        )
     }
 
     override fun setCafeMarkers() {
@@ -419,7 +453,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                 }
                         )
             }
-            ItemType.LEISURE, ItemType.TERRAIN -> {
+            ItemType.LEISURE, ItemType.TERRAIN, ItemType.SHOPPING -> {
                 leisureDataManager.getLeisureByName(param)!!
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
