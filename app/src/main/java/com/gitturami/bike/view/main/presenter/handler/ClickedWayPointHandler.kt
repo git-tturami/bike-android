@@ -9,5 +9,6 @@ class ClickedWayPointHandler: StateHandler {
         Logger.i(TAG, "onStateChanged() : Set Clicked WayPoint")
         view.hideItemSheet()
         view.hideCategoryMarkers()
+        view.expandResultSheet()
     }
 }

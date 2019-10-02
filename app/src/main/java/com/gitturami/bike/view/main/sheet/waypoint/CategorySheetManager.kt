@@ -31,9 +31,9 @@ class CategorySheetManager(activity: MainActivity) {
             }
         }
 
-        activity.category_cafe.setOnClickListener{v ->
+        activity.category_shopping.setOnClickListener{ v ->
             activity.getPresenter().setState(State.SELECT_WAYPOINT)
-            activity.getPresenter().setCafeMarkers()
+            activity.getPresenter().setShoppingMarkers()
         }
         activity.category_leisure.setOnClickListener{v ->
             activity.getPresenter().setState(State.SELECT_WAYPOINT)
@@ -50,18 +50,14 @@ class CategorySheetManager(activity: MainActivity) {
     }
 
     fun collapseWayPointSheet() {
-        if (sheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
-            Logger.i(TAG, "halfWayPointSheet()")
-            sheetBehavior.isHideable = false
-            //sheetBehavior.peekHeight = 400
-            sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
+        Logger.i(TAG, "halfWayPointSheet()")
+        sheetBehavior.isHideable = false
+        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun hiddenWayPointSheet() {
-        if (sheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-            sheetBehavior.isHideable = true
-            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
+        Logger.i(TAG, "hiddenWayPointSheet")
+        sheetBehavior.isHideable = true
+        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 }

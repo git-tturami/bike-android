@@ -46,6 +46,22 @@ class BitmapManager(val context: Context) {
         drawableToMarker(R.drawable.ic_terrain)
     }
 
+    val hotelMarker: Bitmap by lazy {
+        drawableToMarker(R.drawable.ic_hotel_pin)
+    }
+
+    val foodMarker: Bitmap by lazy {
+        drawableToMarker(R.drawable.ic_food_pin)
+    }
+
+    val shoppingMarker: Bitmap by lazy {
+        drawableToMarker(R.drawable.ic_shopping_pin)
+    }
+
+    val parkMarker: Bitmap by lazy {
+        drawableToMarker(R.drawable.ic_park_pin)
+    }
+
     private fun drawableToBitmap(resId: Int): Bitmap {
         val drawable = context.resources.getDrawable(resId, null)
         val bitmap = Bitmap.createBitmap(96, 96, Bitmap.Config.ARGB_8888)
