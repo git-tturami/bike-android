@@ -43,38 +43,73 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:src="@drawable/btn_bg"
+        android:clickable="true"
         android:id="@+id/profileImage" />
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:id="@+id/personalButton"
+        android:background="@drawable/btn_bg"
         android:text="개인정보"
+        android:textSize="18sp"
+        android:textColor="@color/colorBlack"
+        android:drawableLeft="@drawable/ic_account"
+        android:drawablePadding="18dip"
+        android:paddingStart="20dp"
+        android:gravity="left|center_vertical"
         />
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:id="@+id/paymentButton"
+        android:background="@drawable/btn_bg"
         android:text="결제수단"
+        android:textSize="18sp"
+        android:textColor="@color/colorBlack"
+        android:drawableLeft="@drawable/ic_account"
+        android:drawablePadding="18dip"
+        android:gravity="left|center_vertical"
+        android:paddingStart="20dp"
         />
     <TextView
+        android:layout_marginTop="20dp"
+        android:paddingStart="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/text"
+        android:textSize="18sp"
         android:text="계정 연동"
         />
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:id="@+id/ttareungButton"
+        android:background="@drawable/btn_bg"
         android:text="따릉이 연동하기"
+        android:textSize="18sp"
+        android:textColor="@color/colorBlack"
+        android:drawableLeft="@drawable/ic_account"
+        android:drawablePadding="18dip"
+        android:gravity="left|center_vertical"
+        android:paddingStart="20dp"
         />
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:id="@+id/instaButton"
+        android:background="@drawable/btn_bg"
         android:text="인스타그램 연동하기"
+        android:textSize="18sp"
+        android:textColor="@color/colorBlack"
+        android:drawableLeft="@drawable/ic_account"
+        android:drawablePadding="18dip"
+        android:gravity="left|center_vertical"
+        android:paddingStart="20dp"
         />
 
 

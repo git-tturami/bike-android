@@ -6,4 +6,5 @@
     <color name="colorYello">#FFFF00</color>
     <color name="colorlightgrey">#dddfe6</color>
     <color name="colorlightblue">#aacfd0</color>
+    <color name="colorBlack">#000000</color>
 </resources>
