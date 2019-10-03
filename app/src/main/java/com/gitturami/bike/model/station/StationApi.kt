@@ -9,6 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface StationApi {
+    // @GET("/stations/id")
     @GET("/stations/id")
     fun getStationById(@Query("id") id: String): Single<Station>
 
@@ -22,6 +23,7 @@ interface StationApi {
     @GET("/stations/enable")
     fun getEnableStation(): Observable<StationResponse>
 
+    // @GET("/stations/summaries")
     @GET("/stations/summaries")
     fun getSummaryOfStation(): Observable<List<SummaryStation>>
 
