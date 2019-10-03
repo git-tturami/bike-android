@@ -14,15 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/fab_camera"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:clickable="true"-->
-<!--            android:layout_gravity="bottom|right"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            android:layout_marginBottom="10dp"-->
-<!--            android:src="@drawable/ic_place_black_24dp" />-->
 
         <LinearLayout
             android:id="@+id/layout_category"

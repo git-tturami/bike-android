@@ -19,31 +19,34 @@ class ItemSheetManager(activity: MainActivity) {
     private val behavior: BottomSheetBehavior<ConstraintLayout>
     private val button = activity.item_select_but
     private val mainImgView = activity.item_main_img
-    private val subImgView1 = activity.item_sub_img1
     var selectedItem: DefaultItem? = null
     var lat = 0.0
     var lon = 0.0
 
     init {
         behavior = BottomSheetBehavior.from(sheet)
-        behavior.state = BottomSheetBehavior.STATE_HIDDEN
         sheet.setOnTouchListener { view, motionEvent -> true }
-        // TODO : setup callback
+        behavior.bottomSheetCallback = object: BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        }
+        mainImgView.clipToOutline = true
     }
 
     fun hideSheet() {
-        if (behavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-            behavior.isHideable = true
-            behavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
+        behavior.isHideable = true
+        behavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    fun collapseSheet() {
-        if (behavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
-            behavior.isHideable = false
-            behavior.peekHeight = 450
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+    fun openSheet() {
+        behavior.isHideable = false
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun setItem(item: DefaultItem) {
@@ -57,18 +60,7 @@ class ItemSheetManager(activity: MainActivity) {
             Logger.i(TAG, "set image1 view : ${selectedItem?.getImage1Url()}")
             Glide.with(sheet)
                     .load(selectedItem?.getImage1Url())
-                    .override(228, 155)
                     .into(mainImgView)
-        } else {
-            // TODO : when image is null, imgView's background must be set empty img.
-        }
-
-        if (selectedItem?.getImage2Url() != null) {
-            Logger.i(TAG, "set image2 view : ${selectedItem?.getImage2Url()}")
-            Glide.with(sheet)
-                    .load(selectedItem?.getImage2Url())
-                    .override(113, 77)
-                    .into(subImgView1)
         } else {
             // TODO : when image is null, imgView's background must be set empty img.
         }
