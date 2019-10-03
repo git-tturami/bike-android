@@ -42,6 +42,7 @@ class ResultSheet(activity: MainActivity) {
                 end: String,
                 wayPoint: String,
                 distance: Int) {
+        hideSheet()
         layout.removeAllViews()
         layout.addView(createTextView(context, "출발 : $start"))
         layout.addView(createTextView(context, "경유 : $wayPoint"))
@@ -70,6 +71,7 @@ class ResultSheet(activity: MainActivity) {
     }
 
     fun openSheet() {
+        hideSheet()
         behavior.isHideable = false
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }

@@ -361,7 +361,8 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         val needCache = cacheList.needCache(currentTime)
         val observable = when (needCache) {
             true -> {
-                restaurantDataManager.allLightRestaurant.flatMap { list -> Observable.fromIterable(list) }
+                leisureDataManager.summariesFood
+                        .flatMap { list -> Observable.fromIterable(list) }
             }
             false -> {
                 Observable.fromIterable(cacheList.itemList)
@@ -380,7 +381,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         },
                         { e ->
                             Logger.e(TAG, "onError(): $e")
-                            view.showToast("식당 정보를 받아오는 도중에 문제가 발생했습니다.")
+                            view.showToast("자연 정보를 받아오는 도중에 문제가 발생했습니다.")
                             cacheList.clear()
                         },
                         {
@@ -389,6 +390,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                             view.endLoading()
                         }
                 )
+
         disposal.add(observable)
     }
 
@@ -436,24 +438,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                                 }
                         )
             }
-            ItemType.RESTAURANT -> {
-                restaurantDataManager.restaurantByName(param)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    Logger.i(TAG, "$it")
-                                    view.setItem(it)
-                                    setState(State.POST_SELECT_WAYPOINT)
-                                    view.endLoading()
-                                },
-                                { e ->
-                                    Logger.e(TAG, "onError() : $e")
-
-                                }
-                        )
-            }
-            ItemType.LEISURE, ItemType.TERRAIN, ItemType.SHOPPING -> {
+            ItemType.LEISURE, ItemType.TERRAIN, ItemType.SHOPPING, ItemType.RESTAURANT  -> {
                 leisureDataManager.getLeisureByName(param)!!
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

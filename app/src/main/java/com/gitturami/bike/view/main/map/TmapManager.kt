@@ -170,8 +170,9 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
 
     fun drawLine(posList: List<TMapPoint>) {
         val line = TMapPolyLine()
-        line.lineColor = Color.BLUE
-        line.lineWidth = 2f
+        line.lineColor = 0x4141E0
+        line.outLineColor = 0x4141E0
+        line.lineWidth = 1.5f
         for (pos in posList) {
             line.addLinePoint(pos)
         }

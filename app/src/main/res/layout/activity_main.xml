@@ -91,6 +91,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_anchorGravity="bottom|right|end">
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_main"
             android:layout_width="wrap_content"
@@ -103,16 +104,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_anchorGravity="bottom|right|end" />
+
     </RelativeLayout>
 
     <include layout="@layout/layout_bottom_sheet" />
-
     <include layout="@layout/layout_category_bottom_sheet" />
     <include layout="@layout/layout_detail_waypoint_bottom_sheet" />
     <include layout="@layout/layout_item_bottom_sheet" />
     <include layout="@layout/layout_result_sheet" />
 
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-

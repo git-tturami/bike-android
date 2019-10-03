@@ -19,15 +19,15 @@ class BitmapManager(val context: Context) {
     }
 
     val departureMarker: Bitmap by lazy {
-        drawableToBitmap(R.drawable.ic_departure)
+        drawableToMarker(R.drawable.ic_departure)
     }
 
     val layoverMarker: Bitmap by lazy {
-        drawableToBitmap(R.drawable.ic_layover)
+        drawableToMarker(R.drawable.ic_layover)
     }
 
     val arrivalmarker: Bitmap by lazy {
-        drawableToBitmap(R.drawable.ic_arrival)
+        drawableToMarker(R.drawable.ic_arrival)
     }
 
     val restaurantMarker: Bitmap by lazy {
