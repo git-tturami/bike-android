@@ -1,6 +1,7 @@
 package com.gitturami.bike.view.main.sheet.waypoint
 
 import android.view.View
+import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.gitturami.bike.logger.Logger
@@ -9,6 +10,7 @@ import com.gitturami.bike.view.main.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_item_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_item_bottom_sheet.view.*
+import kotlinx.coroutines.runBlocking
 
 class ItemSheetManager(activity: MainActivity) {
     companion object {
@@ -42,9 +44,20 @@ class ItemSheetManager(activity: MainActivity) {
     fun hideSheet() {
         behavior.isHideable = true
         behavior.state = BottomSheetBehavior.STATE_HIDDEN
+        mainImgView.background = null
     }
 
     fun openSheet() {
+        runBlocking {
+            if (selectedItem?.getImage1Url() != null) {
+                Logger.i(TAG, "set image1 view : ${selectedItem?.getImage1Url()}")
+                Glide.with(sheet)
+                        .load(selectedItem?.getImage1Url())
+                        .into(mainImgView)
+            } else {
+                // TODO : when image is null, imgView's background must be set empty img.
+            }
+        }
         behavior.isHideable = false
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
@@ -55,17 +68,6 @@ class ItemSheetManager(activity: MainActivity) {
         lat = item.getLatitude().toDouble()
         lon = item.getLongitude().toDouble()
         selectedItem = item
-
-        if (selectedItem?.getImage1Url() != null) {
-            Logger.i(TAG, "set image1 view : ${selectedItem?.getImage1Url()}")
-            Glide.with(sheet)
-                    .load(selectedItem?.getImage1Url())
-                    .into(mainImgView)
-        } else {
-            // TODO : when image is null, imgView's background must be set empty img.
-        }
-
-        Logger.i(TAG, "$lat, $lon")
     }
 
     fun getSelectedItemId() = sheet.item_title.text.toString()

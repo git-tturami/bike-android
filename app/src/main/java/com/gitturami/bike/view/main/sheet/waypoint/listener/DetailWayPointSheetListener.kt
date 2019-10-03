@@ -2,9 +2,7 @@ package com.gitturami.bike.view.main.sheet.waypoint.listener
 
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.gitturami.bike.logger.Logger
 import com.gitturami.bike.view.main.MainContact
-import com.gitturami.bike.view.main.state.State
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class DetailWayPointSheetListener(
