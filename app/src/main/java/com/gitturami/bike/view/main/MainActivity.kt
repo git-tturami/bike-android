@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     private val loadingDialog: AppCompatDialog by lazy {
         val dialog = AppCompatDialog(this)
-        dialog.setCancelable(false)
+        dialog.setCancelable(true)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setContentView(R.layout.layout_loading_img)
         Glide.with(this)
@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
     override fun setItemBottomSheet(item: DefaultItem) {
         itemSheetManager.setItem(item)
-        itemSheetManager.collapseSheet()
+        itemSheetManager.openSheet()
     }
 
     override fun onBackPressed() {
@@ -320,7 +320,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
     }
 
     override fun collapseItemSheet() {
-        itemSheetManager.collapseSheet()
+        itemSheetManager.openSheet()
     }
 
     override fun hideItemSheet() {
@@ -348,7 +348,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
                 this,
                 presenter.getStartStationName()!!,
                 presenter.getEndStationName()!!,
-                presenter.getWayPointName()!!
+                presenter.getWayPointName()!!,
+                presenter.getDistance()
         )
         resultSheet.openSheet()
     }
