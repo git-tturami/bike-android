@@ -131,7 +131,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { cafe ->
-                            view.setItemBottomSheet(cafe)
+                            view.setItemBottomSheet(cafe, ItemType.CAFE)
                             view.endLoading()
                         }
         )
@@ -144,7 +144,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { leisure ->
-                            view.setItemBottomSheet(leisure)
+                            view.setItemBottomSheet(leisure, ItemType.LEISURE)
                             view.endLoading()
                         }
         )
@@ -429,7 +429,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
-                                    view.setItem(it)
+                                    view.setItem(it, type)
                                     setState(State.POST_SELECT_WAYPOINT)
                                     view.endLoading()
                                 },
@@ -445,7 +445,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                         .subscribe(
                                 {
                                     Logger.i(TAG, "$it")
-                                    view.setItem(it)
+                                    view.setItem(it, type)
                                     setState(State.POST_SELECT_WAYPOINT)
                                     view.endLoading()
                                 },

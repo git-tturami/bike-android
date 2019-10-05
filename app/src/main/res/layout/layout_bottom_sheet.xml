@@ -76,9 +76,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/custom_button"
+                    android:textColor="#ffffff"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:text="출발지 선택" />
+                    android:text="+ 출발" />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
