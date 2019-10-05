@@ -43,9 +43,9 @@ class StationSheet(val presenter: MainContact.Presenter, val activity: MainActiv
         bottomSheet.stationTotal.text = "· 총 자전거 : ${station.rackTotCnt}"
 
         if (presenter.getState() == State.PREPARE) {
-            bottomSheet.setButton.text = "출발지 선택"
+            bottomSheet.setButton.text = "+ 출발"
         } else if (presenter.getState() == State.SET_START) {
-            bottomSheet.setButton.text = "도착지 선택"
+            bottomSheet.setButton.text = "+ 도착"
         }
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
@@ -86,8 +86,8 @@ class StationSheet(val presenter: MainContact.Presenter, val activity: MainActiv
         }
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         when(activity.getState()){
-            State.SHOW_START -> activity.setButton.text = "출발지 선택"
-            State.SHOW_FINISH -> activity.setButton.text = "도착지 선택"
+            State.SHOW_START -> activity.setButton.text = "+ 출발"
+            State.SHOW_FINISH -> activity.setButton.text = "+ 도착"
         }
     }
 

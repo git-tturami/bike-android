@@ -18,7 +18,8 @@ interface MainContact {
         fun setCafeMarkers()
         fun setLeisureMarkers()
         fun setTerrainMarkers()
-        fun setItem(item: DefaultItem)
+        // TODO : duplicated method with setItemBottomSheet
+        fun setItem(item: DefaultItem, itemType: ItemType)
         fun markPath(pathItem: PathItem): Int
         fun onCompleteMarking()
         fun setMarker(type: ItemType, item: DefaultSummaryItem, onClick: () -> Unit)
@@ -32,7 +33,7 @@ interface MainContact {
         fun setFinishSearchView(text: String)
         fun setSelectBottomSheet(station: Station)
         fun hideStationSheet()
-        fun setItemBottomSheet(item: DefaultItem)
+        fun setItemBottomSheet(item: DefaultItem, itemType: ItemType)
         fun hideAllMarkers()
         fun hideCategorySheet()
         fun collapseCategorySheet()

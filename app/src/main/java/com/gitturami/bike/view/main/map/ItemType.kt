@@ -16,5 +16,6 @@ enum class ItemType {
     TERRAIN,
     DEPARTURE,
     ARRIVAL,
-    LAYOVER
+    LAYOVER,
+    DOT
 }

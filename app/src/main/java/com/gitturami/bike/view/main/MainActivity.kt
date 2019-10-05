@@ -148,8 +148,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         stationSheetManager.hiddenSelectSheet()
     }
 
-    override fun setItemBottomSheet(item: DefaultItem) {
-        itemSheetManager.setItem(item)
+    override fun setItemBottomSheet(item: DefaultItem, itemType: ItemType) {
+        itemSheetManager.setItem(this, item, itemType)
         itemSheetManager.openSheet()
     }
 
@@ -237,8 +237,8 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         )
     }
 
-    override fun setItem(item: DefaultItem) {
-        itemSheetManager.setItem(item)
+    override fun setItem(item: DefaultItem, itemType: ItemType) {
+        itemSheetManager.setItem(this, item, itemType)
     }
 
     override fun onCompleteMarking() {

@@ -1,14 +1,16 @@
 package com.gitturami.bike.view.main.sheet.result
 
 import android.content.Context
+import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.setPadding
+import com.gitturami.bike.R
 import com.gitturami.bike.view.main.MainActivity
+import com.gitturami.bike.view.main.map.ItemType
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.layout_result_list.view.*
 import kotlinx.android.synthetic.main.layout_result_sheet.*
 import kotlinx.android.synthetic.main.layout_result_sheet.view.*
 
@@ -44,9 +46,11 @@ class ResultSheet(activity: MainActivity) {
                 distance: Int) {
         hideSheet()
         layout.removeAllViews()
-        layout.addView(createTextView(context, "출발 : $start"))
-        layout.addView(createTextView(context, "경유 : $wayPoint"))
-        layout.addView(createTextView(context, "도착 : $end"))
+        layout.addView(createItemLayout(context, start, ItemType.DEPARTURE))
+        layout.addView(createItemLayout(context, "", ItemType.DOT))
+        layout.addView(createItemLayout(context, wayPoint, ItemType.LAYOVER))
+        layout.addView(createItemLayout(context, "", ItemType.DOT))
+        layout.addView(createItemLayout(context, end, ItemType.ARRIVAL))
         val d = when (distance >= 1000) {
             true -> {
                 "${distance/1000}.${distance%1000}km"
@@ -55,19 +59,41 @@ class ResultSheet(activity: MainActivity) {
                 "${distance}m"
             }
         }
-        layout.addView(createTextView(context, "거리 : $d"))
+        sheet.distance_result_bottom_sheet.text = d
     }
 
-    private fun createTextView(context: Context, text: String): TextView {
-        val tv = TextView(context)
-        tv.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        tv.setPadding(10)
-        tv.text = text
-        tv.textSize = 14f
-        return tv
+    private fun createItemLayout(context: Context, text: String, type: ItemType): View {
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layout = inflater.inflate(R.layout.layout_result_list, sheet, false)
+
+        when (type) {
+            ItemType.DEPARTURE -> {
+                layout.img_result_list.setImageDrawable(
+                        context.resources.getDrawable(R.drawable.ic_departure, null)
+                )
+            }
+            ItemType.ARRIVAL -> {
+                layout.img_result_list.setImageDrawable(
+                        context.resources.getDrawable(R.drawable.ic_arrival, null)
+                )
+            }
+            ItemType.LAYOVER -> {
+                layout.img_result_list.setImageDrawable(
+                        context.resources.getDrawable(R.drawable.ic_layover, null)
+                )
+            }
+            ItemType.DOT -> {
+                layout.img_result_list.setImageDrawable(
+                        context.resources.getDrawable(R.drawable.ic_dot, null)
+                )
+            }
+            else -> {
+
+            }
+        }
+        layout.text_result_list.text = text
+        layout.text_result_list.setTextColor(Color.BLACK)
+        return layout
     }
 
     fun openSheet() {
