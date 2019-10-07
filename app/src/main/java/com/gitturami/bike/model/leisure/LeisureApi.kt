@@ -53,4 +53,7 @@ interface LeisureApi {
 
     @GET("/leisure/foods/summaries")
     fun getFoodSummaries(): Observable<List<SummaryLeisure>>
+
+    @GET("/leisure/parks/summaries")
+    fun getParkSummaries(): Observable<List<SummaryLeisure>>
 }

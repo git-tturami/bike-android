@@ -12,7 +12,6 @@ enum class ItemType {
     HOTEL,
     FOOD,
     SHOPPING,
-    PARK,
     TERRAIN,
     DEPARTURE,
     ARRIVAL,

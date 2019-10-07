@@ -32,5 +32,6 @@ class LeisureDataManager(context: Context): DataManager(context) {
     val summariesCourses = api.getCourseSummaries()
     val summariesShopping = api.getShoppingSummaries()
     val summariesFood = api.getFoodSummaries()
+    val summariesPark = api.getParkSummaries()
     fun getLeisureByName(name: String): Single<Leisure>? = api.getLeisureByName(name)
 }
