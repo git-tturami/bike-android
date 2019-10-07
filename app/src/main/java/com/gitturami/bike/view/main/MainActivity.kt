@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         presenter.setLeisureMarkers()
     }
     override fun setTerrainMarkers() {
-        presenter.setTerrainMarkers()
+        presenter.setParkMarkers()
     }
 
     override fun setMarkerColorByShared(id: String, shared: Int) {

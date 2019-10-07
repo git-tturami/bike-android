@@ -45,7 +45,7 @@ class CategorySheetManager(activity: MainActivity) {
         }
         activity.category_terrain.setOnClickListener{v ->
             activity.getPresenter().setState(State.SELECT_WAYPOINT)
-            activity.getPresenter().setTerrainMarkers()
+            activity.getPresenter().setParkMarkers()
         }
     }
 

@@ -67,7 +67,7 @@ interface MainContact {
         fun setCafeMarkers()
         fun setRestaurantMarkers()
         fun setLeisureMarkers()
-        fun setTerrainMarkers()
+        fun setParkMarkers()
         fun setShoppingMarkers()
         fun setSearchView(text: String)
         fun getState(): State

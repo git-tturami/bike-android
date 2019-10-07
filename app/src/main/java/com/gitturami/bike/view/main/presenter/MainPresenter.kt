@@ -177,6 +177,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
                 }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
+                                    Logger.i(TAG, "$it")
                                     val shared = (it as SummaryStation).shared
                                     val type = when {
                                         shared > 70 -> ItemType.STATION_EMPTY
@@ -312,7 +313,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         disposal.add(observable)
     }
 
-    override fun setTerrainMarkers() {
+    override fun setParkMarkers() {
         Logger.i(TAG, "#### Request Terrain information ####")
         view.startLoading()
         val currentTime = System.currentTimeMillis()
@@ -320,7 +321,7 @@ class MainPresenter(context: Context) : MainContact.Presenter {
         val needCache = cacheList.needCache(currentTime)
         val observable = when (needCache) {
             true -> {
-                leisureDataManager.summariesTerrain
+                leisureDataManager.summariesPark
                         .flatMap { list -> Observable.fromIterable(list) }
             }
             false -> {

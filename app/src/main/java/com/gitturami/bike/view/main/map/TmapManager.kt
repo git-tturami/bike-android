@@ -1,7 +1,6 @@
 package com.gitturami.bike.view.main.map
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
 import androidx.core.view.drawToBitmap
@@ -41,7 +40,7 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
             ItemType.HOTEL to bitmapManager.hotelMarker,
             ItemType.FOOD to bitmapManager.foodMarker,
             ItemType.SHOPPING to bitmapManager.shoppingMarker,
-            ItemType.PARK to bitmapManager.parkMarker
+            ItemType.TERRAIN to bitmapManager.parkMarker
     )
 
     enum class Constants {

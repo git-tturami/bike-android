@@ -2,7 +2,6 @@ package com.gitturami.bike.view.main.sheet.waypoint
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.gitturami.bike.R
@@ -92,7 +91,7 @@ class ItemSheetManager(activity: MainActivity) {
                 setCategoryIcon(context, R.drawable.ic_terrain_small)
                 sheet.item_type.text = "레저"
             }
-            ItemType.PARK -> {
+            ItemType.TERRAIN -> {
                 setCategoryIcon(context, R.drawable.ic_park_small)
                 sheet.item_type.text = "공원"
             }
