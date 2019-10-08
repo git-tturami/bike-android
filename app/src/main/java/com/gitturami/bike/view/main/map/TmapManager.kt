@@ -14,11 +14,10 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 
-class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallback {
+class TmapManager(activity: MainActivity) {
     companion object {
         const val TAG = "TmapManager"
     }
-    private var isTracking = true
     private var isFindPath = false
     var isMarked = false
     private val tMapView = TMapView(activity)
@@ -64,19 +63,18 @@ class TmapManager(activity: MainActivity): TMapGpsManager.onLocationChangedCallb
         tMapView.mapType = TMapView.MAPTYPE_STANDARD
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN)
         activity.linearLayoutTmap.addView(tMapView)
+        tMapGps.setLocationCallback()
     }
 
     private fun initTmapGps() {
+        Logger.i(TAG, "initTmapGps()")
         tMapGps.minTime = 1000
         tMapGps.minDistance = 5f
         tMapGps.provider = TMapGpsManager.NETWORK_PROVIDER
         tMapGps.OpenGps()
     }
 
-    override fun onLocationChange(location: Location) {
-        if (!isTracking) {
-            return
-        }
+    fun setLocation(location: Location) {
         tMapView.setLocationPoint(location.longitude, location.latitude)
         tMapView.setCenterPoint(location.longitude, location.latitude)
     }

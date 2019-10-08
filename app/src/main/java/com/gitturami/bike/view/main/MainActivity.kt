@@ -3,6 +3,7 @@ package com.gitturami.bike.view.main
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -29,10 +30,11 @@ import com.gitturami.bike.view.main.sheet.waypoint.ItemSheetManager
 import com.gitturami.bike.view.main.state.State
 import com.gitturami.bike.view.setting.SettingActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.skt.Tmap.TMapGpsManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_loading_img.*
 
-class MainActivity : AppCompatActivity(), MainContact.View {
+class MainActivity : AppCompatActivity(), MainContact.View, TMapGpsManager.onLocationChangedCallback {
 
     companion object {
         private val TAG = "MainActivity"
@@ -87,6 +89,7 @@ class MainActivity : AppCompatActivity(), MainContact.View {
 
         presenter = MainPresenter(applicationContext)
 
+        initFloatingButtonAction()
         initSettingButton()
 
         presenter.takeView(this)
@@ -95,6 +98,11 @@ class MainActivity : AppCompatActivity(), MainContact.View {
         itemSheetManager.setButtonClickListener(View.OnClickListener {
             presenter.setWayPointAndFindPath(itemSheetManager.selectedItem!!)
         })
+    }
+
+    override fun onLocationChange(location: Location) {
+        Logger.i(TmapManager.TAG, "onLocationChange()")
+        tMapManager.setLocation(location)
     }
 
     override fun getPresenter(): MainContact.Presenter = presenter
